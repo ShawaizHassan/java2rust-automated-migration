@@ -1,0 +1,1 @@
+{"Java": {"bug_source_code": "public class Hello { public static void main(String[] a){ System.out.println(\"Hi\"); }}", "meta":{"file":"Hello.java"}}, "Rust": {"bug_source_code": "fn main(){ println!(\"Hi\"); }", "meta":{"file":"main.rs"}}}

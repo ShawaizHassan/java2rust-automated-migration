@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+.env
+.env.*
+dist/
+build/
+*.egg-info/
+
+# Jupyter/VSCode
+.ipynb_checkpoints/
+.vscode/
+*.code-workspace
+
+# Logs & temp
+logs/
+*.log
+tmp/
+.cache/
+.DS_Store
+
+# Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+.gradle/
+.gradle-cache/
+out/
+
+# Rust
+target/
+Cargo.lock
+# If you need to commit Cargo.lock for bins, remove the ignore above.
+
+# Node (just in case)
+node_modules/
+
+# Large artifacts
+data/raw/
+data/processed/
+runs/
+artifacts/
+checkpoints/
+
+# DVC
+.dvc/
+.dvcignore
+
+# LFS pointers generated artifacts (keep actual large files in LFS)
+*.pt
+*.bin
+*.onnx
+*.tar
+*.tar.gz
+*.zip
+
+# OS/system
+Thumbs.db

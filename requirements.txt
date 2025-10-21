@@ -1,0 +1,8 @@
+# Core
+numpy
+tqdm
+pyyaml
+jsonlines
+# Optional: for docs
+mkdocs
+mkdocs-material

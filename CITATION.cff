@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "JAVA2RUST: Toward Automated Migration of Java Programs to Rust"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: "Hassan"
+    given-names: "Shawaiz"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+identifiers:
+  - type: url
+    value: "https://github.com/ShawaizHassan/java2rust-automated-migration"
+version: "0.1.0"
+date-released: "2025-10-21"
+repository-code: "https://github.com/ShawaizHassan/java2rust-automated-migration"
+license: "Apache-2.0"
+keywords:
+  - "Java to Rust migration"
+  - "Automated code translation"
+  - "Programming languages"
+  - "Software engineering"
+  - "Static analysis"

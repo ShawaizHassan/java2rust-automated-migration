@@ -1,0 +1,27 @@
+name: "Bug report"
+description: "Report a problem or regression"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug.
+      placeholder: Clear and concise description.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Steps, commands, minimal data sample.
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: v0.1.0 or commit SHA
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      render: shell
