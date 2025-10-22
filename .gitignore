@@ -63,3 +63,16 @@ checkpoints/
 
 # OS/system
 Thumbs.db
+# local models & data
+models/**/
+!models/templates/**
+data/raw/
+data/processed/
+*.safetensors
+*.pt
+*.bin
+*.onnx
+runs/
+artifacts/
+checkpoints/
+logs/

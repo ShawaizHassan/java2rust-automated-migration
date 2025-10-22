@@ -1,0 +1,11 @@
+{
+  "name": "vllm-deepseek-coder-6.7b",
+  "model": "deepseek-coder-6.7b-instruct",
+  "base_url": "http://localhost:8001/v1",
+  "api_key": "local",
+  "use_chat": true,
+  "max_tokens": 512,
+  "temperature": 0.2,
+  "top_p": 0.9,
+  "n": 5
+}

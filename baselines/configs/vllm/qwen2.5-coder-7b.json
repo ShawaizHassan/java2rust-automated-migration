@@ -1,0 +1,11 @@
+{
+  "name": "vllm-qwen2.5-coder-7b-instruct",
+  "model": "Qwen2.5-Coder-7B-Instruct",
+  "base_url": "http://localhost:8000/v1",
+  "api_key": "hassan2024",
+  "use_chat": true,
+  "max_tokens": 512,
+  "temperature": 0.2,
+  "top_p": 0.9,
+  "n": 5
+}
