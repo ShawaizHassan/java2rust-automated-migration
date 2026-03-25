@@ -1,0 +1,442 @@
+INDEX: 520 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+public class Edu104F{
+	public static void main(String[] main) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		PrintWriter out = new PrintWriter(System.out);
+		String s = st.nextToken();
+		int[] num = new int[s.length()+1];
+		num[1] = s.charAt(0) - 48;
+		for(int i = 2; i <= s.length(); i++) {
+			num[i] = s.charAt(i-1) - s.charAt(i-2);
+		}
+		int iters = 0;
+		boolean edit = true;
+		int min = 10000;
+		while(edit) {
+			iters++;
+			edit = false;
+			for(int i = 1; i < s.length(); i++) {
+				if(num[i] > 5) {
+					num[i-1]++;
+					num[i] = num[i]-10;
+					num[s.length()]--;
+					edit = true;
+				}
+				else if(num[i] == 5 && num[i-1] < 0) {
+					num[i-1]++;
+					num[i] = num[i]-10;
+					num[s.length()]--;
+					edit = true;
+				}
+				else if(i >= 2 && num[i] == 5 && num[i-1] == 4 && num[i-2] < 0 && (num[s.length()] > 0 || num[s.length()] <= -4)) {
+					num[i-2]++;
+					num[i-1] = -5;
+					num[i] = -5;
+					num[s.length()]-=2;
+					edit = true;
+				}
+				else if(i >= 2 && num[i] == 5 && num[i-1] == 4 && num[i-2] < 0 && num[s.length()] < -3 && num[s.length() - 1] > 0) {
+					num[i-2]++;
+					num[i-1] = -5;
+					num[i] = -5;
+					num[s.length()]-=2;
+					edit = true;
+				}
+				else if(num[i] == 5 && num[i-1] == 5 && num[s.length()] > 1) {
+					num[i-2]++;
+					num[i-1] = -4;
+					num[i] = -5;
+					num[s.length()]-=2;
+					edit = true;
+				}
+				else if(num[i] == 5 && num[i-1] == 5 && num[i-2] == 5) {
+					num[i-2]++;
+					num[i-1] = -4;
+					num[i] = -5;
+					num[s.length()]-=2;
+					edit = true;
+				}
+				else if(num[i] < -5) {
+					num[i-1]--;
+					num[i] = num[i]+10;
+					num[s.length()]++;
+					edit = true;
+				}
+				else if(num[i] == -5 && num[i-1] > 0) {
+					num[i-1]--;
+					num[i] = num[i]+10;
+					num[s.length()]++;
+					edit = true;
+				}
+				else if(i >= 2 && num[i] == -5 && num[i-1] == -4 && (num[i-2] > 0) && (num[s.length()] < 0 || num[s.length()] >= 4)) {
+					num[i-2]--;
+					num[i-1] = 5;
+					num[i] = 5;
+					num[s.length()]+=2;
+					edit = true;
+				}
+				else if(i >= 2 && num[i] == -5 && num[i-1] == -4 && (num[i-2] == -4 && num[i-3] > 0) && (num[s.length()] < 0 || num[s.length()] >= 4)) {
+					num[i-2]--;
+					num[i-1] = 5;
+					num[i] = 5;
+					num[s.length()]+=2;
+					edit = true;
+				}
+				else if(i >= 2 && num[i] == -5 && num[i-1] == -4 && num[i-2] > 0 && num[s.length()] > 3 && num[s.length() - 1] < 0) {
+					num[i-2]--;
+					num[i-1] = 5;
+					num[i] = 5;
+					num[s.length()]+=2;
+					edit = true;
+				}
+				else if(num[i] == -5 && num[i-1] == -5 && num[s.length()] < -1) {
+					num[i-2]--;
+					num[i-1] = 4;
+					num[i] = 5;
+					num[s.length()]+=2;
+					edit = true;
+				}
+				else if(num[i] == -5 && num[i-1] == -5 && num[i-2] == -5) {
+					num[i-2]--;
+					num[i-1] = 4;
+					num[i] = 5;
+					num[s.length()]+=2;
+					edit = true;
+				}
+			}
+			if(num[s.length()] > 6) {
+				num[s.length()-1]++;
+				num[s.length()] -= 11;
+				edit = true;
+			}
+			else if(num[s.length()] >= 5 && num[s.length() - 1] < 0) {
+				num[s.length()-1]++;
+				num[s.length()] -= 11;
+				edit = true;
+			}
+			else if(s.length() >= 2 && num[s.length()] == 6 && num[s.length()-1] == 4 && num[s.length()-2] < 0) {
+				num[s.length()-1]++;
+				num[s.length()] -= 11;
+				edit = true;
+			}
+			else if(num[s.length()] < -6) {
+				num[s.length()-1]--;
+				num[s.length()] += 11;
+				edit = true;
+			}
+			else if(num[s.length()] <= -5 && num[s.length() - 1] > 0) {
+				num[s.length()-1]--;
+				num[s.length()] += 11;
+				edit = true;
+			}
+			else if(s.length() >= 2 && num[s.length()] == -6 && num[s.length()-1] == -4 && num[s.length()-2] > 0) {
+				num[s.length()-1]--;
+				num[s.length()] += 11;
+				edit = true;
+			}
+			int ans = 0;
+			for(int i = 0; i <= s.length(); i++) {
+				//out.print(num[i] + " ");
+				ans += (s.length() + 1 - i)*Math.abs(num[i]);
+			}
+			min = Math.min(ans, min);
+			if(iters > 7000000) {
+				break;
+			}
+		}
+		int ans = 0;
+		for(int i = 0; i <= s.length(); i++) {
+			//out.print(num[i] + " ");
+			ans += (s.length() + 1 - i)*Math.abs(num[i]);
+		}
+		out.println(Math.min(min,ans));
+		out.close();
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class algo_103
+{
+    public static void main(String args[])
+    {
+        Scanner ex=new Scanner(System.in);
+        int n=ex.nextInt();
+        String arr[]=new String[n];
+        int pow[]=new int[26];
+        int num=1;
+        for(int i=0;i<26;i++)
+        {
+            pow[i]=num;
+            num=num*2;
+        }
+        HashMap<Integer,Integer> map=new HashMap<Integer,Integer>();
+        for(int i=0;i<n;i++)
+        arr[i]=ex.next();
+        for(int i=0;i<n;i++)
+        {
+            String s=arr[i];
+            int al[]=new int[26];
+            for(int j=0;j<s.length();j++)
+            al[(int)(s.charAt(j))-97]++;
+            for(int j=0;j<26;j++)
+            al[j]=al[j]%2;
+            String put="";
+            num=0;
+            for(int j=0;j<26;j++)
+            {
+                if(al[j]==1)
+                {
+                    put=put+(char)(j+97);
+                    num=num+pow[j];
+                }
+            }
+            arr[i]=put;
+            if(map.containsKey(num))
+            {
+                int a=map.get(num);
+                map.put(num,a+1);
+            }
+            else
+            map.put(num,1);
+        }
+        long uni=0,dup=0;
+        for(int i=0;i<n;i++)
+        {
+            String s=arr[i];
+            num=0;
+            for(int j=0;j<s.length();j++)
+            num=num+pow[(int)(s.charAt(j))-97];
+            if(map.containsKey(num))
+            dup=dup+map.get(num)-1;
+            int copy=num;
+            for(int j=0;j<s.length();j++)
+            {
+                copy=num-pow[(int)(s.charAt(j))-97];
+                if(map.containsKey(copy))
+                uni=uni+map.get(copy);
+            }
+        }
+        long ans=uni+dup/2;
+        System.out.println(ans);
+    }
+}
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_string().parse::<i32>().unwrap()
+    }
+    fn next_string(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut ex = Scanner::new();
+    let n = ex.next_i32() as usize;
+
+    let mut arr: Vec<String> = vec![String::new(); n];
+
+    let mut pow: [i32; 26] = [0; 26];
+    let mut num: i32 = 1;
+    for i in 0..26 {
+        pow[i] = num;
+        num = num * 2;
+    }
+
+    let mut map: HashMap<i32, i32> = HashMap::new();
+
+    for i in 0..n {
+        arr[i] = ex.next_string();
+    }
+
+    for i in 0..n {
+        let s = arr[i].clone();
+        let mut al: [i32; 26] = [0; 26];
+
+        for b in s.bytes() {
+            let idx = (b - b'a') as usize;
+            al[idx] += 1;
+        }
+        for j in 0..26 {
+            al[j] = al[j] % 2;
+        }
+
+        let mut put = String::new();
+        num = 0;
+        for j in 0..26 {
+            if al[j] == 1 {
+                put.push((b'a' + j as u8) as char);
+                num += pow[j];
+            }
+        }
+        arr[i] = put;
+
+        if let Some(v) = map.get_mut(&num) {
+            *v += 1;
+        } else {
+            map.insert(num, 1);
+        }
+    }
+
+    let mut uni: i64 = 0;
+    let mut dup: i64 = 0;
+
+    for i in 0..n {
+        let s = &arr[i];
+        num = 0;
+        for b in s.bytes() {
+            num += pow[(b - b'a') as usize];
+        }
+
+        if let Some(v) = map.get(&num) {
+            dup += (*v as i64) - 1;
+        }
+
+        for b in s.bytes() {
+            let copy = num - pow[(b - b'a') as usize];
+            if let Some(v) = map.get(&copy) {
+                uni += *v as i64;
+            }
+        }
+    }
+
+    let ans: i64 = uni + dup / 2;
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+
+import java.math.BigInteger;
+import java.util.Scanner;
+
+public class Main {
+    
+    public static void main(String[]args){
+        
+        Scanner in = new Scanner(System.in);
+        
+        int n = in.nextInt();
+        String num = in.next();
+        
+        
+        
+        if(n % 2 == 0){
+            
+            for(int i=0 ; i<num.length() ; i+=2)
+                if(i == num.length()-2)
+                    System.out.println(num.substring(i , i+2));
+                else
+                    System.out.print(num.substring(i, i+2) + "-");
+        }
+            
+        else{
+            
+            
+            if(num.length() == 3)
+            System.out.print(num.substring(0 , 3));
+            else 
+                System.out.print(num.substring(0, 3) + "-");
+            for(int i=3 ; i<num.length() ; i+=2)
+                if(i == num.length()-2)
+                    System.out.println(num.substring(i , i+2));
+                else
+                    System.out.print(num.substring(i, i+2) + "-");
+        }
+        
+       
+            }
+
+   }
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let num = it.next().unwrap_or("").to_string();
+    let bytes = num.as_bytes();
+    let len = bytes.len();
+
+    if n % 2 == 0 {
+        let mut i: usize = 0;
+        while i < len {
+            if i == len - 2 {
+                println!("{}", &num[i..i + 2]);
+            } else {
+                print!("{}-", &num[i..i + 2]);
+            }
+            i += 2;
+        }
+    } else {
+        if len == 3 {
+            print!("{}", &num[0..3]);
+        } else {
+            print!("{}-", &num[0..3]);
+        }
+        let mut i: usize = 3;
+        while i < len {
+            if i == len - 2 {
+                println!("{}", &num[i..i + 2]);
+            } else {
+                print!("{}-", &num[i..i + 2]);
+            }
+            i += 2;
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

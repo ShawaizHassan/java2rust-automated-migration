@@ -1,0 +1,415 @@
+INDEX: 496 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        FastScanner in = new FastScanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        F solver = new F();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class F {
+        public void solve(int testNumber, FastScanner in, PrintWriter out) {
+            int n = in.ni(), k = in.ni(), l = in.ni();
+            int mod = 998244353;
+            long[] invs = IntegerUtils.invs(2 * n + 3, mod);
+            long[][] p = new long[2 * n + 1][n + 1];
+            p[0][1] = 1; // first is always started
+            for (int i = 1; i < 2 * n; i++) {
+                int prevMaxRunning = Math.min(2 * n - i, i); // how many intervals max were running (covering)
+                int maxRunning = Math.min(2 * n - i - 1, i + 1); // how many intervals max can be running
+                for (int j = 0; j <= prevMaxRunning; j++) {
+                    if (p[i - 1][j] != 0) {
+                        if (j > 0) {
+                            p[i][j - 1] = (p[i][j - 1] + p[i - 1][j] * j % mod * invs[2 * n - i] % mod) % mod; // close an interval
+                        }
+                        if (j < maxRunning) {
+                            p[i][j + 1] = (p[i][j + 1] + p[i - 1][j] * (2 * n - i - j) % mod * invs[2 * n - i] % mod) % mod; // start a new interval
+                        }
+                    }
+                }
+            }
+            long ans = 0;
+            for (int i = 0; i < 2 * n; i++) {
+                for (int j = k; j <= n; j++) {
+                    if (p[i][j] == 0)
+                        continue;
+                    ans = (ans + p[i][j]) % mod;
+                }
+            }
+            ans = ans * l % mod * invs[2 * n + 1] % mod;
+            out.println(ans);
+        }
+
+    }
+
+    static class FastScanner {
+        private BufferedReader in;
+        private StringTokenizer st;
+
+        public FastScanner(InputStream stream) {
+            in = new BufferedReader(new InputStreamReader(stream));
+        }
+
+        public String ns() {
+            while (st == null || !st.hasMoreTokens()) {
+                try {
+                    String rl = in.readLine();
+                    if (rl == null) {
+                        return null;
+                    }
+                    st = new StringTokenizer(rl);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return st.nextToken();
+        }
+
+        public int ni() {
+            return Integer.parseInt(ns());
+        }
+
+    }
+
+    static class IntegerUtils {
+        public static long[] invs(int n, long p) {
+            long[] res = new long[n];
+            res[1] = 1;
+            for (int i = 2; i < n; i++) {
+                res[i] = (p - (p / i) * res[(int) (p % i)] % p) % p;
+            }
+            return res;
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.ArrayList;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		Reader in = new Reader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, Reader in, PrintWriter out) {
+        int n = in.nextInt();
+        int[] p = in.nextIntArray(n, 1);
+        int[] op = new int[n + 1];
+        for (int i = 1; i <= n; i++) op[p[i]] = i;
+        int[] q = new int[n + 1];
+        q[n] = 0;
+        for (int i = n - 1; i >= 1; i--) {
+            if (op[i] < op[i + 1]) q[i] = q[i + 1] + 1; else q[i] = 0;
+        }
+        int ans = n;
+        for (int i = 1; i <= n; i++) {
+            int q1 = p[i];
+            int q2 = p[i] + q[p[i]];
+            ans = Math.min(ans, q1 - 1 + n - q2);
+        }
+        out.println(ans);
+    }
+}
+
+class Reader {
+    private BufferedReader in;
+    private StringTokenizer st;
+    public Reader(InputStream is) {
+        in = new BufferedReader(new InputStreamReader(is));
+    }
+    public String next() {
+        try {
+            while (st == null || !st.hasMoreTokens()) {
+                st = new StringTokenizer(in.readLine());
+            }
+            return st.nextToken();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+    public int[] nextIntArray(int n, int offset) {
+        int[] res = new int[n + offset];
+        for (int i = 0; i < n; i++) res[i + offset] = nextInt();
+        return res;
+    }
+
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_int_array_with_offset(&mut self, n: usize, offset: usize) -> Vec<i32> {
+        let mut res = vec![0i32; n + offset];
+        for i in 0..n {
+            res[i + offset] = self.next_i32();
+        }
+        res
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n_i32 = sc.next_i32();
+    let n = n_i32 as usize;
+
+    let p = sc.next_int_array_with_offset(n, 1); // 1-indexed
+    let mut op = vec![0usize; n + 1];
+    for i in 1..=n {
+        let pi = p[i] as usize;
+        op[pi] = i;
+    }
+
+    let mut q = vec![0i32; n + 1];
+    q[n] = 0;
+    for i in (1..=n - 1).rev() {
+        if op[i] < op[i + 1] {
+            q[i] = q[i + 1] + 1;
+        } else {
+            q[i] = 0;
+        }
+    }
+
+    let mut ans = n_i32;
+    for i in 1..=n {
+        let q1 = p[i];
+        let pi = p[i] as usize;
+        let q2 = p[i] + q[pi];
+        let cand = (q1 - 1) + (n_i32 - q2);
+        if cand < ans {
+            ans = cand;
+        }
+    }
+
+    print!("{}", ans);
+    println!();
+}
+```
+
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.PrintStream;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author captainTurtle
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskA solver = new TaskA();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskA {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            int n = in.nextInt();
+            int p1 = in.nextInt();
+            int p2 = in.nextInt();
+            int p3 = in.nextInt();
+            int t1 = in.nextInt();
+            int t2 = in.nextInt();
+            int l[] = new int[n];
+            int r[] = new int[n];
+            int value = 0;
+            for (int i = 0; i < n; i++) {
+                l[i] = in.nextInt();
+                r[i] = in.nextInt();
+            }
+            for (int i = 0; i < n; i++) {
+                value += p1 * (r[i] - l[i]);
+            }
+
+            for (int i = 1; i < n; i++) {
+                int time = l[i] - r[i - 1];
+                for (int j = 0; j < time; j++) {
+                    if (j < t1) {
+                        value += p1;
+                    } else if (j < t1 + t2) {
+                        value += p2;
+                    } else {
+                        value += p3;
+                    }
+                }
+            }
+            System.out.print(value);
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n = sc.next_i32() as usize;
+    let p1 = sc.next_i32() as i64;
+    let p2 = sc.next_i32() as i64;
+    let p3 = sc.next_i32() as i64;
+    let t1 = sc.next_i32() as i64;
+    let t2 = sc.next_i32() as i64;
+
+    let mut l = vec![0i32; n];
+    let mut r = vec![0i32; n];
+
+    for i in 0..n {
+        l[i] = sc.next_i32();
+        r[i] = sc.next_i32();
+    }
+
+    let mut value: i64 = 0;
+
+    for i in 0..n {
+        value += p1 * (r[i] as i64 - l[i] as i64);
+    }
+
+    for i in 1..n {
+        let time = (l[i] - r[i - 1]) as i64;
+
+        let a = time.min(t1);
+        let b = (time - a).max(0).min(t2);
+        let c = (time - a - b).max(0);
+
+        value += a * p1 + b * p2 + c * p3;
+    }
+
+    print!("{}", value);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

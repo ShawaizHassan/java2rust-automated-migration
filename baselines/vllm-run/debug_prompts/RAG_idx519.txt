@@ -1,0 +1,442 @@
+INDEX: 519 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// Don't place your source in a package
+import javax.swing.*;
+import java.lang.reflect.Array;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+import java.math.*;
+import java.util.stream.Stream;
+
+
+
+// Please name your class Main
+public class Main {
+    static FastScanner fs=new FastScanner();
+    static class FastScanner {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer("");
+        public String next() {
+            while (!st.hasMoreElements())
+                try {
+                    st=new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return st.nextToken();
+        }
+        int Int() {
+            return Integer.parseInt(next());
+        }
+
+        long Long() {
+            return Long.parseLong(next());
+        }
+
+        String Str(){
+            return next();
+        }
+    }
+
+
+    public static void main (String[] args) throws java.lang.Exception {
+        PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+        //reading /writing file
+        //Scanner sc=new Scanner(new File("input.txt"));
+        //PrintWriter pr=new PrintWriter("output.txt");
+
+
+        int T=1;
+        for(int t=0;t<T;t++){
+            String s=Str();
+
+            Solution sol=new Solution(out);
+            sol.solution(s);
+        }
+        out.close();
+
+    }
+
+    public static int[] Arr(int n){
+        int A[]=new int[n];
+        for(int i=0;i<n;i++)A[i]=Int();
+        return A;
+    }
+    public static int Int(){
+        return fs.Int();
+    }
+    public static long Long(){
+        return fs.Long();
+    }
+    public static String Str(){
+        return fs.Str();
+    }
+
+}
+
+
+
+
+
+
+
+
+class Solution{
+    PrintWriter out;
+    int INF=Integer.MAX_VALUE;
+    int MOD=1000000007;
+    public Solution(PrintWriter out){
+        this.out=out;
+    }
+
+    long dp[][][];
+    public void solution(String s) {
+        dp=new long[s.length()+1][800][800];
+        for(int i=0;i<dp.length;i++){
+            for(int j=0;j<dp[0].length;j++)Arrays.fill(dp[i][j],-1);
+        }
+        long res=dfs("0"+s,0,0,0);
+        out.println(res);
+
+    }
+
+    public long dfs(String s,int pos,int diff,int chunk){
+        if(pos>=s.length()){
+            if(diff!=0)return INF;
+            return 0;
+        }
+        if(chunk>350||Math.abs(diff)>350){
+            return INF;
+        }
+        if(dp[pos][diff+400][chunk+400]!=-1)return dp[pos][diff+400][chunk+400];
+
+
+        int d=s.charAt(pos)-'0';
+        long res=INF;
+        int newdiff=diff*10+chunk-d;
+        for(int i=-6;i<=6;i++){
+            long cnt=Math.abs(i)*(s.length()-pos);
+            res=Math.min(res,cnt+dfs(s,pos+1,newdiff+i,chunk+i));
+        }
+        dp[pos][diff+400][chunk+400]=res;
+        return res;
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    void solve() {
+        String s = in.next();
+        int m=in.nextInt(),n=s.length();
+        String a[] = new String[m];
+        for(int i=0;i<m;++i){
+            a[i]=in.next();
+        }
+        int res=-1,pos=-1;
+        int last=n-1;
+        for(int i=n-1;i>=0;--i){
+            for(int j=0;j<m;++j){
+                if(i + a[j].length() > n) continue;
+                boolean f = true;
+                for(int k=0,k1=i;k<a[j].length();++k,++k1){
+                    if(a[j].charAt(k) != s.charAt(k1)){
+                        f = false; break;
+                    }
+                }
+                if(f){
+                    last = Math.min(last,i + a[j].length()-2);
+                }
+            }
+            if(res < last-i+1){
+                res = last-i+1; pos = i;
+            }
+        }
+        if(res == 0 || pos >= n) pos = 0;
+        out.print(res+" "+pos);
+    }
+    FastScanner in;
+    PrintWriter out;
+
+    void run() {
+        in = new FastScanner();
+        out = new PrintWriter(System.out);
+        solve();
+        out.close();
+    }
+
+    class FastScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastScanner() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+    }
+
+    public static void main(String[] args) {
+        new Main().run();
+    }
+}
+```
+Translated Rust:
+```
+use std::cmp::min;
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+fn main() {
+    let mut in_sc = FastScanner::new();
+
+    let s = in_sc.next();
+    let m = in_sc.next_i32() as usize;
+    let n = s.len();
+    let sb = s.as_bytes();
+
+    let mut a: Vec<Vec<u8>> = Vec::with_capacity(m);
+    for _ in 0..m {
+        a.push(in_sc.next().into_bytes());
+    }
+
+    let mut res: i32 = -1;
+    let mut pos: i32 = -1;
+    let mut last: i32 = n as i32 - 1;
+
+    for i in (0..n).rev() {
+        for j in 0..m {
+            let len = a[j].len();
+            if i + len > n {
+                continue;
+            }
+            let mut f = true;
+            for k in 0..len {
+                if a[j][k] != sb[i + k] {
+                    f = false;
+                    break;
+                }
+            }
+            if f {
+                let candidate = i as i32 + len as i32 - 2;
+                last = min(last, candidate);
+            }
+        }
+        let cur = last - i as i32 + 1;
+        if res < cur {
+            res = cur;
+            pos = i as i32;
+        }
+    }
+
+    if res == 0 || (pos as usize) >= n {
+        pos = 0;
+    }
+
+    print!("{} {}", res, pos);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+public class Main {
+    static int[]dp;
+    static boolean[] cov;
+    static int[] pos;
+    static int[] s;
+    static int n,m;
+     static int solve(int i){
+        if(i>m) return 0;
+        if(dp[i]!=-1) return dp[i];
+        int ans = (int) 1e9;
+         for(int j=0; j<n; j++){
+             int s1 = Math.max(s[j],Math.abs(pos[j]-i));
+             int cost = s1-s[j];
+             int tmp = cost+solve(pos[j]+s1+1);
+             ans = Math.min(ans,tmp);
+         }
+         if (i > 1)
+            ans = Math.min(ans, 1 + solve(i + 1));
+            return dp[i] = ans;
+    }
+  public static void main(String[] args) throws IOException {
+	BufferedReader	 br = new BufferedReader(new InputStreamReader(System.in));
+	PrintWriter out = new PrintWriter(System.out);
+     	// String s = br.readLine();
+        // char[] arr=s.toCharArray();
+        // ArrayList<Integer> arrl = new ArrayList<Integer>(); 
+        // TreeSet<Integer> ts1 = new TreeSet<Integer>(); 
+        // HashSet<Integer> h = new HashSet<Integer>(); 
+        // HashMap<Integer, Integer> map= new HashMap<>(); 
+        // PriorityQueue<String> pQueue = new PriorityQueue<String>(); 
+        // LinkedList<String> object = new LinkedList<String>(); 
+        // StringBuilder str = new StringBuilder(); 
+ 	    StringTokenizer   st = new StringTokenizer(br.readLine());
+ 	     n = Integer.parseInt(st.nextToken());
+ 	     m = Integer.parseInt(st.nextToken());
+ 	     pos = new int[n];
+ 	     s = new int[n];
+ 	    for(int i=0; i<n; i++){
+ 	         	   st = new StringTokenizer(br.readLine());
+ 	        pos[i] = Integer.parseInt(st.nextToken());
+ 	        s[i] = Integer.parseInt(st.nextToken());
+ 	    }
+ 	    dp = new int[m+5];
+ 	        Arrays.fill(dp,-1);
+ 	    
+        out.println(solve(1));
+       	out.flush();
+ 
+	}}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32();
+
+    let mut pos = vec![0i32; n];
+    let mut s = vec![0i32; n];
+    for i in 0..n {
+        pos[i] = sc.next_i32();
+        s[i] = sc.next_i32();
+    }
+
+    let m_usize = if m < 0 { 0usize } else { m as usize };
+    let mut dp = vec![0i32; m_usize + 6]; // dp[m+1] and beyond are 0
+
+    for i in (1..=m_usize).rev() {
+        let ii = i as i32;
+        let mut ans: i32 = 1_000_000_000;
+
+        for j in 0..n {
+            let diff = (pos[j] as i64 - ii as i64).abs();
+            let sj = s[j] as i64;
+            let s1 = if sj > diff { sj } else { diff };
+            let cost = (s1 - sj) as i32;
+            let next = pos[j] as i64 + s1 + 1;
+            let tmp = if next > m as i64 {
+                cost
+            } else {
+                cost + dp[next as usize]
+            };
+            if tmp < ans {
+                ans = tmp;
+            }
+        }
+
+        if ii > 1 {
+            let skip = 1 + dp[i + 1];
+            if skip < ans {
+                ans = skip;
+            }
+        }
+
+        dp[i] = ans;
+    }
+
+    print!("{}", dp[1]);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

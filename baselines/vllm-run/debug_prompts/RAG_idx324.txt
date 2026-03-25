@@ -1,0 +1,303 @@
+INDEX: 324 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class FirstJava {
+    public static void main(String[] args) {
+    Scanner aa=new Scanner(System.in);
+    long n=aa.nextInt();
+    long m=aa.nextInt();
+    long z=0;
+   
+     if(m==1)
+        z=n-1;
+    else if(n==1)
+        z=m-1;
+    else
+        z=(n*m)-n;
+     
+    
+        System.out.println(z);
+        
+ 
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+	private static Scanner sc;
+
+	int fun(int x,int y,int z){
+	    if(z<=x)return y-z;
+	    if(z>=y)return z-x;
+	    return Math.min(z-x+y-x,y-z+y-x);
+	}
+
+
+	public static void main(String[] args) {
+		int n,a;
+		sc = new Scanner(System.in);
+		Main m = new Main();
+		
+	    while( sc.hasNextInt()){
+	    	n = sc.nextInt();
+			a = sc.nextInt();
+			int [] aa = new int[n];
+			
+	        for(int i=0;i<n;i++){
+	        	aa[i] = sc.nextInt();
+	        }
+	        Arrays.sort(aa);
+	        
+	        
+	        if(n==1){
+	            System.out.println("0");
+	            continue;
+	        }
+	        int ans=Integer.MAX_VALUE;
+	        if(a<=aa[0]){
+	            ans=Math.min(ans,aa[n-2]-a);
+	        }
+	        else if(a>=aa[n-1]){
+	            ans=Math.min(ans,a-aa[1]);
+	        }
+	        else {
+	            ans=Math.min(ans,m.fun(aa[1],aa[n-1],a));
+	            ans=Math.min(ans,m.fun(aa[0],aa[n-2],a));
+	        }
+	        System.out.println(ans);
+	    }
+
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> Option<i32> {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        if self.idx >= self.input.len() {
+            return None;
+        }
+        let mut sign = 1i32;
+        if self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        Some(num * sign)
+    }
+}
+
+fn fun(x: i32, y: i32, z: i32) -> i32 {
+    if z <= x {
+        return y - z;
+    }
+    if z >= y {
+        return z - x;
+    }
+    std::cmp::min(z - x + y - x, y - z + y - x)
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut out = String::new();
+
+    while let Some(n) = sc.next_i32() {
+        let a = match sc.next_i32() {
+            Some(v) => v,
+            None => break,
+        };
+        let n_usize = n as usize;
+        let mut aa: Vec<i32> = vec![0; n_usize];
+        for i in 0..n_usize {
+            aa[i] = sc.next_i32().unwrap();
+        }
+        aa.sort();
+
+        if n_usize == 1 {
+            out.push_str("0\n");
+            continue;
+        }
+
+        let mut ans: i32 = i32::MAX;
+        if a <= aa[0] {
+            ans = std::cmp::min(ans, aa[n_usize - 2] - a);
+        } else if a >= aa[n_usize - 1] {
+            ans = std::cmp::min(ans, a - aa[1]);
+        } else {
+            ans = std::cmp::min(ans, fun(aa[1], aa[n_usize - 1], a));
+            ans = std::cmp::min(ans, fun(aa[0], aa[n_usize - 2], a));
+        }
+        out.push_str(&format!("{}\n", ans));
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+/* package codechef; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+import java.util.Arrays;
+import java.math.BigInteger;
+ 
+/* Name of the class has to be "Main" only if the class is public. */
+public class Main
+{
+     public static void main (String[] args) throws java.lang.Exception
+     {
+     	Scanner in =new Scanner(System.in);
+		int t=1,i,l,p,j,n;
+		String s="",st="";
+	     long m,h,k,r;
+	     for(i=0;i<t;i++)
+		{
+		     m=0;
+		     n=in.nextInt();
+		     long x[]=new long[n];
+		     long y[]=new long[n];
+		     long z[]=new long[n];
+		     for(j=0;j<n;j++)
+		     {
+		          x[j]=in.nextInt();
+		          y[j]=in.nextInt();
+		          z[j]=x[j]+y[j];
+		     }
+		     for(j=0;j<n;j++)
+		     {
+		          if(z[j]>m)
+		               m=z[j];
+		     }
+		     System.out.println(m);
+		}
+     }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let t: i32 = 1;
+    let mut i: i32;
+    let mut j: i32;
+    let mut n: i32;
+
+    let _s = String::new();
+    let _st = String::new();
+    let _h: i64 = 0;
+    let _k: i64 = 0;
+    let _r: i64 = 0;
+    let _l: i32 = 0;
+    let _p: i32 = 0;
+
+    i = 0;
+    while i < t {
+        let mut m: i64 = 0;
+        n = sc.next_i32();
+
+        let nn = n as usize;
+        let mut x: Vec<i64> = vec![0; nn];
+        let mut y: Vec<i64> = vec![0; nn];
+        let mut z: Vec<i64> = vec![0; nn];
+
+        j = 0;
+        while j < n {
+            let ju = j as usize;
+            x[ju] = sc.next_i32() as i64;
+            y[ju] = sc.next_i32() as i64;
+            z[ju] = x[ju] + y[ju];
+            j += 1;
+        }
+
+        j = 0;
+        while j < n {
+            let ju = j as usize;
+            if z[ju] > m {
+                m = z[ju];
+            }
+            j += 1;
+        }
+
+        println!("{}", m);
+        i += 1;
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,465 @@
+INDEX: 26 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.util.InputMismatchException;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        OutputWriter out = new OutputWriter(outputStream);
+        Task118D solver = new Task118D();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class Task118D {
+        long mod = (long) 1e8;
+        long dp[][][];
+
+        public void solve(int testNumber, InputReader in, OutputWriter out) {
+            int n1 = in.nextInt();
+            int n2 = in.nextInt();
+            int k1 = in.nextInt();
+            int k2 = in.nextInt();
+            dp = new long[n1 + 1][n2 + 1][2];
+
+            for (int i = 0; i <= n1; i++) {
+                for (int j = 0; j <= n2; j++) {
+                    dp[i][j][0] = -1;
+                    dp[i][j][1] = -1;
+                }
+            }
+
+            long ans = rec(n1, n2, 0, k1, k2) + rec(n1, n2, 1, k1, k2);
+            ans %= mod;
+            out.println(ans);
+        }
+
+        long rec(int n1, int n2, int turn, int k1, int k2) {
+            if (dp[n1][n2][turn] != -1)
+                return dp[n1][n2][turn];
+            if (n1 == 0 && n2 == 0)
+                return 1;
+            if (turn == 0 && n1 == 0)
+                return 0;
+            if (turn == 1 && n2 == 0)
+                return 0;
+
+            long ans = 0;
+            if (turn == 0) {
+                for (int i = 1; i <= k1; i++) {
+                    if (n1 - i >= 0)
+                        ans += rec(n1 - i, n2, 1, k1, k2);
+                }
+            } else {
+                for (int i = 1; i <= k2; i++) {
+                    if (n2 - i >= 0)
+                        ans += rec(n1, n2 - i, 0, k1, k2);
+                }
+            }
+            ans %= mod;
+            dp[n1][n2][turn] = ans;
+            return ans;
+        }
+
+    }
+
+    static class OutputWriter {
+        private final PrintWriter writer;
+
+        public OutputWriter(OutputStream outputStream) {
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+        }
+
+        public OutputWriter(Writer writer) {
+            this.writer = new PrintWriter(writer);
+        }
+
+        public void close() {
+            writer.close();
+        }
+
+        public void println(long i) {
+            writer.println(i);
+        }
+
+    }
+
+    static class InputReader {
+        private InputStream stream;
+        private byte[] buf = new byte[1024];
+        private int curChar;
+        private int numChars;
+        private InputReader.SpaceCharFilter filter;
+
+        public InputReader(InputStream stream) {
+            this.stream = stream;
+        }
+
+        public int read() {
+            if (numChars == -1) {
+                throw new InputMismatchException();
+            }
+            if (curChar >= numChars) {
+                curChar = 0;
+                try {
+                    numChars = stream.read(buf);
+                } catch (IOException e) {
+                    throw new InputMismatchException();
+                }
+                if (numChars <= 0) {
+                    return -1;
+                }
+            }
+            return buf[curChar++];
+        }
+
+        public int nextInt() {
+            int c = read();
+            while (isSpaceChar(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int res = 0;
+            do {
+                if (c < '0' || c > '9') {
+                    throw new InputMismatchException();
+                }
+                res *= 10;
+                res += c - '0';
+                c = read();
+            } while (!isSpaceChar(c));
+            return res * sgn;
+        }
+
+        public boolean isSpaceChar(int c) {
+            if (filter != null) {
+                return filter.isSpaceChar(c);
+            }
+            return isWhitespace(c);
+        }
+
+        public static boolean isWhitespace(int c) {
+            return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+        }
+
+        public interface SpaceCharFilter {
+            public boolean isSpaceChar(int ch);
+
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        Task solver = new Task();
+        solver.solve(in, out);
+        out.close();
+    }
+
+    static class Task {
+
+        void solve(InputReader in, PrintWriter out) {
+            int n = in.nextInt();
+            out.println((n * n) % 2 == 0 ? n * n / 2 : (n * n / 2 )+ 1);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i % 2 == 0) {
+                        if (j % 2 == 0) {
+                            out.print('C');
+                        } else {
+                            out.print('.');
+                        }
+                    } else {
+                        if (j % 2 == 0) {
+                            out.print('.');
+                        } else {
+                            out.print('C');
+                        }
+                    }
+                }
+                out.print("\n");
+            }
+        }
+    }
+
+    static class InputReader {
+        BufferedReader reader;
+        StringTokenizer tokenizer;
+
+        InputReader(InputStream stream) {
+            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            tokenizer = null;
+        }
+
+        String next() {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return tokenizer.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct InputReader {
+    data: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            data: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.data[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut inr = InputReader::new();
+    let n = inr.next_i32();
+    let nn = (n as i64) * (n as i64);
+    let first = if nn % 2 == 0 { nn / 2 } else { nn / 2 + 1 };
+
+    let mut out = String::new();
+    out.push_str(&format!("{}\n", first));
+
+    let n_usize = n as usize;
+    for i in 0..n_usize {
+        for j in 0..n_usize {
+            let c = if i % 2 == 0 {
+                if j % 2 == 0 { 'C' } else { '.' }
+            } else {
+                if j % 2 == 0 { '.' } else { 'C' }
+            };
+            out.push(c);
+        }
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

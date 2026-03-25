@@ -1,0 +1,367 @@
+INDEX: 500 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+//package Contest551;
+
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class mainF {
+    public static Scanner enter = new Scanner(System.in);
+    public static PrintWriter out = new PrintWriter(System.out);
+    public static long mod=998244353;
+    public static long cnk[][]=new long[(int)2e3+2][(int)2e3+2];
+    public static long fact[]=new long[2*(int)2e3+2];
+    public static long reverse[]=new long[2*(int)2e3+2];
+    public static long deg_2[]=new long[(int)2e3+2];
+    public static void main(String[] args) {
+        long t=System.currentTimeMillis();
+        cnk[0][0]=1;
+        for (int i = 1; i <cnk.length ; i++) {
+            cnk[0][i]=1;
+            for (int j = 1; j <=i ; j++) {
+                cnk[j][i]=cnk[j-1][i-1]+cnk[j][i-1];
+                cnk[j][i]%=mod;
+            }
+        }
+        fact[0]=1;
+        deg_2[0]=1;
+        for (int i = 1; i <fact.length ; i++) {
+            fact[i]=fact[i-1]*i;
+            fact[i]%=mod;
+        }
+        for (int i = 1; i <deg_2.length ; i++) {
+            deg_2[i]=deg_2[i-1]*2;
+            deg_2[i]%=mod;
+        }
+        reverse[1]=1;
+        for (int i = 3; i <reverse.length ; i+=2) {
+            reverse[i]=bin_pow(fact[i],mod-2,mod);
+        }
+       /* System.out.println(Arrays.toString(reverse));
+        System.out.println(fact[5]);
+        System.out.println(reverse[5]);*/
+        int n=enter.nextInt();
+        int k=enter.nextInt();
+        long l=enter.nextInt();
+        l%=mod;
+        long ans=0;
+        for (int i = k; i <=n ; i++) {
+            long tmp=0;
+            for (int s = 0,c=1; s <=n-i ; s++,c*=-1) {
+                long a=1;
+                a*=cnk[s][n-i]*deg_2[s];
+                a%=mod;
+                a*=fact[s+i];
+                a%=mod;
+                a*=fact[s+i];
+                a%=mod;
+                a*=reverse[2*(s+i)+1];
+                a%=mod;
+                tmp+=a*c;
+                tmp%=mod;
+               // System.out.println(reverse[2*(s+i)+1]);
+            }
+            //System.out.println(tmp);
+            /*ans+=cnk[i][n]*deg_2[i]*tmp;
+            ans%=mod;*/
+            long  b=1;
+            b*=tmp*deg_2[i];
+            b%=mod;
+            //System.out.println(b);
+            b*=cnk[i][n];
+            b%=mod;
+            ans+=b;
+            ans%=mod;
+        }
+        ans*=l;
+        ans%=mod;
+        System.out.println((ans<0)? (ans+mod) : ans);
+
+
+      //  System.out.println(System.currentTimeMillis()-t);
+
+
+
+    }
+    public static long bin_pow(long a,long b, long mod){//a^b %mod
+        long ans=1;
+        while(b!=0){
+            if((b&1)==1) ans*=a;
+            a*=a;
+            ans%=mod;
+            a%=mod;
+            b>>=1;
+        }
+        return ans;
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.lang.reflect.Field;
+import java.util.*;
+
+public class CodeChef {
+    static int mod = (int)1e9+7;
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        Functions f  = new Functions();
+       int testCase = sc.nextInt();
+       while (testCase-->0){
+           long n = sc.nextLong();
+          long r = sc.nextLong();
+         if(r<n){
+             System.out.println(r*((long)r+1)/2);
+         }
+         else{
+             long ans = (n-1)*(n)/2;
+             System.out.println(ans+1);
+         }
+       }
+    }
+
+
+}
+class Functions extends CodeChef{
+    public int[] setIntegerArray(int n){
+        int [] arr = new int[n];
+        for(int i=0;i<n;i++)
+            arr[i] =sc.nextInt();
+        return arr;
+    }
+    public long[] setLongArray(int n){
+        long [] arr = new long[n];
+        for(int i=0;i<n;i++)
+            arr[i] =sc.nextLong();
+        return arr;
+    }
+    public long factorial(int n){
+        long fact = 1L;
+        for(int i=2;i<=n;i++)fact=  (fact*i)%mod;
+        return fact;
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i64();
+        let r = sc.next_i64();
+        if r < n {
+            let ans = r * (r + 1) / 2;
+            out.push_str(&format!("{}\n", ans));
+        } else {
+            let ans = (n - 1) * n / 2;
+            out.push_str(&format!("{}\n", ans + 1));
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.lang.*;
+import java.math.*;
+public class D {
+  // Exponentation
+    public static int exp(int base, int e, int mod) {
+      if(e == 0) return 1;
+      if(e == 1) return base;
+      int val = exp(base, e/2, mod);
+      int ans = (int)(1L*val*val % mod);
+      if(e % 2 == 1)
+        ans = (int)(1L*ans*base % mod);
+      return ans;
+    }
+    public static void main(String[] args) throws Exception {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        // Scanner scan = new Scanner(System.in);
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
+        // int n = Integer.parseInt(bf.readLine());
+        StringTokenizer st = new StringTokenizer(bf.readLine());
+        long mod = 998244353;
+        int mod_i = 998244353;
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int b = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(bf.readLine());
+        int[] a = new int[m]; for(int i=0; i<m; i++) a[i] = Integer.parseInt(st.nextToken());
+
+        int middle = n - 2*a[m-1];
+        long ans = exp(b, middle, mod_i);
+        for(int i=0; i<m; i++) {
+          int diff = a[i];
+          if(i != 0) diff -= a[i-1];
+          long val = exp(b, diff, mod_i);
+          long val2 = (val*(val-1)/2 % mod + val) % mod;
+          ans = (ans * val2) % mod;
+        }
+        out.println(ans);
+
+
+
+        // int n = scan.nextInt();
+
+        out.close(); System.exit(0);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn exp(base: i32, e: i32, modu: i32) -> i32 {
+    if e == 0 {
+        return 1;
+    }
+    if e == 1 {
+        return base;
+    }
+    let val = exp(base, e / 2, modu) as i64;
+    let modu64 = modu as i64;
+    let mut ans = (val * val) % modu64;
+    if e % 2 == 1 {
+        ans = (ans * base as i64) % modu64;
+    }
+    ans as i32
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let modv: i64 = 998244353;
+    let mod_i: i32 = 998244353;
+
+    let n = sc.next_i32();
+    let m = sc.next_i32();
+    let b = sc.next_i32();
+
+    let mut a = vec![0i32; m as usize];
+    for i in 0..m as usize {
+        a[i] = sc.next_i32();
+    }
+
+    let middle = n - 2 * a[m as usize - 1];
+    let mut ans: i64 = exp(b, middle, mod_i) as i64;
+
+    for i in 0..m as usize {
+        let mut diff = a[i];
+        if i != 0 {
+            diff -= a[i - 1];
+        }
+        let val = exp(b, diff, mod_i) as i64;
+        let val2 = ((val * (val - 1) / 2) % modv + val) % modv;
+        ans = (ans * val2) % modv;
+    }
+
+    print!("{ans}\n");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

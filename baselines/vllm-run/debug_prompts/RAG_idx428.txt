@@ -1,0 +1,261 @@
+INDEX: 428 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.* ;
+
+public class Solution{
+    
+    public static void main(String[] args){
+        
+        Scanner in = new Scanner(System.in) ;
+        int n = in.nextInt() ;
+        int B = in.nextInt() ;
+        int[] a = new int[n] ;
+        
+        for(int i=0;i<n;i++){
+            a[i] = in.nextInt() ;
+        }
+        
+        int c0 =0,c1 = 0;
+        PriorityQueue<Integer> q = new PriorityQueue<Integer>() ;
+        
+        for(int i=0;i<n;i++){
+            if(a[i] % 2 == 0){
+                c0 ++ ;
+            }else{
+                c1 ++ ;
+            }
+            
+            if(c0 == c1 && i < n-1){
+                q.add( Math.abs(a[i+1] - a[i]) ) ;
+            }
+            
+        }
+        
+         int cnt =0,sum = 0;
+            
+            while(!q.isEmpty() && sum + q.peek() <=  B){
+                sum += q.poll() ;
+                cnt++;
+            }
+            
+            System.out.println(cnt) ;
+    }
+    
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+public class Main{
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt(), k = sc.nextInt();
+
+		PriorityQueue<Integer> q = new PriorityQueue<Integer>();
+		for(int i = 0; i < n; i++)
+			q.add(sc.nextInt());
+
+		for(int i = 0; i < k; i++)
+			q.add(- q.poll());
+
+		int sum = 0;
+		while(!q.isEmpty())
+			sum += q.poll();
+
+		System.out.println(sum);
+	}
+}	
+```
+Translated Rust:
+```
+use std::cmp::Reverse;
+use std::collections::BinaryHeap;
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let k: usize = it.next().unwrap().parse().unwrap();
+
+    let mut heap: BinaryHeap<Reverse<i32>> = BinaryHeap::new();
+    for _ in 0..n {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        heap.push(Reverse(x));
+    }
+
+    for _ in 0..k {
+        let x = heap.pop().unwrap().0;
+        heap.push(Reverse(-x));
+    }
+
+    let mut sum: i32 = 0;
+    while let Some(Reverse(x)) = heap.pop() {
+        sum = sum.wrapping_add(x);
+    }
+
+    println!("{}", sum);
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+import java.util.PriorityQueue;
+import java.util.Comparator;
+public class A {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+		int[] ranks = new int[n];
+		int[] rate = new int[n];
+		
+		for (int i = 0; i < n; i++) {
+			rate[i] = sc.nextInt();
+		}
+		final int[] ratings = rate.clone();
+		
+		PriorityQueue<Integer> Q = new PriorityQueue<Integer>(n, 
+            new Comparator<Integer>(){
+                public int compare(Integer a, Integer b){
+                    if (ratings[a] < ratings[b]) return 1;
+                    if (ratings[a] == ratings[b]) return 0;
+                    return -1;
+                }
+        });
+		
+		for (int i = 0; i < n; i++) {
+			Q.add(i);
+		}
+		int oldRating = -1;
+		int currentRank = -1;
+		for (int i = 0; i < n; i++) {
+			int q = Q.poll();
+			if (ratings[q]==oldRating) {
+				ranks[q] = currentRank;
+			} else {
+				ranks[q] = i+1;
+				currentRank = i+1;
+				oldRating = ratings[q];
+			}
+		}
+		
+		for (int i = 0; i < n; i++) {
+			if (i!=0) {
+				System.out.print(" ");
+			}
+			System.out.print(ranks[i]);
+		}
+		return;
+    }
+}
+
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::collections::BinaryHeap;
+use std::io::{self, Read};
+
+#[derive(Clone)]
+struct Node {
+    idx: usize,
+    rating: i32,
+}
+
+impl Eq for Node {}
+
+impl PartialEq for Node {
+    fn eq(&self, other: &Self) -> bool {
+        self.rating == other.rating && self.idx == other.idx
+    }
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.rating.cmp(&other.rating) {
+            Ordering::Equal => other.idx.cmp(&self.idx),
+            ord => ord,
+        }
+    }
+}
+
+impl PartialOrd for Node {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut ratings: Vec<i32> = vec![0; n];
+    for i in 0..n {
+        ratings[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut heap: BinaryHeap<Node> = BinaryHeap::with_capacity(n);
+    for i in 0..n {
+        heap.push(Node {
+            idx: i,
+            rating: ratings[i],
+        });
+    }
+
+    let mut ranks: Vec<i32> = vec![0; n];
+    let mut old_rating: i32 = -1;
+    let mut current_rank: i32 = -1;
+
+    for i in 0..n {
+        let node = heap.pop().unwrap();
+        if node.rating == old_rating {
+            ranks[node.idx] = current_rank;
+        } else {
+            let r = (i as i32) + 1;
+            ranks[node.idx] = r;
+            current_rank = r;
+            old_rating = node.rating;
+        }
+    }
+
+    let mut out = String::new();
+    for i in 0..n {
+        if i != 0 {
+            out.push(' ');
+        }
+        out.push_str(&ranks[i].to_string());
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

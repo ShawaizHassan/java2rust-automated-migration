@@ -1,0 +1,94 @@
+### SYSTEM
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+
+### USER
+I will provide Java code and translation rule hints.
+Your job is to translate **only** the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java Code to translate:
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.List;
+
+public class CyclicPermutations { // Template for CF
+    public static class ListComparator implements Comparator<List<Integer>> {
+
+        @Override
+        public int compare(List<Integer> l1, List<Integer> l2) {
+            for (int i = 0; i < l1.size(); ++i) {
+                if (l1.get(i).compareTo(l2.get(i)) != 0) {
+                    return l1.get(i).compareTo(l2.get(i));
+                }
+            }
+            return 0;
+        }
+    }
+
+    public static class Pair {
+        int first;
+        int second;
+
+        public Pair(int first, int second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        public int getFirst() {
+            return first;
+        }
+
+        public int getSecond() {
+            return second;
+        }
+
+        @Override
+        public String toString() {
+            return first + " " + second;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        // Check for int overflow!!!!
+        // Should you use a long to store the sum or smthn?
+        BufferedReader f = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+
+        long n = Integer.parseInt(f.readLine());
+        long bad = 1;
+        long mod = 1000000007;
+        for (int j = 0; j < n - 1; j++) {
+            bad *= 2;
+            bad %= mod;
+        }
+        long prod = 1;
+        for (long j = n; j > 0; j--) {
+            prod *= j;
+            prod %= mod;
+        }
+        if (prod - bad >= 0) {
+            out.println(prod - bad);
+        } else {
+            out.println(mod + prod - bad);
+        }
+        out.close();
+    }
+
+}
+```
+### Translation Rule Hints
+This section contains Translation Rule Hints about the Java and Rust code. Use as guidance.
+- **translation_rules1**
+  - [lines 9] `Comparator<List<Integer>>` → **ArrayList→Vec** — Default dynamic array in Rust.
+  - [lines 12] `List<Integer>` → **ArrayList→Vec** — Default dynamic array in Rust.
+- **translation_rules2**
+  - [lines 49] `PrintWriter` → **String out buffer** — Faster than many println!/PrintWriter calls.
+  - [lines 51] `f.readLine()` → **Read+split_whitespace** — Default fast input (Scanner/Tokenizer equivalent).
+### Reminder
+1. Carefully read and understand the Java code, and Translation Rule Hints.
+2. Output **only** the Safe Rust code — no explanations, comments, or additional text.

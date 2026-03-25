@@ -1,0 +1,446 @@
+INDEX: 317 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+import java.math.BigInteger;
+import java.text.*;
+public class Main implements Runnable {
+    static int mod = 1000_000_007;
+    static long lim = (long)1e9 + 6;
+    static long mod1 = 998244353;
+    static boolean fileIO = false;
+    static FastScanner f;
+    static int inf = 2000_000_000;
+    static PrintWriter pw = new PrintWriter(System.out);
+    static Scanner S = new Scanner(System.in);
+    static long x0; static long y0;
+    static long iinf = Long.MAX_VALUE;
+    static double eps = (double)1e-4;
+    public static void solve() {
+        int n = f.ni();
+        long r1 = f.nl(); long s1 = f.nl(); long p1 = f.nl();
+        long r2 = f.nl(); long s2 = f.nl(); long p2 = f.nl();
+
+        // Find maximum wins
+        long min = 0l , max = 0l;
+        max = Math.min(p1 , r2) + Math.min(r1 , s2) + Math.min(s1 , p2);
+
+        // Find minimum wins
+        min = Math.max(0 , r1 - r2 - p2) + Math.max(0 , s1 - s2 - r2) + Math.max(0 , p1 - p2 - s2);
+        pn(min + " " + max);
+    }    
+    public static void main(String[] args)throws IOException {
+        new Thread(null , new Main() , "F*uckit" , 1 << 28).start();  
+    }
+        
+/******************************END OF MAIN PROGRAM*******************************************/
+    public void run() {
+        f = new FastScanner(System.in);
+        //pre();
+        int t = 1;
+        int tt = 1;
+        //fw = new FileWriter("!out.txt");
+        while(t --> 0) {
+            //fw.write("Case #" + (tt++) + ": ");
+            //fw.write("\n");
+            solve();
+        }
+        pw.flush(); 
+        pw.close();
+        //fw.close();  
+    }
+    public static class FastScanner {
+        private InputStream stream;
+        private byte[] buf = new byte[1024];
+        private int curChar;
+        private int numChars;
+        private FastScanner.SpaceCharFilter filter;
+ 
+        public FastScanner(InputStream stream) {
+            this.stream = stream;
+        }
+ 
+        public int read() {
+            if (numChars == -1)
+                throw new InputMismatchException();
+ 
+            if (curChar >= numChars) {
+                curChar = 0;
+                try {
+                    numChars = stream.read(buf);
+                } catch (IOException e) {
+                    throw new InputMismatchException();
+                }
+ 
+                if (numChars <= 0)
+                    return -1;
+            }
+            return buf[curChar++];
+        }
+ 
+        public int ni() {
+            int c = read();
+ 
+            while (isSpaceChar(c))
+                c = read();
+ 
+            int sgn = 1;
+ 
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+ 
+            int res = 0;
+            do {
+                if (c < '0' || c > '9') throw new InputMismatchException();
+                res *= 10;
+                res += c - '0';
+                c = read();
+            }
+            while (!isSpaceChar(c));
+ 
+            return res * sgn;
+        }
+ 
+        public long nl() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            long res = 0;
+ 
+            do {
+                if (c < '0' || c > '9') throw new InputMismatchException();
+                res *= 10;
+                res += c - '0';
+                c = read();
+            }
+            while (!isSpaceChar(c));
+            return res * sgn;
+        }
+ 
+        public String next() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            }
+            while (!isSpaceChar(c));
+            return res.toString();
+        }
+ 
+        public boolean isSpaceChar(int c) {
+            if (filter != null)
+                return filter.isSpaceChar(c);
+            return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+        }
+ 
+        public interface SpaceCharFilter {
+            public boolean isSpaceChar(int ch);
+        }
+    }
+    public static void pn(Object o){pw.println(o);}
+    public static void pi(Object o){pw.print(o);pw.flush();}
+    public static void p(Object o){pw.print(o);}
+    public static void pni(Object o){pw.println(o);pw.flush();}
+    static int gcd(int a,int b){if(b==0)return a;else{return gcd(b,a%b);}}
+    static long gcd(long a,long b){if(b==0l)return a;else{return gcd(b,a%b);}}
+    static long lcm(long a,long b){return (a*b/gcd(a,b));}
+    static long exgcd(long a,long b){if(b==0){x0=1;y0=0;return a;}long temp=exgcd(b,a%b);long t=x0;x0=y0;y0=t-a/b*y0;return temp;}
+    static long pow(long a,long b){long res=1;while(b>0){if((b&1)==1)res=res*a;b>>=1;a=a*a;}return res;}
+    static long mpow(long a,long b, long m){long res=1;while(b>0){if((b&1)==1)res=((res%m)*(a%m))%m;b>>=1;a=((a%m)*(a%m))%m;}return res;}
+    static long mul(long a , long b){return ((a%mod)*(b%mod)%mod);}
+    static long adp(long a , long b){return ((a%mod)+(b%mod)%mod);}
+    static boolean isPrime(long n){if(n<=1)return false;if(n<=3)return true;if(n%2==0||n%3==0)return false;for(long i=5;i*i<=n;i=i+6)if(n%i==0||n%(i+2)==0)return false;return true;}
+    static boolean isPrime(int n){if(n<=1)return false;if(n<=3)return true;if(n%2==0||n%3==0)return false;for(int i=5;i*i<=n;i=i+6)if(n%i==0||n%(i+2)==0)return false;return true;}
+    static HashSet<Long> factors(long n){HashSet<Long> hs=new HashSet<Long>();for(long i=1;i<=(long)Math.sqrt(n);i++){if(n%i==0){hs.add(i);hs.add(n/i);}}return hs;}
+    static HashSet<Integer> factors(int n){HashSet<Integer> hs=new HashSet<Integer>();for(int i=1;i<=(int)Math.sqrt(n);i++){if(n%i==0){hs.add(i);hs.add(n/i);}}return hs;}
+    static HashSet<Long> pf(long n){HashSet<Long> ff=factors(n);HashSet<Long> ans=new HashSet<Long>();for(Long i:ff)if(isPrime(i))ans.add(i);return ans;}
+    static HashSet<Integer> pf(int n){HashSet<Integer> ff=factors(n);HashSet<Integer> ans=new HashSet<Integer>();for(Integer i:ff)if(isPrime(i))ans.add(i);return ans;}
+    static int[] inpint(int n){int arr[]=new int[n+1];for(int i=1;i<=n;++i){arr[i]=f.ni();}return arr;}
+    static long[] inplong(int n){long arr[] = new long[n+1];for(int i=1;i<=n;++i){arr[i]=f.nl();}return arr;}
+    static boolean ise(int x){return ((x&1)==0);}static boolean ise(long x){return ((x&1)==0);}
+    static int gnv(char c){return Character.getNumericValue(c);} // Credits - KharYusuf for Multiset Class
+    static class MultiSet<T extends Comparable<T>>{public int size=0;public TreeMap<T,Integer> tr;public MultiSet(){tr=new TreeMap<>();}public void add(T u){tr.put(u,tr.getOrDefault(u,0)+1);++size;}public boolean contains(T u){return tr.containsKey(u);}public void clear(){tr.clear();}}
+    static int log(long x){return x==1?0:(1+log(x/2));} static int log(int x){return x==1?0:(1+log(x/2));}
+    static void sort(int[] a){ArrayList<Integer> l=new ArrayList<>();for(int i:a)l.add(i);Collections.sort(l);for(int i=0;i<a.length;++i)a[i]=l.get(i);}
+    static void sort(long[] a){ArrayList<Long> l=new ArrayList<>();for(long i:a)l.add(i);Collections.sort(l);for(int i=0;i<a.length;++i)a[i]=l.get(i);}
+    static void sort(ArrayList<Integer> a){Collections.sort(a);}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+public class Task{
+        //  ..............code begins here..............
+
+static long mod=(long)1e9+7;
+
+static void solve() throws  IOException {
+            long[] x=long_arr();
+            long s=(x[0]+x[1]+x[2]);
+
+            out.write((s-1)+"\n");
+}
+
+
+public static void main(String[] args) throws  IOException{
+                assign();
+                int t=int_v(read());
+                while(t--!=0){solve();}
+                out.flush();
+}
+
+// taking inputs
+static BufferedReader s1;
+static BufferedWriter out;
+static String read() throws IOException{String line="";while(line.length()==0){line=s1.readLine();continue;}return line;}
+static int int_v (String s1){return Integer.parseInt(s1);}
+static long long_v(String s1){return Long.parseLong(s1);}
+static int[] int_arr() throws IOException{String[] a=read().split(" ");int[] b=new int[a.length];for(int i=0;i<a.length;i++){b[i]=int_v(a[i]);}return b;}
+static long[] long_arr() throws IOException{String[] a=read().split(" ");long[] b=new long[a.length];for(int i=0;i<a.length;i++){b[i]=long_v(a[i]);}return b;}
+static void assign(){s1=new BufferedReader(new InputStreamReader(System.in));out=new BufferedWriter(new OutputStreamWriter(System.out));}
+static String setpreciosion(double d,int k){BigDecimal d1 = new BigDecimal(Double.toString(d));return d1.setScale(k,RoundingMode.HALF_UP).toString();}//UP DOWN HALF_UP
+static int gcd(int a,int b){if(b==0){return a;}return gcd(b,a%b);}
+static long Modpow(long a,long p,long m){long res=1;while(p>0){if((p&1)!=0){res=(res*a)%m;}p >>=1;a=(a*a)%m;}return res%m;}
+static long Modmul(long a,long b,long m){return ((a%m)*(b%m))%m;}
+static long ModInv(long a,long m){return Modpow(a,m-2,m);}
+static long nck(int n,int r,long m){if(r>n){return 0l;}return Modmul(f[n],ModInv(Modmul(f[n-r],f[r],m),m),m);}
+static long[] f;
+}
+             
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.skip_whitespace();
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i64 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let a = sc.next_i64();
+        let b = sc.next_i64();
+        let c = sc.next_i64();
+        let s = a + b + c;
+        out.push_str(&(s - 1).to_string());
+        out.push('\n');
+    }
+
+    let mut w = io::BufWriter::new(io::stdout());
+    w.write_all(out.as_bytes()).unwrap();
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.lang.*;
+import java.lang.Math.*;
+import java.io.*;
+
+public class cf_276_A {
+
+	public static boolean[] f = new boolean[2020];
+	public static long MOD  = 1000000007;
+	public static  int n,d;
+	public static int[] a = new int[2020];
+	public static int[][] b = new int[2020][2020];
+	public static long res  = 0;
+	public static int[] c = new int[2020];
+	public static int delta;
+	
+	public static long dfs(int p, int v)
+	{
+		if (c[v]>delta + d || ((c[v] == delta + d) && (f[v] == true)) || c[v]<delta)
+			  return 0;
+		long ans = 1;
+		for (int i = 1; i <=a[v]; i++)
+		{
+			int u = b[v][i];
+			if (u!=p)
+			  ans = ans*( (dfs(v,u) + 1)% MOD);
+			  ans = ans % MOD;
+		}
+		return ans;
+	}
+	
+	public static void main(String[] args) throws java.lang.Exception
+	{
+	  Scanner reader = new Scanner(System.in);
+	  d = reader.nextInt();
+	  n = reader.nextInt();
+	  int u,v;
+	  for (int i=1; i<=n; i++) c[i] = reader.nextInt();
+	  for (int i=1; i<n; i++)
+	  {
+		  u = reader.nextInt();
+		  v = reader.nextInt();
+		  a[u]++;
+		  a[v]++;
+		  b[u][a[u]] = v;
+		  b[v][a[v]] = u;
+	  }
+	  
+	  for (int i=1; i<=n; i++)
+	  {
+		  delta = c[i] - d;
+		  res = (res + dfs(i,i)) % MOD;
+		  f[i] = true;
+	  }
+	 System.out.print(res);
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 1_000_000_007;
+
+struct State {
+    n: usize,
+    d: i32,
+    c: Vec<i32>,
+    adj: Vec<Vec<usize>>,
+    f: Vec<bool>,
+    delta: i32,
+}
+
+impl State {
+    fn dfs(&self, p: usize, v: usize) -> i64 {
+        let cv = self.c[v];
+        if cv > self.delta + self.d || (cv == self.delta + self.d && self.f[v]) || cv < self.delta {
+            return 0;
+        }
+        let mut ans: i64 = 1;
+        for &u in &self.adj[v] {
+            if u != p {
+                let sub = (self.dfs(v, u) + 1) % MOD;
+                ans = (ans * sub) % MOD;
+            }
+        }
+        ans
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let d: i32 = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+    let n: usize = it.next().unwrap().parse().unwrap();
+
+    let mut c = vec![0i32; n + 1];
+    for i in 1..=n {
+        c[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut adj = vec![Vec::<usize>::new(); n + 1];
+    for _ in 1..n {
+        let u: usize = it.next().unwrap().parse().unwrap();
+        let v: usize = it.next().unwrap().parse().unwrap();
+        adj[u].push(v);
+        adj[v].push(u);
+    }
+
+    let mut state = State {
+        n,
+        d,
+        c,
+        adj,
+        f: vec![false; n + 1],
+        delta: 0,
+    };
+
+    let mut res: i64 = 0;
+    for i in 1..=state.n {
+        state.delta = state.c[i] - state.d;
+        let add = state.dfs(i, i);
+        res = (res + add) % MOD;
+        state.f[i] = true;
+    }
+
+    print!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

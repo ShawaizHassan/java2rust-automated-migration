@@ -1,0 +1,347 @@
+INDEX: 143 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+//package yahia;
+import java.io.PrintWriter;
+import java.util.*;public class Main {public static void main (String []args) {Scanner sc =new Scanner (System.in);PrintWriter pw =new PrintWriter(System.out);
+String w =sc.next();char [] x =w.toCharArray();int a =x.length;String j ="";
+if (a<=2) System.out.println(w);
+else if (a%2==1) {
+     j=x[a/2]+""+x[a/2+1];
+     int i =(a/2-1);int s=a/2+2;
+     while (i>=0||s<a) {
+    	 j=j+x[i];--i;
+    	 if (s<a) {
+    		 j=j+x[s];++s;
+    	 }
+     }
+     System.out.println(j);
+}
+else {
+	j=j+x[a/2-1]+x[a/2];
+	int i =(a-2)/2 -1;int s =a/2+1;
+	while (i>0||s<a) {
+		if (i>=0) {
+			j=j+x[i];
+			--i;
+		}
+		j=j+x[s];++s;
+	}
+	System.out.println(j);
+
+}}}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class Main {
+    
+	public static void main(String[] args) {
+	    
+		int n; String s;
+		Scanner sc = new Scanner(System.in);
+		n=sc.nextInt();
+		s=sc.next();
+		char[] s1 = s.toCharArray();
+		char[] s2 = s.toCharArray();
+		// All Black
+		int index=0;
+		int arr[] = new int[n];
+		for(int i=0;i<n-1;i++){
+			if(s1[i]=='W'){
+				s1[i]='B';
+				arr[index]=i+1;
+				index++;
+				if(s1[i+1]=='B'){
+					s1[i+1]='W';
+				}else{
+					s1[i+1]='B';
+				}
+			}
+		}
+		if(s1[n-1]=='B'){
+			System.out.println(index);
+			for(int j=0;j<index;j++){
+				System.out.print(arr[j]+ " ");
+			}
+			return;
+		}
+		
+		// All White
+		int index1=0;
+		int arr1[] = new int[n];
+		for(int i=0;i<n-1;i++){
+			if(s2[i]=='B'){
+				s2[i]='W';
+				arr1[index1]=i+1;
+				index1++;
+				if(s2[i+1]=='W'){
+					s2[i+1]='B';
+				}else{
+					s2[i+1]='W';
+				}
+			}
+		}
+		if(s2[n-1]=='W'){
+			System.out.println(index1);
+			for(int j=0;j<index1;j++){
+				System.out.print(arr1[j] + " ");
+			}
+			return;
+		}
+		System.out.println("-1");
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let s = it.next().unwrap_or("");
+
+    let mut s1: Vec<u8> = s.as_bytes().to_vec();
+    let mut s2: Vec<u8> = s.as_bytes().to_vec();
+
+    // All Black
+    let mut index: usize = 0;
+    let mut arr: Vec<i32> = vec![0; n];
+    for i in 0..n.saturating_sub(1) {
+        if s1[i] == b'W' {
+            s1[i] = b'B';
+            arr[index] = (i as i32) + 1;
+            index += 1;
+            if s1[i + 1] == b'B' {
+                s1[i + 1] = b'W';
+            } else {
+                s1[i + 1] = b'B';
+            }
+        }
+    }
+    if n > 0 && s1[n - 1] == b'B' {
+        print!("{}", index);
+        if index > 0 {
+            print!("\n");
+            for j in 0..index {
+                print!("{} ", arr[j]);
+            }
+        }
+        return;
+    }
+
+    // All White
+    let mut index1: usize = 0;
+    let mut arr1: Vec<i32> = vec![0; n];
+    for i in 0..n.saturating_sub(1) {
+        if s2[i] == b'B' {
+            s2[i] = b'W';
+            arr1[index1] = (i as i32) + 1;
+            index1 += 1;
+            if s2[i + 1] == b'W' {
+                s2[i + 1] = b'B';
+            } else {
+                s2[i + 1] = b'W';
+            }
+        }
+    }
+    if n > 0 && s2[n - 1] == b'W' {
+        print!("{}", index1);
+        if index1 > 0 {
+            print!("\n");
+            for j in 0..index1 {
+                print!("{} ", arr1[j]);
+            }
+        }
+        return;
+    }
+
+    print!("-1");
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+public class C135A
+{
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        String s = sc.next();
+        int[] w = new int[26];
+        if (n == 1)
+        {
+            System.out.println(s);
+            return;
+        }
+        if (n > s.length() || s.length() % n != 0)
+        {
+            System.out.println(-1);
+            return;
+        }
+        for (int i = 0; i < s.length(); i++)
+        {
+            int val = s.charAt(i) - 'a';
+            w[val]++;
+        }
+        boolean bad = false;
+        for (int i = 0; i < w.length; i++)
+        {
+            if (w[i] % n != 0)
+            {
+                bad = true;
+                break;
+            }
+            w[i] /= n;
+        }
+        if (bad)
+        {
+            System.out.println(-1);
+        }
+        else
+        {
+            String p = "";
+            for (int i = 0; i < w.length; i++)
+            {
+                for (int j = 0; j < w[i]; j++)
+                {
+                    p += (char)('a' + i);
+                }
+            }
+            for (int i = 0; i < n; i++)
+            {
+                System.out.print(p);
+            }
+            System.out.println();
+        }
+        
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_string(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let s = sc.next_string();
+
+    let mut w = [0i32; 26];
+
+    if n == 1 {
+        print!("{}", s);
+        println!();
+        return;
+    }
+
+    if n > s.len() || s.len() % n != 0 {
+        println!("-1");
+        return;
+    }
+
+    for &b in s.as_bytes().iter() {
+        let val = (b - b'a') as usize;
+        w[val] += 1;
+    }
+
+    let mut bad = false;
+    for i in 0..26 {
+        if (w[i] as usize) % n != 0 {
+            bad = true;
+            break;
+        }
+        w[i] /= n as i32;
+    }
+
+    if bad {
+        println!("-1");
+    } else {
+        let mut p = String::new();
+        for i in 0..26 {
+            for _ in 0..w[i] {
+                p.push((b'a' + i as u8) as char);
+            }
+        }
+        let mut out = String::new();
+        for _ in 0..n {
+            out.push_str(&p);
+        }
+        println!("{}", out);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

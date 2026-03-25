@@ -1,0 +1,334 @@
+INDEX: 415 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class A {
+	static long nCk(long n, long k) {
+		if (k > n)
+			return 0;
+		if (k * 2 > n)
+			k = n - k;
+		if (k == 0)
+			return 1;
+
+		long result = n;
+		for (int i = 2; i <= k; ++i) {
+			result *= (n - i + 1);
+			result /= i;
+		}
+		return result;
+	}
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		long n = Long.parseLong(bf.readLine());
+		System.out.println(4 * 3 * 2 * pow(4, n - 3) + (n - 3) * 4 * 9
+				* pow(4, n - 4));
+	}
+
+	private static long pow(long i, long l) {
+		if (l < 0)
+			return 0;
+		if (l == 0)
+			return 1;
+		return i * pow(i, l - 1);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
+
+public class Main {
+
+
+    public static void main(String[] args) throws IOException {
+
+        PrintWriter out = new PrintWriter(System.out);
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter printWriter = new PrintWriter(System.out);
+
+        int n = Integer.parseInt(in.readLine());
+
+
+        int t = (int) (Math.log(n) / Math.log(2));
+
+        String sNumbers[] = in.readLine().split(" ");
+
+        int[] numbers = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            numbers[i] = Integer.parseInt(sNumbers[i]);
+        }
+
+        int result = 0;
+        int k = 0;
+
+        for (int i = 1; i < n; i++) {
+
+            if (numbers[i - 1] != 0) {
+
+                if (t != 0) {
+                    while (true) {
+                        k = i + (int) Math.pow(2, t);
+                        if (k <= n) {
+                            break;
+                        } else {
+                            t--;
+                        }
+                    }
+                } else {
+                    k = i;
+                }
+
+                numbers[k - 1] = numbers[k - 1] + numbers[i - 1];
+                result = result + numbers[i - 1];
+            }
+
+            System.out.println(result);
+
+        }
+    }
+
+
+}
+
+
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n = sc.next_i32();
+    let mut numbers = vec![0i32; n as usize];
+    for i in 0..(n as usize) {
+        numbers[i] = sc.next_i32();
+    }
+
+    let mut t: i32 = ((n as f64).ln() / 2f64.ln()) as i32;
+
+    let mut result: i32 = 0;
+    let mut k: i32 = 0;
+
+    let mut out = String::new();
+
+    for i in 1..n {
+        if numbers[(i - 1) as usize] != 0 {
+            if t != 0 {
+                loop {
+                    let pow_val = (2f64).powi(t) as i32; // trunc toward zero, matches Java cast
+                    k = i + pow_val;
+                    if k <= n {
+                        break;
+                    } else {
+                        t -= 1;
+                    }
+                }
+            } else {
+                k = i;
+            }
+
+            let idx_k = (k - 1) as usize;
+            let val = numbers[(i - 1) as usize];
+            numbers[idx_k] = numbers[idx_k] + val;
+            result = result + val;
+        }
+
+        out.push_str(&format!("{}\n", result));
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
+
+public class Main {
+
+
+    public static void main(String[] args) throws IOException {
+
+        PrintWriter out = new PrintWriter(System.out);
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter printWriter = new PrintWriter(System.out);
+
+        int n = Integer.parseInt(in.readLine());
+
+
+        int t = (int)(Math.log(n) / Math.log(2));
+
+        String sNumbers[] = in.readLine().split(" ");
+
+        int [] numbers = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            numbers[i] = Integer.parseInt(sNumbers[i]);
+        }
+
+        int result = 0;
+        int k =0;
+
+        for (int i = 1; i < n; i++) {
+
+            while (true) {
+                k = i + (int) Math.pow(2, t);
+                if (k<=n) {
+                    break;
+                }
+                else {
+                        t--;
+                    }
+            }
+
+            numbers[k-1]  = numbers[k-1] + numbers[i-1];
+            result = result +  numbers[i-1];
+            System.out.println(result);
+
+
+
+
+
+        }
+    }
+
+
+
+}
+
+
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut t: i32 = (((n as f64).ln()) / (2f64).ln()) as i32;
+
+    let mut numbers = vec![0i32; n];
+    for i in 0..n {
+        numbers[i] = sc.next_i32();
+    }
+
+    let mut result: i32 = 0;
+
+    let mut out = String::new();
+
+    for i in 1..n {
+        let k: usize;
+        loop {
+            let add = (2f64).powi(t) as i32;
+            let kk = (i as i32) + add;
+            if kk <= n as i32 {
+                k = kk as usize;
+                break;
+            } else {
+                t -= 1;
+            }
+        }
+
+        numbers[k - 1] = numbers[k - 1].wrapping_add(numbers[i - 1]);
+        result = result.wrapping_add(numbers[i - 1]);
+        out.push_str(&format!("{}\n", result));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

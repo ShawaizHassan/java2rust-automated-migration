@@ -1,0 +1,302 @@
+INDEX: 427 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int btcAmount = sc.nextInt();
+        int[] btcCosts = new int[100];
+        int even = 0, odd = 0;
+        int right = 0;
+        for (int i = 0; i < n; i++) {
+            int left = 0;
+            if (right == 0) {
+                left = sc.nextInt();
+            } else {
+                left = right;
+                right = 0;
+            }
+            if (left % 2 == 0) even++;
+            else odd++;
+            if (even == odd && i != n - 1) {
+                right = sc.nextInt();
+                int btcCost = Math.abs(left - right);
+                btcCosts[btcCost] += 1;
+                even = 0;
+                odd = 0;
+            }
+        }
+        int sawedAmount = 0;
+        int currentBTCCost = 0;
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < btcCosts[i]; j++) {
+                currentBTCCost += i;
+                if (currentBTCCost <= btcAmount) {
+                    sawedAmount++;
+                } else break;
+            }
+        }
+        System.out.println(sawedAmount);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int t = scanner.nextInt();
+        int[] books = new int[n];
+        for (int i = 0; i < n; i++) {
+            books[i] = scanner.nextInt();
+        }
+        int right = -1;
+        int left = 0;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            if (right == n - 1) {
+                break;
+            }
+            if (right == -1) {
+                left = i;
+                for (int j = i; j < n; j++) {
+                    if (sum + books[j] <= t) {
+                        sum += books[j];
+                        right = j;
+                    } else {
+                        break;
+                    }
+                }
+            } else {
+                right++;
+                sum = sum - books[left] + books[right];
+                left++;
+                if (sum < t) {
+                    for (int j = right + 1; j < n; j++) {
+                        if (sum + books[j] <= t) {
+                            sum += books[j];
+                            right = j;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        System.out.print(right == -1 ? 0 : right - left + 1);
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let t: i32 = it.next().unwrap().parse().unwrap();
+
+    let n_usize = n as usize;
+    let mut books: Vec<i32> = Vec::with_capacity(n_usize);
+    for _ in 0..n_usize {
+        books.push(it.next().unwrap().parse().unwrap());
+    }
+
+    let mut right: i32 = -1;
+    let mut left: i32 = 0;
+    let mut sum: i32 = 0;
+
+    for i in 0..n {
+        if right == n - 1 {
+            break;
+        }
+        if right == -1 {
+            left = i;
+            let mut j = i;
+            while j < n {
+                let bj = books[j as usize];
+                if sum + bj <= t {
+                    sum += bj;
+                    right = j;
+                } else {
+                    break;
+                }
+                j += 1;
+            }
+        } else {
+            right += 1;
+            sum = sum - books[left as usize] + books[right as usize];
+            left += 1;
+            if sum < t {
+                let mut j = right + 1;
+                while j < n {
+                    let bj = books[j as usize];
+                    if sum + bj <= t {
+                        sum += bj;
+                        right = j;
+                    } else {
+                        break;
+                    }
+                    j += 1;
+                }
+            }
+        }
+    }
+
+    if right == -1 {
+        print!("0");
+    } else {
+        print!("{}", right - left + 1);
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+public class A{
+    public static void main(String args[]){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int a[]=new int[n+1];
+        int j=0,max=0;
+        for(int i=1;i<n+1;i++){
+            int num=sc.nextInt();
+            a[num]=i;
+        }
+        int left=0,right=0;
+        boolean flag=true;
+        j=a[n];
+        //System.out.println(j);
+        for(int i=n-1;i>0 && flag==true;i--){
+            if(j>a[i]){
+                if(left==j-a[i]-1){
+                    left++;
+                }    
+                else{
+                    flag=false;
+                    //System.out.println("else: "+i+" "+left+" "+(j-a[i]-1));
+                }
+            }
+            else if(j<a[i]){
+                if(right==a[i]-j-1){
+                    right++;
+                }
+                else{
+                    flag=false;
+                    ///System.out.println("else1: "+i);
+                }
+            }
+        }
+        if(flag==true)
+            System.out.println("YES");
+        else
+            System.out.println("NO");
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut a = vec![0i32; n + 1];
+    for i in 1..=n {
+        let num = sc.next_i32() as usize;
+        a[num] = i as i32;
+    }
+
+    let mut left: i32 = 0;
+    let mut right: i32 = 0;
+    let mut flag = true;
+
+    let j = a[n];
+    for i in (1..n).rev() {
+        if !flag {
+            break;
+        }
+        let ai = a[i];
+        if j > ai {
+            if left == j - ai - 1 {
+                left += 1;
+            } else {
+                flag = false;
+            }
+        } else if j < ai {
+            if right == ai - j - 1 {
+                right += 1;
+            } else {
+                flag = false;
+            }
+        }
+    }
+
+    if flag {
+        println!("YES");
+    } else {
+        println!("NO");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

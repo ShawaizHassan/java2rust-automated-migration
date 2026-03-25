@@ -1,0 +1,253 @@
+INDEX: 303 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args){
+    Scanner scan = new Scanner(System.in);
+
+    int N = scan.nextInt(), A = scan.nextInt(), B = scan.nextInt();
+    int ans = 1;
+    if(B >= 0){
+      ans = (A + B) % N;
+    }
+    else{
+      B = -B % N;
+      ans = (A - B + N) % N;
+    }
+    if(ans == 0){
+      ans = N;
+    }
+
+    System.out.println(ans);
+  }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class Juicer {
+	
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		
+		int n = scan.nextInt();
+		int b = scan.nextInt();
+		int d = scan.nextInt();
+		
+		long sum = 0;
+		int ans = 0;
+		for (int i = 0 ;i < n ; i++) {
+			int o = scan.nextInt();
+			if (o <= b) {
+				sum += o;
+			}
+			if (sum > d) {
+				ans++;
+				sum = 0;
+			}
+		}
+
+			System.out.println(ans);
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let b: i32 = it.next().unwrap().parse().unwrap();
+    let d: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut sum: i64 = 0;
+    let mut ans: i32 = 0;
+
+    for _ in 0..n {
+        let o: i32 = it.next().unwrap().parse().unwrap();
+        if o <= b {
+            sum += o as i64;
+        }
+        if sum > d as i64 {
+            ans += 1;
+            sum = 0;
+        }
+    }
+
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.lang.Math.*;
+
+public class distribution {
+  static int min(int a, int b){
+    return a < b ? a : b;
+  }
+  public static void main(String[] args) throws IOException {
+      Scanner scan = new Scanner(System.in);
+      int tc = scan.nextInt();
+      cases: for(int i = 0; i < tc; i++){
+        int N = scan.nextInt(); int K = scan.nextInt();
+        scan.nextLine();
+        char[] arr = scan.nextLine().toCharArray();
+        Arrays.sort(arr);
+        String ans = "";
+        /*int ind = -1;
+        int bound;
+        outer: while(ind < arr.length - 1){
+          bound = min(arr.length - 1, ind + K);
+          boolean areAllEqual = true;
+          for(int j = bound - 1; j > ind; j--){
+            System.out.println(j);
+            if(arr[j] != arr[bound]){
+              areAllEqual = false;
+            }
+          }
+          if(!areAllEqual){
+            for(int j = ind + 1; j <= bound; j++){
+              ans += arr[j];
+            }
+            break outer;
+          }
+          ans += arr[bound];
+          ind = bound;
+        }*/
+        boolean areAllEqual = arr[K - 1] == arr[0];
+        if(!areAllEqual || K == N){
+          System.out.println(arr[K - 1]);
+        } else {
+          ans += arr[K - 1];
+          areAllEqual = arr[K] == arr[N - 1];
+          if(!areAllEqual){
+            for(int j = K; j < N; j++){
+              ans += arr[j];
+            }
+          } else {
+            for(int j = K; j < N; j += K){
+              ans += arr[j];
+            }
+          }
+          System.out.println(ans);
+        }
+      }
+  }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_string(&mut self) -> String {
+        self.skip_whitespace();
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut scan = Scanner::new();
+    let tc = scan.next_i32() as usize;
+    let mut out = String::new();
+
+    for _ in 0..tc {
+        let n = scan.next_i32() as usize;
+        let k = scan.next_i32() as usize;
+        let s = scan.next_string();
+        let mut arr: Vec<u8> = s.into_bytes();
+        arr.sort_unstable();
+
+        let mut ans: Vec<u8> = Vec::new();
+
+        let are_all_equal = arr[k - 1] == arr[0];
+        if !are_all_equal || k == n {
+            out.push(arr[k - 1] as char);
+            out.push('\n');
+        } else {
+            ans.push(arr[k - 1]);
+            let are_all_equal2 = arr[k] == arr[n - 1];
+            if !are_all_equal2 {
+                for j in k..n {
+                    ans.push(arr[j]);
+                }
+            } else {
+                let mut j = k;
+                while j < n {
+                    ans.push(arr[j]);
+                    j += k;
+                }
+            }
+            out.push_str(&String::from_utf8(ans).unwrap());
+            out.push('\n');
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

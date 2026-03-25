@@ -1,0 +1,405 @@
+INDEX: 473 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.InputMismatchException;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author Ribhav
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        FastReader in = new FastReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        EHeightAllTheSame solver = new EHeightAllTheSame();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class EHeightAllTheSame {
+        public void solve(int testNumber, FastReader s, PrintWriter out) {
+            long n = s.nextLong(), m = s.nextLong(), k = n * m;
+            long l = s.nextLong(), r = s.nextLong(), len = r - l + 1;
+            long mod = 998244353;
+
+            if (k % 2 == 1) {
+                out.println(EHeightAllTheSame.Maths.power(len, n * m, mod));
+                return;
+            }
+
+            long ans = (EHeightAllTheSame.Maths.power(len, k, mod) + EHeightAllTheSame.Maths.power(len % 2, k, mod)) * EHeightAllTheSame.Maths.power(2, mod - 2, mod) % mod;
+            out.println(ans);
+        }
+
+        private static class Maths {
+            static long power(long x, long y, long p) {
+                long res = 1;
+                x = x % p;
+
+                while (y > 0) {
+                    if ((y & 1) == 1)
+                        res = (res * x) % p;
+                    y = y >> 1;
+                    x = (x * x) % p;
+                }
+                return res;
+            }
+
+        }
+
+    }
+
+    static class FastReader {
+        private InputStream stream;
+        private byte[] buf = new byte[1024];
+        private int curChar;
+        private int numChars;
+        private FastReader.SpaceCharFilter filter;
+
+        public FastReader(InputStream stream) {
+            this.stream = stream;
+        }
+
+        public int read() {
+            if (numChars == -1) {
+                throw new InputMismatchException();
+            }
+            if (curChar >= numChars) {
+                curChar = 0;
+                try {
+                    numChars = stream.read(buf);
+                } catch (IOException e) {
+                    throw new InputMismatchException();
+                }
+                if (numChars <= 0) {
+                    return -1;
+                }
+            }
+            return buf[curChar++];
+        }
+
+        public long nextLong() {
+            int c = read();
+            while (isSpaceChar(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            long res = 0;
+            do {
+                if (c < '0' || c > '9') {
+                    throw new InputMismatchException();
+                }
+                res *= 10;
+                res += c - '0';
+                c = read();
+            } while (!isSpaceChar(c));
+            return res * sgn;
+        }
+
+        public boolean isSpaceChar(int c) {
+            if (filter != null) {
+                return filter.isSpaceChar(c);
+            }
+            return isWhitespace(c);
+        }
+
+        public static boolean isWhitespace(int c) {
+            return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+        }
+
+        public interface SpaceCharFilter {
+            public boolean isSpaceChar(int ch);
+
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+/*
+If you want to aim high, aim high
+Don't let that studying and grades consume you
+Just live life young
+******************************
+If I'm the sun, you're the moon
+Because when I go up, you go down
+*******************************
+I'm working for the day I will surpass you
+https://www.a2oj.com/Ladder16.html
+*/
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+   public class x1009E
+   {
+      static long MOD = 998244353L;
+      public static void main(String omkar[]) throws Exception
+      {
+         BufferedReader infile = new BufferedReader(new InputStreamReader(System.in));  
+         StringTokenizer st = new StringTokenizer(infile.readLine());
+         int N = Integer.parseInt(st.nextToken());
+         int[] arr = new int[N];
+         st = new StringTokenizer(infile.readLine());
+         for(int i=0; i < N; i++)
+            arr[i] = Integer.parseInt(st.nextToken());
+         long res = 0L;
+         long curr = arr[0];
+         for(int i=0; i < N; i++)
+         {
+            res = (res+curr)%MOD;
+            if(i+1 < N)
+            {
+               long addend = arr[i+1]-arr[i];
+               addend = (addend*power(power(2,i+1,MOD),MOD-2,MOD))%MOD;
+               curr += addend;
+               curr %= MOD;
+            }
+         }
+         res = (res*power(2, N, MOD))%MOD;
+         res = (res*power(2, MOD-2, MOD))%MOD;
+         System.out.println(res);
+      }
+      public static long power(long x, long y, long p) 
+      { 
+          long res = 1L;      
+          x = x % p;  
+          while (y > 0) 
+          { 
+              if((y & 1)==1) 
+                  res = (res * x) % p; 
+              y = y >> 1;  
+              x = (x * x) % p;  
+          } 
+          return res; 
+      }
+   }
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 998_244_353;
+
+fn power(mut x: i64, mut y: i64, p: i64) -> i64 {
+    let mut res: i64 = 1;
+    x %= p;
+    while y > 0 {
+        if (y & 1) == 1 {
+            res = (res * x) % p;
+        }
+        y >>= 1;
+        x = (x * x) % p;
+    }
+    res
+}
+
+fn main() {
+    // Fast token scanner
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+    let mut arr: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        arr.push(it.next().unwrap().parse::<i32>().unwrap());
+    }
+
+    let mut res: i64 = 0;
+    let mut curr: i64 = arr[0] as i64;
+
+    for i in 0..n {
+        res = (res + curr) % MOD;
+
+        if i + 1 < n {
+            let mut addend: i64 = (arr[i + 1] as i64) - (arr[i] as i64);
+            let denom = power(2, (i + 1) as i64, MOD);
+            let inv = power(denom, MOD - 2, MOD);
+            addend = (addend * inv) % MOD;
+            curr += addend;
+            curr %= MOD;
+        }
+    }
+
+    res = (res * power(2, n as i64, MOD)) % MOD;
+    res = (res * power(2, MOD - 2, MOD)) % MOD;
+
+    println!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

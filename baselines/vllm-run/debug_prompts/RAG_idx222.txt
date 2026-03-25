@@ -1,0 +1,254 @@
+INDEX: 222 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+//package com.baba;
+
+import java.util.Scanner;
+
+public class Main {
+    static char[] result = {'+', '-', '0', '?'};
+
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int x = s.nextInt();
+        int y = s.nextInt();
+        int z = s.nextInt();
+        System.out.println(result[solve(x + z, y) == solve(x, y + z) ? solve(x, y) : 3]);
+    }
+
+    static int solve(int x, int y) {
+        return x == y ? 2 : x < y ? 1 : 0;
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class BearAndColors
+{
+	public static void main(String[] args)
+	{
+		Scanner in = new Scanner(System.in);
+		
+		int n = in.nextInt();
+		
+		int[] array = new int[n];
+		for(int x = 0; x < n; x++)
+		{
+			array[x] = in.nextInt() - 1;
+		}
+		
+		int[] result = new int[n];
+		for(int y = 0; y < array.length; y++)
+		{
+			int[] counts = new int[n];
+			int best = 0;
+			for(int z = y; z < array.length; z++)
+			{
+				counts[array[z]]++;
+				if(counts[array[z]] > counts[best] || (array[z] < best && counts[array[z]] == counts[best]))
+				{
+					best = array[z];
+				}
+				
+				result[best]++;
+			}
+		}
+		
+		for(int a = 0; a < result.length; a++)
+		{
+			System.out.print(result[a] + " ");
+		}
+		
+		System.out.println();
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    data: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { data: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.data[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as usize;
+
+    let mut array: Vec<usize> = vec![0; n];
+    for x in 0..n {
+        let v = fs.next_i32() - 1;
+        array[x] = v as usize;
+    }
+
+    let mut result: Vec<i64> = vec![0; n];
+
+    for y in 0..n {
+        let mut counts: Vec<i32> = vec![0; n];
+        let mut best: usize = 0;
+        for z in y..n {
+            let c = array[z];
+            counts[c] += 1;
+            if counts[c] > counts[best] || (c < best && counts[c] == counts[best]) {
+                best = c;
+            }
+            result[best] += 1;
+        }
+    }
+
+    let mut out = String::new();
+    for a in 0..n {
+        out.push_str(&format!("{} ", result[a]));
+    }
+    out.push('\n');
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.math.*;
+public class Main{
+    public static int solve(String A,String B,int n){
+        char[] a = A.toCharArray();
+        char[] b = B.toCharArray();
+        String s = "abcdefghijklmnopqrst";
+        for(int i = 0 ; i < n ; i++){
+            if(a[i] > b[i]){
+                return -1;
+            }
+        }
+        int ans = 0;
+        for(char x = 'a' ; x <= 't' ; x++){
+            char  y = 'z';
+            ArrayList<Integer> list = new ArrayList<Integer>();
+            for(int i = 0 ; i < n ; i++){
+                if(a[i] == x && b[i] != x){
+                    y = (b[i] < y)?b[i]:y;
+                    list.add(i);
+                }
+            }
+            if(y != 'z'){
+                ans++;
+                for(int p:list)
+                    a[p] = y;
+            }
+        }
+        return ans;
+    }
+    public static void main(String []args){
+        Scanner sc = new Scanner(System.in);
+        int c = sc.nextInt();
+        while(c-- > 0){
+            int n = sc.nextInt();
+            String A = sc.next();
+            String B = sc.next();
+            System.out.println(solve(A,B,n));
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn solve(a_str: &str, b_str: &str, n: usize) -> i32 {
+    let mut a: Vec<u8> = a_str.as_bytes().to_vec();
+    let b: Vec<u8> = b_str.as_bytes().to_vec();
+
+    for i in 0..n {
+        if a[i] > b[i] {
+            return -1;
+        }
+    }
+
+    let mut ans: i32 = 0;
+    for x in b'a'..=b't' {
+        let mut y: u8 = b'z';
+        let mut list: Vec<usize> = Vec::new();
+        for i in 0..n {
+            if a[i] == x && b[i] != x {
+                if b[i] < y {
+                    y = b[i];
+                }
+                list.push(i);
+            }
+        }
+        if y != b'z' {
+            ans += 1;
+            for &p in &list {
+                a[p] = y;
+            }
+        }
+    }
+
+    ans
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let c: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..c {
+        let n: usize = it.next().unwrap().parse().unwrap();
+        let a = it.next().unwrap();
+        let b = it.next().unwrap();
+        let res = solve(a, b, n);
+        out.push_str(&res.to_string());
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

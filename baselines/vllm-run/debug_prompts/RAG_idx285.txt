@@ -1,0 +1,401 @@
+INDEX: 285 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+
+public class Main{
+    static long MOD = 998244353 ;
+    static long [] fac;
+    public static void main(String[] args) {
+        MyScanner sc = new MyScanner();
+        out = new PrintWriter(new BufferedOutputStream(System.out));
+        // Start writing your solution here. -------------------------------------
+        //int t = sc.nextInt();
+        int t = 1;
+        while(t-- > 0)
+        {
+           int n = sc.nextInt();
+           long kk = sc.nextLong();
+           fac = new long[n + 1];
+           fac[0] = fac[1] = 1l;
+           for(int i = 2; i <= n; i++) fac[i] = (fac[i - 1] * i) % MOD;
+           if(kk == 0) out.println(fac[n]);
+           else if(kk >= n) out.println(0);
+           else
+           {
+               int k = (int) kk;
+               long tmp = 0l, sign = 1;
+               int l = n - k;
+               for(int i = 0; i <= l; i++)
+               {
+                   tmp = (tmp + MOD + (quickPOW(l - i, n) * C(l, l - i) * sign % MOD)) % MOD;
+                   sign *= -1l;
+               }
+               long res = 2l * C(n , k) * tmp % MOD;
+               out.println(res);
+           }
+        }
+        out.close();
+    }
+    public static long C(int n, int m)
+    {
+        if(m == 0 || m == n) return 1l;
+        if(m > n || m < 0) return 0l;
+        long res = fac[n] * quickPOW((fac[m] * fac[n - m]) % MOD, MOD - 2) % MOD;
+
+        return res;
+    }
+    public static long quickPOW(long n, long m)
+    {
+        long ans = 1l;
+        while(m > 0)
+        {
+            if(m % 2 == 1)
+                ans = (ans * n) % MOD;
+            n = (n * n) % MOD;
+            m >>= 1;
+        }
+        return ans;
+    }
+    public static int gcd(int a, int b)
+    {
+        if(a % b == 0) return b;
+        return gcd(b, a % b);
+    }
+    public static long solve(long x, long[] res){
+        int n = res.length;
+        long a = x / n;
+        int b = (int)(x % n);
+        return res[n - 1] * a + res[b];
+    }
+    //-----------PrintWriter for faster output---------------------------------
+    public static PrintWriter out;
+    //-----------MyScanner class for faster input----------
+    public static class MyScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public MyScanner() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+        String nextLine(){
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+    //--------------------------------------------------------
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+public class A {
+	public static void main(String[] args)throws Throwable {
+		MyScanner sc=new MyScanner();
+		PrintWriter pw=new PrintWriter(System.out);
+		
+		int n=sc.nextInt();
+		int m=sc.nextInt();
+		int v=sc.nextInt()-1;
+		long max=1+(1L*(n-2)*(n-1))/2;
+		if(max<m || m<n-1){
+			pw.println(-1);
+			pw.flush();
+			return;
+		}
+		int other=0;
+		if(v==0)
+			other++;
+		pw.println((v+1)+" "+(other+1));
+		m--;
+		for(int i=0;i<n && m>0;i++){
+			if(i==other)
+				continue;
+			for(int j=i+1;j<n && m>0;j++){
+				if(j==other)
+					continue;
+				pw.println((i+1)+" "+(j+1));
+				m--;
+			}
+		}
+		
+		pw.flush();
+		pw.close();
+	}
+	
+	static void shuffle(int[] a) {
+		int n = a.length;
+		for (int i = 0; i < n; i++) {
+			int r = i + (int) (Math.random() * (n - i));
+			int tmp = a[i];
+			a[i] = a[r];
+			a[r] = tmp;
+		}
+	}
+	
+	static class MyScanner {
+		BufferedReader br;
+		StringTokenizer st;
+		public MyScanner() {br = new BufferedReader(new InputStreamReader(System.in));}
+		String next() {while (st == null || !st.hasMoreElements()) {
+			try {st = new StringTokenizer(br.readLine());}
+			catch (IOException e) {e.printStackTrace();}}
+		return st.nextToken();}
+		int nextInt() {return Integer.parseInt(next());}
+		long nextLong() {return Long.parseLong(next());}
+		double nextDouble() {return Double.parseDouble(next());}
+		String nextLine(){String str = "";
+		try {str = br.readLine();}
+		catch (IOException e) {e.printStackTrace();}
+		return str;}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n = sc.next_i32();
+    let mut m = sc.next_i32() as i64;
+    let v = sc.next_i32() - 1;
+
+    let nn = n as i64;
+    let max_edges = 1 + ((nn - 2) * (nn - 1)) / 2;
+
+    if max_edges < m || m < (n as i64) - 1 {
+        print!("-1\n");
+        return;
+    }
+
+    let mut other: i32 = 0;
+    if v == 0 {
+        other += 1;
+    }
+
+    let mut out = String::new();
+    out.push_str(&(v + 1).to_string());
+    out.push(' ');
+    out.push_str(&(other + 1).to_string());
+    out.push('\n');
+
+    m -= 1;
+
+    let n_usize = n as usize;
+    let other_usize = other as usize;
+
+    for i in 0..n_usize {
+        if m <= 0 {
+            break;
+        }
+        if i == other_usize {
+            continue;
+        }
+        for j in (i + 1)..n_usize {
+            if m <= 0 {
+                break;
+            }
+            if j == other_usize {
+                continue;
+            }
+            out.push_str(&(i as i32 + 1).to_string());
+            out.push(' ');
+            out.push_str(&(j as i32 + 1).to_string());
+            out.push('\n');
+            m -= 1;
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+/*
+If you want to aim high, aim high
+Don't let that studying and grades consume you
+Just live life young
+******************************
+If I'm the sun, you're the moon
+Because when I go up, you go down
+*******************************
+I'm working for the day I will surpass you
+https://www.a2oj.com/Ladder16.html
+*/
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+   public class x1009E
+   {
+      static long MOD = 998244353L;
+      public static void main(String omkar[]) throws Exception
+      {
+         BufferedReader infile = new BufferedReader(new InputStreamReader(System.in));  
+         StringTokenizer st = new StringTokenizer(infile.readLine());
+         int N = Integer.parseInt(st.nextToken());
+         int[] arr = new int[N];
+         st = new StringTokenizer(infile.readLine());
+         for(int i=0; i < N; i++)
+            arr[i] = Integer.parseInt(st.nextToken());
+         long res = 0L;
+         long curr = arr[0];
+         for(int i=0; i < N; i++)
+         {
+            res = (res+curr)%MOD;
+            if(i+1 < N)
+            {
+               long addend = arr[i+1]-arr[i];
+               addend = (addend*power(power(2,i+1,MOD),MOD-2,MOD))%MOD;
+               curr += addend;
+               curr %= MOD;
+            }
+         }
+         res = (res*power(2, N, MOD))%MOD;
+         res = (res*power(2, MOD-2, MOD))%MOD;
+         System.out.println(res);
+      }
+      public static long power(long x, long y, long p) 
+      { 
+          long res = 1L;      
+          x = x % p;  
+          while (y > 0) 
+          { 
+              if((y & 1)==1) 
+                  res = (res * x) % p; 
+              y = y >> 1;  
+              x = (x * x) % p;  
+          } 
+          return res; 
+      }
+   }
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 998_244_353;
+
+fn power(mut x: i64, mut y: i64, p: i64) -> i64 {
+    let mut res: i64 = 1;
+    x %= p;
+    while y > 0 {
+        if (y & 1) == 1 {
+            res = (res * x) % p;
+        }
+        y >>= 1;
+        x = (x * x) % p;
+    }
+    res
+}
+
+fn main() {
+    // Fast token scanner
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+    let mut arr: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        arr.push(it.next().unwrap().parse::<i32>().unwrap());
+    }
+
+    let mut res: i64 = 0;
+    let mut curr: i64 = arr[0] as i64;
+
+    for i in 0..n {
+        res = (res + curr) % MOD;
+
+        if i + 1 < n {
+            let mut addend: i64 = (arr[i + 1] as i64) - (arr[i] as i64);
+            let denom = power(2, (i + 1) as i64, MOD);
+            let inv = power(denom, MOD - 2, MOD);
+            addend = (addend * inv) % MOD;
+            curr += addend;
+            curr %= MOD;
+        }
+    }
+
+    res = (res * power(2, n as i64, MOD)) % MOD;
+    res = (res * power(2, MOD - 2, MOD)) % MOD;
+
+    println!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

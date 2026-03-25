@@ -1,0 +1,234 @@
+INDEX: 113 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+public class Problem_50A {
+
+	static public void main(String[] args) throws java.lang.Exception{
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		
+		String[] temp = in.readLine().split(" ");
+		int M = Integer.parseInt(temp[0]);
+		int N = Integer.parseInt(temp[1]);
+		
+		int area = M * N;
+		
+		if(area == 1){
+			System.out.println(0);
+			return;
+		}
+		
+		System.out.println(area / 2);
+		return;
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.lang.*;
+import java.math.*;
+import java.io.*;
+
+import static java.lang.Math.*;
+import static java.util.Arrays.*;
+
+public class D{
+    Scanner sc=new Scanner(System.in);
+
+    int INF=1<<28;
+    double EPS=1e-9;
+
+    int t;
+    double a, b;
+
+    void run(){
+        t=sc.nextInt();
+        for(int i=0; i<t; i++){
+            a=sc.nextInt();
+            b=sc.nextInt();
+            double area;
+            if(4*b<a+EPS){
+                area=2*b*(a-b);
+            }else{
+                area=a*(b+a/8);
+            }
+            if(abs(a)<EPS&&abs(b)<EPS){
+                println("1");
+            }else if(abs(a)<EPS){
+                println("0.5");
+            }else if(abs(b)<EPS){
+                println("1");
+            }else{
+                println(area/(2*a*b)+"");
+            }
+        }
+    }
+
+    void println(String s){
+        System.out.println(s);
+    }
+
+    void print(String s){
+        System.out.print(s);
+    }
+
+    void debug(Object... os){
+        System.err.println(Arrays.deepToString(os));
+    }
+
+    public static void main(String[] args){
+        new D().run();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let t = sc.next_i32();
+    let eps: f64 = 1e-9;
+
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let a = sc.next_i32() as f64;
+        let b = sc.next_i32() as f64;
+
+        let area: f64;
+        if 4.0 * b < a + eps {
+            area = 2.0 * b * (a - b);
+        } else {
+            area = a * (b + a / 8.0);
+        }
+
+        if a.abs() < eps && b.abs() < eps {
+            out.push_str("1\n");
+        } else if a.abs() < eps {
+            out.push_str("0.5\n");
+        } else if b.abs() < eps {
+            out.push_str("1\n");
+        } else {
+            out.push_str(&(area / (2.0 * a * b)).to_string());
+            out.push('\n');
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+ 
+public class Solution {
+	public static void main (String[] args) throws IOException{
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		String[] temp=br.readLine().trim().split(" ");
+		int numTestCases=Integer.parseInt(temp[0]);
+		while(numTestCases-->0){
+		    temp=br.readLine().trim().split(" ");
+		    int n=Integer.parseInt(temp[0]);
+		    int d=Integer.parseInt(temp[1]);
+		    System.out.println(isPossible(n,d));
+		}
+	}
+	public static String isPossible(int n,int d){
+	    if(1L*(n+1)*(n+1)>=4L*d)
+	    {
+	        return "YES";
+	    }
+	    else{
+	        return "NO";
+	    }
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn is_possible(n: i32, d: i32) -> &'static str {
+    let nn = n as i64;
+    let dd = d as i64;
+    if (nn + 1) * (nn + 1) >= 4 * dd {
+        "YES"
+    } else {
+        "NO"
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..t {
+        let n: i32 = it.next().unwrap().parse().unwrap();
+        let d: i32 = it.next().unwrap().parse().unwrap();
+        out.push_str(is_possible(n, d));
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

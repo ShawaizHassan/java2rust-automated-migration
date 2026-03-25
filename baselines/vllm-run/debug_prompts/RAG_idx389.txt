@@ -1,0 +1,329 @@
+INDEX: 389 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+import java.util.*;
+import java.lang.*; 
+import java.util.regex.Pattern;
+import java.text.DecimalFormat;
+import java.util.stream.IntStream;
+public class Main{      
+public static void main(String[] args)
+{     Scanner scanner=new Scanner(System.in);
+      String w1=scanner.next();
+      String w2=scanner.next();
+      String l1[] = w1.split(":"); 
+      String l2[] = w2.split(":"); 
+      int h1= Integer.parseInt(l1[0]);
+      int m1= Integer.parseInt(l1[1]);
+      int h2= Integer.parseInt(l2[0]);
+      int m2= Integer.parseInt(l2[1]);
+      int mi=h1*60+m1;
+      int mf=h2*60+m2;
+      int mid=(mf-mi)/2;
+      int ans1=h1+(mid)/60;
+      int ans2=m1+(mid)%60;
+      if(ans2>=60)
+            {ans1++;
+             ans2=ans2%60;}
+      if(ans1<10)
+            System.out.print("0"+ans1);
+      else System.out.print(ans1);
+      System.out.print(":");
+      if(ans2<10)
+            System.out.print("0"+ans2);
+      else System.out.print(ans2);
+ }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author darshan
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskA solver = new TaskA();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskA {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            int n = in.nextInt();
+            int s = in.nextInt();
+            long ins = 0;
+            long ans = 0;
+            boolean f1 = false;
+            long req = 2 * s + 2;
+            for (int i = 0; i < n; i++) {
+                int h = in.nextInt();
+                int m = in.nextInt();
+                long mint = h * 60 + m;
+                if (!f1) {
+                    if (i == 0) {
+                        if ((mint - ins) >= req / 2) {
+                            f1 = true;
+                            ans = ins;
+                        }
+                    } else if ((mint - ins) >= req) {
+                        f1 = true;
+                        ans = ins + (req / 2);
+                    }
+                }
+
+                ins = mint;
+            }
+            if (!f1) {
+                ans = ins + (req / 2);
+            }
+            long h1 = ans / 60;
+            long m1 = ans % 60;
+            out.print(h1 + " " + m1);
+
+
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32();
+    let s = sc.next_i32();
+
+    let mut ins: i64 = 0;
+    let mut ans: i64 = 0;
+    let mut f1 = false;
+    let req: i64 = 2 * s as i64 + 2;
+    let half: i64 = req / 2;
+
+    for i in 0..(n as usize) {
+        let h = sc.next_i32();
+        let m = sc.next_i32();
+        let mint: i64 = (h as i64) * 60 + (m as i64);
+
+        if !f1 {
+            if i == 0 {
+                if mint - ins >= half {
+                    f1 = true;
+                    ans = ins;
+                }
+            } else if mint - ins >= req {
+                f1 = true;
+                ans = ins + half;
+            }
+        }
+
+        ins = mint;
+    }
+
+    if !f1 {
+        ans = ins + half;
+    }
+
+    let h1 = ans / 60;
+    let m1 = ans % 60;
+    print!("{} {}", h1, m1);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public Scanner sc;
+    
+    public void run() {
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int s = sc.nextInt();
+        long ans = 0;
+        for (int n1 = 0; n1 * 2 + 1 <= n; n1++)
+            for (int m1 = 0; m1 * 2 + 1 <= m; m1++) {
+                int cnt = 0;
+                if ((n1*2+1) * (m1*2+1) == s) {
+                    cnt = 2*(n1+1)*(m1+1)-1;
+                }
+                else if ((n1*2+1) * (m1*2+1) > s) {
+                    if (((n1*2+1)*(m1*2+1)-s) % 4 != 0) continue;
+                    int t = ((n1*2+1)*(m1*2+1)-s) / 4;
+                    for (int w = 1; w <= n1; w++) {
+                        if (t % w != 0) continue;
+                        int h = t / w;
+                        if (1 <= h && h <= m1)
+                            cnt += 2;
+                    }
+                }
+                ans += (n-2*n1)*(m-2*m1)*cnt;
+            }
+        
+        System.out.println(ans);
+    }
+    
+    public static void main(String[] args) {
+        Main main = new Main();
+        try { main.sc = new Scanner(new FileInputStream("test.in")); }
+        catch (FileNotFoundException e) { main.sc = new Scanner(System.in); }
+        main.run();
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::fs::File;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new(mut reader: impl Read) -> Self {
+        let mut input = Vec::new();
+        reader.read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let scanner_source: Box<dyn Read> = match File::open("test.in") {
+        Ok(f) => Box::new(f),
+        Err(_) => Box::new(io::stdin()),
+    };
+    let mut sc = Scanner::new(scanner_source);
+
+    let n = sc.next_i32();
+    let m = sc.next_i32();
+    let s = sc.next_i32();
+
+    let mut ans: i64 = 0;
+
+    let mut n1: i32 = 0;
+    while n1 * 2 + 1 <= n {
+        let mut m1: i32 = 0;
+        while m1 * 2 + 1 <= m {
+            let mut cnt: i64 = 0;
+            let a = (n1 * 2 + 1) as i64;
+            let b = (m1 * 2 + 1) as i64;
+            let prod = a * b;
+            let s64 = s as i64;
+
+            if prod == s64 {
+                cnt = (2i64) * ((n1 + 1) as i64) * ((m1 + 1) as i64) - 1;
+            } else if prod > s64 {
+                let diff = prod - s64;
+                if diff % 4 != 0 {
+                    m1 += 1;
+                    continue;
+                }
+                let t = diff / 4;
+                let mut w: i32 = 1;
+                while w <= n1 {
+                    if t % (w as i64) == 0 {
+                        let h = (t / (w as i64)) as i32;
+                        if 1 <= h && h <= m1 {
+                            cnt += 2;
+                        }
+                    }
+                    w += 1;
+                }
+            }
+
+            ans += ((n - 2 * n1) as i64) * ((m - 2 * m1) as i64) * cnt;
+
+            m1 += 1;
+        }
+        n1 += 1;
+    }
+
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

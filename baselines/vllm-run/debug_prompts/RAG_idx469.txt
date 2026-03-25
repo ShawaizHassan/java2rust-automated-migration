@@ -1,0 +1,225 @@
+INDEX: 469 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class cf877a {
+
+	public static void main(String[] args) {
+		Scanner sc =new Scanner(System.in);
+		
+		String n = sc.nextLine();
+		
+		String[] arr = {"Danil","Olya","Slava","Ann","Nikita"};
+		
+		int have= 0;
+		
+		for (String s : arr) {
+			int prev =0;
+			while (n.indexOf(s, prev) != -1) {
+				have++;
+				prev  = n.indexOf(s, prev)+1;
+				if (prev == -1) {
+					break;
+				}
+			}
+		}
+		
+		System.out.println(have == 1 ? "YES" : "NO");
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+/**
+ * Created by yuu on 15/4/17.
+ */
+public class Problem482A {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+
+        int prev = 1;
+        boolean plus = true;
+        System.out.print(prev + " " );
+        for (int i = k; i > 0; i--) {
+            if (plus) {
+                prev += i;
+            }
+            else {
+                prev -= i;
+            }
+            System.out.print(prev + " ");
+            plus = !plus;
+        }
+        for (int i = k + 2; i <= n; i++) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32();
+    let k = sc.next_i32();
+
+    let mut prev: i32 = 1;
+    let mut plus = true;
+
+    let mut out = String::new();
+    out.push_str(&format!("{} ", prev));
+
+    for i in (1..=k).rev() {
+        if plus {
+            prev += i;
+        } else {
+            prev -= i;
+        }
+        out.push_str(&format!("{} ", prev));
+        plus = !plus;
+    }
+
+    for i in (k + 2)..=n {
+        out.push_str(&format!("{} ", i));
+    }
+
+    out.push('\n');
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class Driver {
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		int n = input.nextInt();
+		boolean bool = false;
+		for (int i = 0; i < n; i++) {
+			String name = input.next();
+			int prev = input.nextInt();
+			int next = input.nextInt();
+			if (prev >= 2400 && next > 2400 && next > prev) {
+				bool = true;
+				break;
+			}
+		}
+		if (bool == true) {
+			System.out.println("YES");
+		} else {
+			System.out.println("NO");
+		}
+
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next<T: std::str::FromStr>(&mut self) -> T {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        std::str::from_utf8(&self.input[start..self.idx])
+            .unwrap()
+            .parse::<T>()
+            .ok()
+            .unwrap()
+    }
+}
+
+fn main() {
+    let mut input = Scanner::new();
+    let n: i32 = input.next();
+    let mut bool_flag = false;
+
+    for _ in 0..n {
+        let _name: String = input.next();
+        let prev: i32 = input.next();
+        let next: i32 = input.next();
+        if prev >= 2400 && next > 2400 && next > prev {
+            bool_flag = true;
+            break;
+        }
+    }
+
+    if bool_flag == true {
+        println!("YES");
+    } else {
+        println!("NO");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

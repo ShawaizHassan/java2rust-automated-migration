@@ -1,0 +1,386 @@
+INDEX: 287 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+public class EdE {
+
+	public static void main(String[] args) throws Exception{
+		int num = 998244353;
+
+		// TODO Auto-generated method stub
+ 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+ 		PrintWriter out = new PrintWriter(System.out);
+ 		StringTokenizer st = new StringTokenizer(bf.readLine());
+ 		long n = Long.parseLong(st.nextToken());
+ 		long k = Long.parseLong(st.nextToken());
+ 		long[] fact = new long[200001];
+ 		fact[0] = 1;
+ 		long ans1 = 1;
+ 		for(int i = 1;i<=200000;i++){
+ 			ans1= (ans1*i) % num;
+ 			fact[i] = ans1;
+ 		}
+ 		long ans = 0;
+ 		for (int i = 0;i<n-k;i++){
+ 			//ans+= (-1)^i*(n-k choose i)* (n-k-i)^n
+ 			long ks = 1;
+			ks = ks * fact[(int)(n-k)]%num;
+			ks = ks*power(fact[i], num-2, num)%num;
+			ks = ks*power(fact[(int)(n-k-i)], num-2, num)%num;
+ 			if (i%2 == 0){
+ 				
+ 				ans+= ks * power(n-k-i, n, num)%num;
+ 			}
+ 			else{
+ 				ans-= ks* power(n-k-i, n, num)%num;
+ 			}
+ 			ans = ans%num;
+ 		}
+ 		if (k >=n)
+ 			out.println(0);
+ 		else{
+ 		if (k != 0)
+ 			ans= ans*2%num;
+ 		
+ 		ans = ans*fact[(int)(n)]%num;
+ 		ans = ans*power(fact[(int)(k)], num-2, num)%num;
+ 		ans = ans*power(fact[(int)(n-k)], num-2, num)%num;
+ 		
+ 		while (ans < 0){
+ 			ans = ans+num;
+ 		}
+ 		out.println(ans);
+ 		}
+ 		out.close();
+ 		
+ 	}
+ 	
+	
+	public static int power(long x, long y, long mod){
+		long ans = 1;
+		while(y>0){
+			if (y%2==1)
+				ans = (ans*x)%mod;
+			x = (x*x)%mod;
+			y/=2;
+		}
+		return (int)(ans);
+	}
+ }
+	
+//StringJoiner sj = new StringJoiner(" "); 
+//sj.add(strings)
+//sj.toString() gives string of those stuff w spaces or whatever that sequence is
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.*;
+public class fence 
+{
+ //static {System.out.println("hello"); }
+ 
+   public static void main(String args[])
+   { Scanner scn=new Scanner(System.in);
+        
+     int n=scn.nextInt(); 
+     int k=scn.nextInt(); 
+     num ar[]=new num[n];
+     int a[]=new int[n];
+     for(int i=0;i<n;i++) { a[i]=scn.nextInt(); ar[i]=new num(10- a[i]%10, a[i]); }
+        Arrays.sort(ar, new num() );
+        
+        int rat=0;
+       for(int i=0;i<n;i++)
+       {   if (k >= ar[i].ff) 
+           { ar[i].ss+=(ar[i].ff);
+             k-= ar[i].ff ;
+            }
+            
+    
+        } 
+        int add=k/10;
+         for(int i=0;i<n;i++)
+       {  if (add*10>=100-ar[i].ss)
+           {  
+               add-=(100-ar[i].ss)/10;
+                ar[i].ss=100;
+            }    
+          else 
+           {
+               ar[i].ss+=add*10;
+               
+             add=0;   
+            }
+        }
+        
+        int ans=0;
+       for(int i=0;i<n;i++) ans+=(ar[i].ss/10);
+       System.out.println(ans);
+    
+    }
+}
+
+
+
+class num implements Comparator<num>
+    {
+        
+        public int ff;
+        public int ss;
+   
+        num()
+        {
+            
+        }
+        num(int x,int y)
+        {
+            this.ff = x;
+            this.ss =y;
+       
+        }
+        public int getff()
+        {
+        return ff;
+        }
+        public int getss()
+        {
+        return ss;
+        }
+       public boolean equals(Object n1)
+        {num n=(num)n1;
+        if (this.ff==n.ff && this.ss==n.ss) return true;
+        else return false;
+            
+            
+        }
+       public int compare(num n1,num n2)
+        {  if (n1.ff!=n2.ff) return n1.ff-n2.ff;
+            else return n2.ss-n1.ss;
+            
+            
+        }    
+        
+    }
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+#[derive(Clone, Copy)]
+struct Num {
+    ff: i32,
+    ss: i32,
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let mut k: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut ar: Vec<Num> = Vec::with_capacity(n);
+    for _ in 0..n {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        ar.push(Num {
+            ff: 10 - x % 10,
+            ss: x,
+        });
+    }
+
+    ar.sort_by(|a, b| {
+        if a.ff != b.ff {
+            a.ff.cmp(&b.ff)
+        } else {
+            b.ss.cmp(&a.ss)
+        }
+    });
+
+    for i in 0..n {
+        if k >= ar[i].ff {
+            ar[i].ss += ar[i].ff;
+            k -= ar[i].ff;
+        }
+    }
+
+    let mut add: i32 = k / 10;
+    for i in 0..n {
+        let need = 100 - ar[i].ss;
+        if add * 10 >= need {
+            add -= need / 10;
+            ar[i].ss = 100;
+        } else {
+            ar[i].ss += add * 10;
+            add = 0;
+        }
+    }
+
+    let mut ans: i32 = 0;
+    for i in 0..n {
+        ans += ar[i].ss / 10;
+    }
+
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+
+public class Ferm {
+	public static void main(String [] args){
+		Scanner in= new Scanner(System.in);
+		long n= in.nextLong();
+		int k =in.nextInt();
+		String q =in.nextLine();
+		String s = in.nextLine();
+		s+=" ";String num="";
+		long min=-1;int index=0;long ans1=0;long ans2=0;
+		for(int i=0;i<s.length();i++){
+			if(s.substring(i,i+1).equals(" ")){
+				index++;
+				long numb = Long.parseLong(num);
+				if(min==-1){min=n%numb;ans1=index;ans2=(n-n%numb)/numb;}
+				else if(n%numb<min){min=n%numb;ans1=index;ans2=(n-n%numb)/numb;}
+				num="";
+			}
+			else{
+				num+=s.substring(i,i+1);
+				}
+		}
+		if(n==0){ans2=0;}
+		System.out.print(ans1+" ");System.out.print(ans2);
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.skip_ws();
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut val = 0i64;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                val = val * 10 + (c - b'0') as i64;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        sign * val
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+    fn next_line(&mut self) -> String {
+        if self.idx >= self.input.len() {
+            return String::new();
+        }
+        // consume a single '\n' if present (Scanner.nextLine after token reads)
+        if self.input[self.idx] == b'\n' {
+            self.idx += 1;
+            if self.idx >= self.input.len() {
+                return String::new();
+            }
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && self.input[self.idx] != b'\n' {
+            self.idx += 1;
+        }
+        let end = self.idx;
+        if self.idx < self.input.len() && self.input[self.idx] == b'\n' {
+            self.idx += 1;
+        }
+        String::from_utf8_lossy(&self.input[start..end]).to_string()
+    }
+    fn skip_ws(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+}
+
+fn main() {
+    let mut in_sc = Scanner::new();
+    let n: i64 = in_sc.next_i64();
+    let _k: i32 = in_sc.next_i32();
+    let _q: String = in_sc.next_line();
+    let mut s: String = in_sc.next_line();
+
+    s.push(' ');
+    let mut num = String::new();
+    let mut min: i64 = -1;
+    let mut index: i32 = 0;
+    let mut ans1: i64 = 0;
+    let mut ans2: i64 = 0;
+
+    let bytes = s.as_bytes();
+    for i in 0..bytes.len() {
+        if bytes[i] == b' ' {
+            index += 1;
+            let numb: i64 = num.parse::<i64>().unwrap();
+            let rem = n % numb;
+            if min == -1 {
+                min = rem;
+                ans1 = index as i64;
+                ans2 = (n - rem) / numb;
+            } else if rem < min {
+                min = rem;
+                ans1 = index as i64;
+                ans2 = (n - rem) / numb;
+            }
+            num.clear();
+        } else {
+            num.push(bytes[i] as char);
+        }
+    }
+
+    if n == 0 {
+        ans2 = 0;
+    }
+    print!("{} {}", ans1, ans2);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

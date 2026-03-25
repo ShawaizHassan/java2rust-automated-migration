@@ -1,0 +1,332 @@
+INDEX: 80 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+public class HangDepTroai {
+    public static void main(String[] args){
+        Scanner input = new Scanner(System.in);
+        int a = input.nextInt();
+        int b = input.nextInt();
+        int c = input.nextInt();
+        int d=0;
+        if(a<=0 || c>=11){
+            System.out.println("Error");
+            }
+        else if(b>a && b>c && ( a==1 && c==1)){
+            d = b+a+c;
+            System.out.println(d); 
+        }       
+        else if(c==1 && b>a){
+            d = a*(b+c);
+            System.out.println(d);
+        }
+        else if(c>a && c>b && ( a==1 && b==1)){
+            d = c*(a+b);
+            System.out.println(d);
+        }
+        else if(a==1 && b>c){
+            d = c*(a+b);
+        System.out.println(d);
+        }       
+        else if(a>1 && a==c && b==1){
+            d = c*(a+b);
+            System.out.println(d);
+        }
+        else if(a>b && a>c &&( b==1|| c==1)){
+            d = a*(b+c);
+            System.out.println(d);
+        }
+        else if(a>b && a>c && ( b>1 || c>1 )){
+            d = a*b*c;
+            System.out.println(d);
+        }
+        else if(b>a && b>c && ( a==1 || c==1)){
+            d = b*(a+c);
+            System.out.println(d); 
+        }
+        else if(b>a && b>c && ( a>1 || c>1)){
+            d = a*b*c;
+            System.out.println(d);
+        }
+        else if(c>a && c>b && ( a==1 || b==1)){
+            d = c*(a+b);
+            System.out.println(d);
+        }
+        else if(c>a && c>b && ( a>1 || b>1 )){
+            d = a*b*c;
+            System.out.println(d);
+        }
+        else if(a==1 && b==1 && c==1){
+            d = a+b+c;
+            System.out.println(d);
+        }
+        else if(a==b && b==c && c==a){
+            d = a*b*c;
+            System.out.println(d);
+        }
+        else if(c==1 && b>a){
+            d = a*(b+c);
+            System.out.println(d);
+    }
+  }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.lang.*;
+
+
+
+public class Main
+{
+
+  public static void main(String[] args)
+  {
+  Scanner s=new Scanner(System.in);
+  int t=s.nextInt();
+  int a=0,b=0,c=0,d=0;
+  while(t-->0)
+  {
+    a=s.nextInt();
+    b=s.nextInt();
+    c=s.nextInt();
+    d=s.nextInt();
+    if(a==c && a==b+d)
+    {
+      System.out.println("YES");
+    }
+    else if(a==d && a==b+c)
+    {
+        System.out.println("YES");
+    }
+    else if(b==c && b==a+d)
+    {
+        System.out.println("YES");
+    }
+    else if(b==d && b==a+c)
+    {
+        System.out.println("YES");
+    }
+    else
+    {
+        System.out.println("NO");
+    }
+  //  System.out.println(a+b);
+    
+    
+  }
+
+  
+
+  }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut t = sc.next_i32();
+    let mut out = String::new();
+
+    while t > 0 {
+        t -= 1;
+        let a = sc.next_i32();
+        let b = sc.next_i32();
+        let c = sc.next_i32();
+        let d = sc.next_i32();
+
+        if a == c && a == b + d {
+            out.push_str("YES\n");
+        } else if a == d && a == b + c {
+            out.push_str("YES\n");
+        } else if b == c && b == a + d {
+            out.push_str("YES\n");
+        } else if b == d && b == a + c {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+public class Taxi 
+{
+    public static void main(String args[])
+    {
+        Scanner ip = new Scanner(System.in);
+        int a = ip.nextInt();
+        int c1=0,g2=0,g3=0,c4=0,b,c,d;
+        int[] x = new int[a];
+        for(int i=0;i<x.length;i++)
+        {
+            x[i]=ip.nextInt();
+            if(x[i]==1)
+            c1++;
+            else if(x[i]==2)
+            g2++;
+            else if(x[i]==3)
+            g3++;
+            else
+            c4++;
+        }
+        if(g3>c1)
+        {
+            b=g3-c1;
+            if(g2%2==0)
+                System.out.println(c4+(g3-b)+b+(g2/2));
+            else
+                System.out.println(c4+(g3-b)+b+(g2/2)+1);
+        }
+        else if(g3<c1 && g2%2==0)
+        {
+            c=c1-g3;
+            if((c%4)==0)
+                System.out.println(c4+(c1-c)+(g2/2)+(c/4));
+            else
+                System.out.println(c4+(c1-c)+(g2/2)+(c/4)+1);
+        }
+        else if(g3<c1 && g2%2!=0)
+        {
+            d=c1-g3;
+            if((d%4)<=2)
+                System.out.println(c4+(c1-d)+(g2/2)+(d/4)+1);
+            else if((d%4)==0)
+                System.out.println(c4+(c1-d)+(g2/2)+(d/4)+1);
+            else
+                System.out.println(c4+(c1-d)+(g2/2)+(d/4)+2);
+        }
+        else
+        {
+            if(g2%2==0)
+                System.out.println(c4+g3+(g2/2));
+            else
+                System.out.println(c4+g3+(g2/2)+1);
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let a: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut c1: i32 = 0;
+    let mut g2: i32 = 0;
+    let mut g3: i32 = 0;
+    let mut c4: i32 = 0;
+
+    let mut x: Vec<i32> = vec![0; a as usize];
+    for i in 0..x.len() {
+        let val: i32 = it.next().unwrap().parse().unwrap();
+        x[i] = val;
+        if x[i] == 1 {
+            c1 += 1;
+        } else if x[i] == 2 {
+            g2 += 1;
+        } else if x[i] == 3 {
+            g3 += 1;
+        } else {
+            c4 += 1;
+        }
+    }
+
+    let ans: i32;
+    if g3 > c1 {
+        let b = g3 - c1;
+        if g2 % 2 == 0 {
+            ans = c4 + (g3 - b) + b + (g2 / 2);
+        } else {
+            ans = c4 + (g3 - b) + b + (g2 / 2) + 1;
+        }
+    } else if g3 < c1 && g2 % 2 == 0 {
+        let c = c1 - g3;
+        if (c % 4) == 0 {
+            ans = c4 + (c1 - c) + (g2 / 2) + (c / 4);
+        } else {
+            ans = c4 + (c1 - c) + (g2 / 2) + (c / 4) + 1;
+        }
+    } else if g3 < c1 && g2 % 2 != 0 {
+        let d = c1 - g3;
+        if (d % 4) <= 2 {
+            ans = c4 + (c1 - d) + (g2 / 2) + (d / 4) + 1;
+        } else if (d % 4) == 0 {
+            ans = c4 + (c1 - d) + (g2 / 2) + (d / 4) + 1;
+        } else {
+            ans = c4 + (c1 - d) + (g2 / 2) + (d / 4) + 2;
+        }
+    } else {
+        if g2 % 2 == 0 {
+            ans = c4 + g3 + (g2 / 2);
+        } else {
+            ans = c4 + g3 + (g2 / 2) + 1;
+        }
+    }
+
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

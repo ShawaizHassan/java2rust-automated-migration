@@ -1,0 +1,213 @@
+INDEX: 262 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Arrays;
+import java.util.Scanner;
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner input= new Scanner(System.in);
+		int a = input.nextInt();
+		int b = input.nextInt();
+		int c = input.nextInt();
+		int d= input.nextInt();
+		int m[]= new int[3];
+		m[1]=a;
+		m[0]=b;
+		m[2]=c;
+		Arrays.sort(m);
+		int d1=m[1]-m[0];
+		int d2=m[2]-m[1];
+		int answer=0;
+		if(d1>=d){
+		}else{
+			answer+=d-d1;
+		}
+		if(d2>=d){
+		}else{
+			answer+=d-d2;
+		}
+		System.out.println(answer);
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+public class TheRank {
+
+    
+    public static void main(String[] args) {
+        Scanner input=new Scanner(System.in);
+        int n,max=0,m=1,i;
+        n=input.nextInt();
+        for ( i = 0; i < n; i++) {
+            int a,b,c,d,sum=0;
+            a=input.nextInt();
+            b=input.nextInt();
+            c=input.nextInt();
+            d=input.nextInt();
+            if(i==0){
+                max=a+b+c+d;
+            }else{
+                 sum=a+b+c+d;
+            }
+           
+            if(sum>max){
+              
+                m++;
+                
+            }
+        }
+        System.out.println(m);
+    }
+    
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut max: i32 = 0;
+    let mut m: i32 = 1;
+
+    for i in 0..n {
+        let a: i32 = it.next().unwrap().parse().unwrap();
+        let b: i32 = it.next().unwrap().parse().unwrap();
+        let c: i32 = it.next().unwrap().parse().unwrap();
+        let d: i32 = it.next().unwrap().parse().unwrap();
+
+        let mut sum: i32 = 0;
+        if i == 0 {
+            max = a + b + c + d;
+        } else {
+            sum = a + b + c + d;
+        }
+
+        if sum > max {
+            m += 1;
+        }
+    }
+
+    println!("{}", m);
+}
+```
+
+Java:
+```
+
+import java.io.IOException;
+import java.util.Scanner;
+public class Taxi {
+public static void main(String[] args) throws IOException {
+        Scanner scn = new Scanner(System.in);
+    int groups=scn.nextInt(),a=0,b=0,c=0,d=0;
+    for(int i=0;i<=groups-1;i++){int x = scn.nextInt();switch(x){
+    case 4:a++;break;case 3:b++;break;
+    case 2:c++;break;case 1:d++;break;
+    }}int answer=a+b+(c/2);
+    d-=b;
+    if(c%2!=0){answer++;
+    d=d-2;}
+    if(d>0){answer+=d/4;
+    if(d%4!=0)answer++;}
+    System.out.println(answer);
+    }}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut scn = Scanner::new();
+    let groups = scn.next_i32();
+    let mut a = 0i32;
+    let mut b = 0i32;
+    let mut c = 0i32;
+    let mut d = 0i32;
+
+    for _ in 0..groups {
+        let x = scn.next_i32();
+        match x {
+            4 => a += 1,
+            3 => b += 1,
+            2 => c += 1,
+            1 => d += 1,
+            _ => {}
+        }
+    }
+
+    let mut answer = a + b + (c / 2);
+    d -= b;
+    if c % 2 != 0 {
+        answer += 1;
+        d -= 2;
+    }
+    if d > 0 {
+        answer += d / 4;
+        if d % 4 != 0 {
+            answer += 1;
+        }
+    }
+
+    println!("{}", answer);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

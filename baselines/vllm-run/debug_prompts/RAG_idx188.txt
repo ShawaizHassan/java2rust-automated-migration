@@ -1,0 +1,533 @@
+INDEX: 188 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.IOException; 
+import java.io.InputStream; 
+import java.io.PrintWriter; 
+import java.util.*; 
+ 
+
+public class d{
+
+	static class Pos{
+		int i,j;
+		Pos(int i, int j){this.i=i;this.j=j;}
+	}
+	static class Node{
+		int i,j,k,l,c;
+		Node(int i,int j,int k,int l,int c){this.i=i;this.j=j;this.k=k;this.l=l;this.c=c;}
+	}
+
+	static void solve(){
+		int n = ni();
+		int[][][][] dis = new int[n][n][3][n*n+1];
+		Pos[] pos =new Pos[n*n];
+		for(int i=0;i<n;++i)for(int j=0;j<n;++j)pos[ni()-1] = new Pos(i, j);
+		for(int i=0;i<n;++i)for(int j=0;j<n;++j)for(int k=0;k<3;++k)for(int l=0;l<=n*n;++l)dis[i][j][k][l]=Integer.MAX_VALUE;
+		PriorityQueue<Node> que = new PriorityQueue<>((a,b)->a.c-b.c);
+		for(int k=0;k<3;++k){
+			dis[pos[0].i][pos[0].j][k][1]=0;
+			que.add(new Node(pos[0].i, pos[0].j, k, 1, 0));
+		}
+		List<Integer> movex[] = new List[3];
+		List<Integer> movey[] = new List[3];
+		movex[0] = Arrays.asList(-2,-2,-1,-1,1,1,2,2);
+		movey[0] = Arrays.asList(1,-1,2,-2,2,-2,1,-1);
+		for(int i=1;i<3;++i){
+			movex[i]=new ArrayList<>();
+			movey[i]=new ArrayList<>();
+		}
+		for(int i=1;i<=n;++i){
+			movex[1].add(i);movex[1].add(-i);
+			movey[1].add(0);movey[1].add(0);
+			movex[1].add(0);movex[1].add(0);
+			movey[1].add(i);movey[1].add(-i);
+
+			movex[2].add(i);movex[2].add(-i);
+			movey[2].add(i);movey[2].add(-i);
+			movex[2].add(i);movex[2].add(-i);
+			movey[2].add(-i);movey[2].add(i);
+		}
+		while(!que.isEmpty()){
+			Node node = que.poll();
+			if(node.c > dis[node.i][node.j][node.k][node.l])continue;
+			int i=node.i, j=node.j, k=node.k, l=node.l;
+			if(l==n*n){
+				out.println(node.c/1000+" "+node.c%1000);
+				return;
+			}
+			for(int kk=0;kk<3;++kk){
+				if(kk==k)continue;
+				if(dis[i][j][kk][l] > dis[i][j][k][l]+1001){
+					dis[i][j][kk][l]=dis[i][j][k][l]+1001;
+					que.add(new Node(i, j, kk, l, dis[i][j][kk][l]));
+				}
+			}
+			for(int x=0;x<movex[k].size();++x){
+				int dx = movex[k].get(x);
+				int dy = movey[k].get(x);
+
+				if(inrange(i+dy, j+dx, n, n)){
+					int ll = l;
+					if(pos[l].i==i+dy && pos[l].j==j+dx)++ll;
+					if(dis[i+dy][j+dx][k][ll]>dis[i][j][k][l]+1000){
+						dis[i+dy][j+dx][k][ll]=dis[i][j][k][l]+1000;
+						que.add(new Node(i+dy, j+dx, k, ll, dis[i+dy][j+dx][k][ll]));
+					}
+				}
+			}
+		}
+		
+
+
+	} 
+ 
+ 
+ 
+ 
+	 public static void main(String[] args){ 
+		 solve(); 
+		 out.flush(); 
+	 } 
+	 private static InputStream in = System.in; 
+	 private static PrintWriter out = new PrintWriter(System.out); 
+ 
+	 static boolean inrange(int y, int x, int h, int w){ 
+		 return y>=0 && y<h && x>=0 && x<w; 
+	 } 
+	 @SuppressWarnings("unchecked") 
+	 static<T extends Comparable> int lower_bound(List<T> list, T key){ 
+		 int lower=-1;int upper=list.size(); 
+		 while(upper - lower>1){ 
+		 int center =(upper+lower)/2; 
+		 if(list.get(center).compareTo(key)>=0)upper=center; 
+		 else lower=center; 
+		 } 
+		 return upper; 
+	 } 
+	 @SuppressWarnings("unchecked") 
+	 static <T extends Comparable> int upper_bound(List<T> list, T key){ 
+		 int lower=-1;int upper=list.size(); 
+		 while(upper-lower >1){ 
+		 int center=(upper+lower)/2; 
+		 if(list.get(center).compareTo(key)>0)upper=center; 
+		 else lower=center; 
+		 } 
+		 return upper; 
+	 } 
+	 @SuppressWarnings("unchecked") 
+	 static <T extends Comparable> boolean next_permutation(List<T> list){ 
+		 int lastIndex = list.size()-2; 
+		 while(lastIndex>=0 && list.get(lastIndex).compareTo(list.get(lastIndex+1))>=0)--lastIndex; 
+		 if(lastIndex<0)return false; 
+		 int swapIndex = list.size()-1; 
+		 while(list.get(lastIndex).compareTo(list.get(swapIndex))>=0)swapIndex--; 
+		 T tmp = list.get(lastIndex); 
+		 list.set(lastIndex++, list.get(swapIndex)); 
+		 list.set(swapIndex, tmp); 
+		 swapIndex = list.size()-1; 
+		 while(lastIndex<swapIndex){ 
+		 tmp = list.get(lastIndex); 
+		 list.set(lastIndex, list.get(swapIndex)); 
+		 list.set(swapIndex, tmp); 
+		 ++lastIndex;--swapIndex; 
+		 } 
+		 return true; 
+	 } 
+	 private static final byte[] buffer = new byte[1<<15]; 
+	 private static int ptr = 0; 
+	 private static int buflen = 0; 
+	 private static boolean hasNextByte(){ 
+		 if(ptr<buflen)return true; 
+		 ptr = 0; 
+		 try{ 
+			 buflen = in.read(buffer); 
+		 } catch (IOException e){ 
+			 e.printStackTrace(); 
+		 } 
+		 return buflen>0; 
+	 } 
+	 private static int readByte(){ if(hasNextByte()) return buffer[ptr++]; else return -1;} 
+	 private static boolean isSpaceChar(int c){ return !(33<=c && c<=126);} 
+	 private static int skip(){int res; while((res=readByte())!=-1 && isSpaceChar(res)); return res;} 
+ 
+	 private static double nd(){ return Double.parseDouble(ns()); } 
+	 private static char nc(){ return (char)skip(); } 
+	 private static String ns(){ 
+		 StringBuilder sb = new StringBuilder(); 
+		 for(int b=skip();!isSpaceChar(b);b=readByte())sb.append((char)b); 
+		 return sb.toString(); 
+	 } 
+	 private static int[] nia(int n){ 
+		 int[] res = new int[n]; 
+		 for(int i=0;i<n;++i)res[i]=ni(); 
+		 return res; 
+	 } 
+	 private static long[] nla(int n){ 
+		 long[] res = new long[n]; 
+		 for(int i=0;i<n;++i)res[i]=nl(); 
+		 return res; 
+	 } 
+	 private static int ni(){ 
+		 int res=0,b; 
+		 boolean minus=false; 
+		 while((b=readByte())!=-1 && !((b>='0'&&b<='9') || b=='-')); 
+		 if(b=='-'){ 
+			 minus=true; 
+			 b=readByte(); 
+		 } 
+		 for(;'0'<=b&&b<='9';b=readByte())res=res*10+(b-'0'); 
+		 return minus ? -res:res; 
+	 } 
+	 private static long nl(){ 
+		 long res=0,b; 
+		 boolean minus=false; 
+		 while((b=readByte())!=-1 && !((b>='0'&&b<='9') || b=='-')); 
+		 if(b=='-'){ 
+			 minus=true; 
+			 b=readByte(); 
+		 } 
+		 for(;'0'<=b&&b<='9';b=readByte())res=res*10+(b-'0'); 
+		 return minus ? -res:res; 
+	} 
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.Scanner;
+
+public class B {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int[] c = new int[n];
+        int size = 0;
+        for (int i = 0; i < n; i++) {
+            c[i] = in.nextInt();
+            size = Math.max(size, c[i]);
+        }
+
+        ArrayList<node> list = new ArrayList<node>();
+        node[][] grid = new node[n][size];
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < c[i]; j++) {
+                node t = new node(i, j, in.nextInt());
+                grid[i][j] = t;
+                list.add(t);
+            }
+        Collections.sort(list);
+        
+        int cnt = 0, idx = 0;
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < c[i]; j++) {
+                node num = list.get(idx++);
+                if (num.x != i || num.y != j) {
+                    cnt++;
+                    ans.append((num.x + 1) + " " + (num.y + 1) + " " + (i + 1)
+                            + " " + (j + 1) + "\n");
+                    // Swapping
+                    grid[num.x][num.y] = grid[i][j];
+                    grid[i][j].x = num.x;
+                    grid[i][j].y = num.y;
+                }
+            }
+
+        System.out.println(cnt);
+        System.out.print(ans.toString());
+    }
+
+    static class node implements Comparable<node> {
+        int x, y, num;
+
+        public node(int xx, int yy, int nn) {
+            x = xx;
+            y = yy;
+            num = nn;
+        }
+
+        @Override
+        public int compareTo(node n) {
+            return num - n.num;
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+#[derive(Clone)]
+struct Node {
+    x: i32,
+    y: i32,
+    num: i32,
+}
+
+impl Node {
+    fn new(xx: i32, yy: i32, nn: i32) -> Self {
+        Self { x: xx, y: yy, num: nn }
+    }
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut c: Vec<i32> = vec![0; n];
+    let mut size: i32 = 0;
+    for i in 0..n {
+        c[i] = sc.next_i32();
+        if c[i] > size {
+            size = c[i];
+        }
+    }
+
+    let size_usize = size as usize;
+    let mut list: Vec<Node> = Vec::new();
+    let mut grid: Vec<Vec<Option<Node>>> = vec![vec![None; size_usize]; n];
+
+    for i in 0..n {
+        let ci = c[i] as usize;
+        for j in 0..ci {
+            let t = Node::new(i as i32, j as i32, sc.next_i32());
+            grid[i][j] = Some(t.clone());
+            list.push(t);
+        }
+    }
+
+    list.sort_by(|a, b| {
+        let da = a.num as i64;
+        let db = b.num as i64;
+        if da < db {
+            Ordering::Less
+        } else if da > db {
+            Ordering::Greater
+        } else {
+            Ordering::Equal
+        }
+    });
+
+    let mut cnt: i32 = 0;
+    let mut idx: usize = 0;
+    let mut ans = String::new();
+
+    for i in 0..n {
+        let ci = c[i] as usize;
+        for j in 0..ci {
+            let num = &list[idx];
+            idx += 1;
+
+            if num.x != i as i32 || num.y != j as i32 {
+                cnt += 1;
+                ans.push_str(&(num.x + 1).to_string());
+                ans.push(' ');
+                ans.push_str(&(num.y + 1).to_string());
+                ans.push(' ');
+                ans.push_str(&((i as i32) + 1).to_string());
+                ans.push(' ');
+                ans.push_str(&((j as i32) + 1).to_string());
+                ans.push('\n');
+
+                let nx = num.x as usize;
+                let ny = num.y as usize;
+
+                grid[nx][ny] = grid[i][j].clone();
+
+                if let Some(ref mut node_at_ij) = grid[i][j] {
+                    node_at_ij.x = num.x;
+                    node_at_ij.y = num.y;
+                }
+            }
+        }
+    }
+
+    print!("{}\n{}", cnt, ans);
+}
+```
+
+Java:
+```
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+/**
+ *
+ * @author fz
+ */
+public class RockB {
+    Scanner in = new Scanner(System.in);
+
+    private RockB() throws IOException {
+        //in.nextLine();
+        String s = in.nextLine();
+        List<List<Integer>> dist = new ArrayList<>();
+        for(int i = 0; i < 26; i++)
+            dist.add(new ArrayList<>());
+        for(int i = 0; i < s.length(); i++) {
+            dist.get(s.charAt(i) - 'A').add(i);
+        }
+        int res = 0;
+        for(List<Integer> list : dist) {
+            int val = hp(list);
+            res = Math.max(res, val);
+//            out(val);
+        }
+        out(res);
+        
+        
+        
+        
+        
+    }
+    private int hp(List<Integer> list) {
+        if(list.size() == 0)
+            return 0;
+        int[] dp = new int[list.size()];
+        dp[0] = 1;
+        for(int i = 1; i < dp.length; i++){
+            int val = 1;
+            for(int j = 0; j < i; j++) {
+                if((list.get(i) - list.get(j)) % 2 == 1) {
+                    val = Math.max(val, 1 + dp[j]);
+                }
+            }
+            dp[i] = val;
+        }
+        return dp[dp.length - 1];
+    }
+    
+    
+    
+    
+    private int[] ns(int n) {
+        int[] a = new int[n];
+        for(int i = 0; i < n; i++) {
+            a[i] = in.nextInt();
+        }
+        return a;
+    }
+    private int[][] nmat(int m, int n) {//m rows and n cols
+        int[][] res = new int[m][n];
+        for(int i = 0; i < m; i++)
+            for(int j = 0; j < n; j++)
+                res[i][j] = in.nextInt();
+        return res;
+    }
+
+
+    private static void out(Object x) {
+        System.out.println(x);
+    }
+    public static void main(String[] args) throws IOException {
+        new RockB();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn hp(list: &Vec<i32>) -> i32 {
+    if list.is_empty() {
+        return 0;
+    }
+    let n = list.len();
+    let mut dp = vec![0i32; n];
+    dp[0] = 1;
+    for i in 1..n {
+        let mut val = 1i32;
+        for j in 0..i {
+            if ((list[i] - list[j]) % 2).abs() == 1 {
+                val = val.max(1 + dp[j]);
+            }
+        }
+        dp[i] = val;
+    }
+    dp[n - 1]
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut lines = input.lines();
+    let s = lines.next().unwrap_or("").to_string();
+
+    let mut dist: Vec<Vec<i32>> = vec![Vec::new(); 26];
+    for (i, b) in s.bytes().enumerate() {
+        if b'A' <= b && b <= b'Z' {
+            dist[(b - b'A') as usize].push(i as i32);
+        }
+    }
+
+    let mut res = 0i32;
+    for list in dist.iter() {
+        let val = hp(list);
+        if val > res {
+            res = val;
+        }
+    }
+
+    println!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

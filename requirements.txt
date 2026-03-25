@@ -6,3 +6,4 @@ jsonlines
 # Optional: for docs
 mkdocs
 mkdocs-material
+rank_bm25

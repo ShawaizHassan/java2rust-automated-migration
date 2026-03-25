@@ -1,0 +1,578 @@
+INDEX: 489 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import javax.swing.*;
+import java.lang.reflect.Array;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+import java.math.*;
+import java.util.stream.Stream;
+
+
+
+// Please name your class Main
+public class Main {
+    static FastScanner fs=new FastScanner();
+    static class FastScanner {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer("");
+        public String next() {
+            while (!st.hasMoreElements())
+                try {
+                    st=new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return st.nextToken();
+        }
+        int Int() {
+            return Integer.parseInt(next());
+        }
+
+        long Long() {
+            return Long.parseLong(next());
+        }
+
+        String Str(){
+            return next();
+        }
+    }
+
+
+    public static void main (String[] args) throws java.lang.Exception {
+        PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+        //reading /writing file
+        //Scanner in=new Scanner(System.in);
+        //Scanner in=new Scanner(new File("input.txt"));
+        //PrintWriter pr=new PrintWriter("output.txt");
+
+
+        int T=1;
+        for(int t=0;t<T;t++){
+            Solution sol1=new Solution(out,fs);
+            sol1.solution(T,t);
+        }
+        out.flush();
+
+    }
+
+
+    public static int[] Arr(int n){
+        int A[]=new int[n];
+        for(int i=0;i<n;i++)A[i]=Int();
+        return A;
+    }
+    public static int Int(){
+        return fs.Int();
+    }
+    public static long Long(){
+        return fs.Long();
+    }
+    public static String Str(){
+        return fs.Str();
+    }
+
+}
+
+
+
+
+
+
+
+
+class Solution {
+    PrintWriter out;
+    int INF = Integer.MAX_VALUE;
+    int NINF = Integer.MIN_VALUE;
+    int MOD = 998244353;
+    int mod = 1000000007;
+    Main.FastScanner fs;
+
+
+    public Solution(PrintWriter out, Main.FastScanner fs) {
+        this.out = out;
+        this.fs = fs;
+
+    }
+
+
+    public void solution(int all, int testcase) {
+        int n = fs.Int();
+        mod = fs.Int();
+
+        long dp[][] = new long[n][n * n + 5];
+        dp[0][0] = 1;
+        for(int i = 1; i < n; i++) {
+            for(int j = 0; j < dp[0].length; j++) {
+                for(int cnt = 0; cnt <= i; cnt++){
+                    if(j - cnt >= 0) {
+                        dp[i][j] += dp[i - 1][j - cnt];
+                        dp[i][j] %= mod;
+                        if(dp[i][j] == 0){
+                            dp[i][j] += mod;
+                        }
+                    }
+                }
+            }
+        }
+
+        long sums[][] = new long[dp.length][dp[0].length];
+        for(int i = 0; i < dp.length;i++){
+            int sum = 0;
+            for(int j = 0; j < dp[0].length; j++){
+                sum += dp[i][j];
+                sum %= mod;
+                if(sum == 0) sum += mod;
+                sums[i][j] = sum;
+            }
+        }
+
+
+        //init
+        long fact[] = new long[501 * 501];
+        fact[0] = fact[1] = 1;
+        for(int i = 2; i < fact.length;i++){
+            fact[i] = fact[i - 1] * i;
+            fact[i] %= mod;
+        }
+        long ncr[][] = new long[501][501];
+        ncr[0][0]=1;
+        for (int i=1;i<ncr.length;i++) {
+            ncr[i][0]=1;
+            for (int j=1;j<ncr[0].length;j++) {
+                ncr[i][j]=(ncr[i-1][j] + ncr[i-1][j-1])%mod;
+                if(ncr[i][j] == 0)ncr[i][j] += mod;
+            }
+        }
+
+
+
+        long res = 0;
+        for(int i = 0; i <= n - 2; i++) {
+            int cnt = n - i;
+            int pre = n - cnt;
+            long com = (ncr[n][pre] * fact[pre]) % mod;
+            if(com == 0) com += mod;
+            long sum = 0;
+
+            long last[] = dp[cnt - 2];
+            long ssum = 0;
+            long total =0;
+            for(int j = 2; j < dp[0].length; j++) { // j == inversions
+                total += sums[cnt - 2][j - 2] * (cnt - 1);
+                total %= mod;
+                if(total == 0) total += mod;
+
+                sum += last[j] * total;
+                sum %= mod;
+                if(sum == 0) sum += mod;
+
+                ssum += sums[cnt - 2][j - 2];
+                if(j - cnt - 1 >= 0) {
+                    ssum -= sums[cnt - 2][j - cnt - 1];
+                }
+                ssum += mod;
+                ssum %= mod;
+                if(ssum == 0) ssum += mod;
+
+                total -= ssum;
+                total += mod;
+                total %= mod;
+                if(total == 0)total += mod;
+            }
+            res += sum * com;
+            res%=mod;
+            if(res == 0) res += mod;
+        }
+        out.println(res % mod);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.*;
+
+public class A {
+
+static int mod=(int)1e9+7;
+ public static void main(String[] $) {
+
+  Scanner sc=new Scanner(System.in);
+int t=sc.nextInt();
+while(t-->0) {
+int n=sc.nextInt();
+int q=sc.nextInt();
+int a[]=new int[n];
+for(int i=0;i<n;i++) {
+  a[i]=sc.nextInt();
+}
+
+long sum=0;
+//for(int i=0;i<n;i++) {
+//  sum+=Math.max(0,a[i]-a[i+1]);
+//}
+long  dp[][]=new long[n+1][2];
+for(int i=0;i<=n;i++) {
+  for(int j=0;j<2;j++) {
+    dp[i][j]=-1;
+  }
+}
+long max=(solve(dp,a,n,0,0));
+System.out.println(max);
+
+//System.out.println(sum);
+
+}
+  
+}
+ static long solve(long dp[][],int a[],int n,int prev,long sum) {
+   if(n==0) {
+     return 0;
+   }
+//   if(n==1) {
+//     return a[n-1];
+//   }
+//  
+   if(dp[n][prev]!=-1) {
+    return dp[n][prev];
+   }
+   if(prev==0) {
+ return dp[n][0]=Math.max(a[n-1]+solve(dp,a,n-1,1,sum),solve(dp,a,n-1,0,sum));
+   }
+   else 
+   return dp[n][1]=Math.max(-1*a[n-1]+solve(dp,a,n-1,0,sum),solve(dp,a,n-1,1,sum));
+   
+   
+ }
+ static long s(long n) 
+ { 
+
+
+  long k = (long)(Math.log(n) / Math.log(2)); 
+
+ 
+  return k; 
+ } 
+static long pow(long x,long y) {
+  long res=1l;
+  while(y!=0) {
+    if(y%2==1) {
+      res=x*res%mod;
+    }
+    y/=2;
+    x=x*x%mod;
+  }
+  return res;
+}
+
+}
+class pair{
+  int x,y;
+  pair(int x,int y){
+    this.x=x;
+    this.y=y;
+  }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+const MOD: i64 = 1_000_000_007;
+
+fn solve(dp: &mut Vec<Vec<i64>>, a: &Vec<i32>, n: usize, prev: usize, _sum: i64) -> i64 {
+    if n == 0 {
+        return 0;
+    }
+    if dp[n][prev] != -1 {
+        return dp[n][prev];
+    }
+    let res = if prev == 0 {
+        let take = a[n - 1] as i64 + solve(dp, a, n - 1, 1, _sum);
+        let skip = solve(dp, a, n - 1, 0, _sum);
+        take.max(skip)
+    } else {
+        let take = -(a[n - 1] as i64) + solve(dp, a, n - 1, 0, _sum);
+        let skip = solve(dp, a, n - 1, 1, _sum);
+        take.max(skip)
+    };
+    dp[n][prev] = res;
+    res
+}
+
+#[allow(dead_code)]
+fn s(n: i64) -> i64 {
+    // Java: (long)(Math.log(n) / Math.log(2))
+    ( (n as f64).ln() / 2f64.ln() ) as i64
+}
+
+#[allow(dead_code)]
+fn pow(mut x: i64, mut y: i64) -> i64 {
+    let mut res: i64 = 1;
+    while y != 0 {
+        if y % 2 == 1 {
+            res = (x * res) % MOD;
+        }
+        y /= 2;
+        x = (x * x) % MOD;
+    }
+    res
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n_i32 = sc.next_i32();
+        let _q = sc.next_i32();
+        let n = n_i32 as usize;
+        let mut a = vec![0i32; n];
+        for i in 0..n {
+            a[i] = sc.next_i32();
+        }
+
+        let mut dp = vec![vec![-1i64; 2]; n + 1];
+        let maxv = solve(&mut dp, &a, n, 0, 0);
+        out.push_str(&format!("{}\n", maxv));
+    }
+
+    print!("{}", out);
+}
+
+#[allow(dead_code)]
+struct Pair {
+    x: i32,
+    y: i32,
+}
+impl Pair {
+    fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.StringTokenizer;
+
+public class A415 {
+	static long mod = 1_000_000_007;
+	static long twoInv = 500000004;
+	public static void main(String[] args) {
+		FS scan = new FS(System.in);
+		int N = scan.nextInt();
+		ArrayList<Integer> list = new ArrayList<>();
+		for(int i=0;i<N;i++)list.add(scan.nextInt());
+		
+		Collections.sort(list);
+		
+		long[] d = new long[N];
+		long sum = 0;
+		long two = 1;
+		for(int i=1;i<N;i++){
+			d[i] = (list.get(i)*two)%mod;
+			two*=2;
+			two%=mod;
+			sum+=d[i];
+			sum%=mod;
+			
+		}
+		long sol = 0;
+		for(int i=0;i<N-1;i++){
+			sol+=sum;
+			sol-=(list.get(i)*((exp(2,N-(i+1),mod)-1+mod)%mod));
+			sol%=mod;
+			sol+=mod;
+			sol%=mod;
+			
+			sum-=list.get(i+1);
+			sum+=mod;
+			sum%=mod;
+			sum*=twoInv;
+			sum%=mod;
+		}
+		System.out.println(sol);
+	}
+	private static long exp(long a, long b, long c) {
+		if(b==0)return 1L;
+		long temp = exp(a,b/2,c);
+		return b%2==0?(temp*temp)%c:(a*((temp*temp)%c))%c;
+	}
+	private static class FS {
+		BufferedReader br;
+		StringTokenizer st;
+		public FS(InputStream in) {
+			br = new BufferedReader(new InputStreamReader(in));
+		}
+		String next(){
+			while(st==null||!st.hasMoreElements()){
+				try{st = new StringTokenizer(br.readLine());}
+				catch(IOException e){e.printStackTrace();}
+			}
+			return st.nextToken();
+		}
+		int nextInt() {return Integer.parseInt(next());}
+		long nextLong() {return Long.parseLong(next());}
+		double nextDouble() { return Double.parseDouble(next());}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 1_000_000_007;
+const TWO_INV: i64 = 500_000_004;
+
+fn pow_mod(mut a: i64, mut b: i64, m: i64) -> i64 {
+    let mut res: i64 = 1;
+    a %= m;
+    while b > 0 {
+        if (b & 1) == 1 {
+            res = (res * a) % m;
+        }
+        a = (a * a) % m;
+        b >>= 1;
+    }
+    res
+}
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as usize;
+    let mut list: Vec<i64> = Vec::with_capacity(n);
+    for _ in 0..n {
+        list.push(fs.next_i32() as i64);
+    }
+    list.sort();
+
+    let mut d = vec![0i64; n];
+    let mut sum: i64 = 0;
+    let mut two: i64 = 1;
+    for i in 1..n {
+        d[i] = (list[i] % MOD) * two % MOD;
+        two = (two * 2) % MOD;
+        sum += d[i];
+        sum %= MOD;
+    }
+
+    let mut sol: i64 = 0;
+    if n >= 2 {
+        for i in 0..(n - 1) {
+            sol += sum;
+            sol %= MOD;
+
+            let pow = pow_mod(2, (n - (i + 1)) as i64, MOD);
+            let mut sub = (pow - 1) % MOD;
+            if sub < 0 {
+                sub += MOD;
+            }
+            sub = (list[i] % MOD) * sub % MOD;
+
+            sol -= sub;
+            sol %= MOD;
+            if sol < 0 {
+                sol += MOD;
+            }
+
+            sum -= list[i + 1] % MOD;
+            sum %= MOD;
+            if sum < 0 {
+                sum += MOD;
+            }
+            sum = (sum * TWO_INV) % MOD;
+        }
+    }
+
+    println!("{}", sol % MOD);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

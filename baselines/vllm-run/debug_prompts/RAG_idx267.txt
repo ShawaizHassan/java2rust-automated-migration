@@ -1,0 +1,217 @@
+INDEX: 267 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class test {
+
+public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int N = Integer.parseInt(in.next());
+    int K = Integer.parseInt(in.next());
+    int min = Integer.MAX_VALUE;
+    for (int i = 0; i < N; i++) {
+        int a = Integer.parseInt(in.next());
+        if (K % a == 0 && min > K/a) min = K/a;
+    }
+    System.out.println(min);
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+
+public class test2 {
+ 
+    public static void main(String[] args) 
+    {
+	new test2().run();
+    }
+    
+    void run()
+    {
+	Scanner in=new Scanner(System.in);
+	int n=in.nextInt();
+	char[] arr=in.next().toCharArray();
+	
+	int H=0;
+	
+	for(int i=0;i<n;i++)
+	    if(arr[i]=='H')
+		H++;
+	
+	int min=Integer.MAX_VALUE;
+	
+	for(int i=0;i<n;i++)
+	    if(arr[i]=='H')
+	    {
+		int t=0;
+		for(int j=0;j<H;j++)
+		{
+		    if(arr[(i+j)%n]!='H')
+			t++;
+		}
+		
+		min=Math.min(min,t);
+	    }
+	
+	System.out.println(min);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let s = it.next().unwrap_or("");
+    let arr: Vec<u8> = s.as_bytes().to_vec();
+
+    let mut h: usize = 0;
+    for &c in &arr {
+        if c == b'H' {
+            h += 1;
+        }
+    }
+
+    let mut min_val: i32 = i32::MAX;
+
+    for i in 0..n {
+        if arr[i] == b'H' {
+            let mut t: i32 = 0;
+            for j in 0..h {
+                if arr[(i + j) % n] != b'H' {
+                    t += 1;
+                }
+            }
+            if t < min_val {
+                min_val = t;
+            }
+        }
+    }
+
+    println!("{}", min_val);
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class Jonny {
+static  Scanner in=new Scanner(System.in);
+public static void main(String args[]){
+	int t=in.nextInt();
+	for(int i=0;i<t;i++) {
+		int n=in.nextInt();
+		int[][] a=new int[n][2];
+		for(int j=0;j<n;j++)
+			for(int k=0;k<2;k++)a[j][k]=in.nextInt();
+		//Arrays.sort(a, Comparator.comparingInt(arr -> arr[1]));
+		int max=0; int min=a[0][1];
+		for(int j=0;j<n;j++) {
+			if(a[j][1]<min)min=a[j][1];
+		if(a[j][0]>max)max=a[j][0];
+		}
+		if(max-min<0)System.out.println(0);
+		else System.out.println(max-min);
+	}
+	
+}}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32() as usize;
+        let mut a: Vec<[i32; 2]> = vec![[0, 0]; n];
+        for j in 0..n {
+            for k in 0..2 {
+                a[j][k] = sc.next_i32();
+            }
+        }
+
+        let mut max_val: i32 = 0;
+        let mut min_val: i32 = a[0][1];
+        for j in 0..n {
+            if a[j][1] < min_val {
+                min_val = a[j][1];
+            }
+            if a[j][0] > max_val {
+                max_val = a[j][0];
+            }
+        }
+
+        let diff = max_val - min_val;
+        if diff < 0 {
+            out.push_str("0\n");
+        } else {
+            out.push_str(&format!("{}\n", diff));
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,332 @@
+INDEX: 0 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+public class main {
+    
+    public static int [] mem;
+    public static int a,b,c;
+    
+    public static void main(String[] args) {
+        
+        Scanner s= new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+        //BufferedReader n = new BufferedReader(new InputStreamReader(System.in));
+        
+        int valor=s.nextInt();
+         a=s.nextInt();
+         b=s.nextInt();
+         c=s.nextInt();
+        
+        
+        mem=new int [4001];
+        for(int i=0;i<mem.length;i++){
+            mem[i]=-10000;
+        }
+        mem[0]=0;
+        for(int i = 1;i<mem.length;i++){
+            if(i>=a && i>=b && i>=c){
+                mem[i]= Math.max(1+mem[i-a], Math.max(1+mem[i-b],1+mem[i-c]));
+            }
+            else
+                if(i>=a && i>=b)
+                    mem[i]= Math.max(1+mem[i-a],1+mem[i-b]);
+                else
+                    if(i>=c && i>=b)
+                        mem[i]= Math.max(1+mem[i-c],1+mem[i-b]);
+                    else
+                        if(i>=a && i>=c)
+                            mem[i]= Math.max(1+mem[i-a],1+mem[i-c]);
+                        else
+                            if(i>=a)
+                                mem[i]= 1+mem[i-a];
+                            else
+                                if(i>=b)
+                                    mem[i]= 1+mem[i-b];
+                                else
+                                    if(i>=c)
+                                        mem[i]= 1+mem[i-c];
+        }
+        System.out.println(mem[valor]);
+        
+    }
+    
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import static java.lang.Integer.parseInt;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class C {
+	static long[][] trees;
+	public static void main(String[] args) throws Throwable{
+		BufferedReader in =new BufferedReader(new InputStreamReader(System.in));
+		int N=parseInt(in.readLine().trim());
+		trees=new long[N][];
+		for(int i=0;i<N;i++) {
+			StringTokenizer st=new StringTokenizer(in.readLine());
+			trees[i]=new long[]{parseInt(st.nextToken()), parseInt(st.nextToken())};
+		}
+		mem=new int[N][2];
+		for(int i=0;i<N;i++) {
+			mem[i][0]=-1;
+			mem[i][1]=-1;
+		}
+		if(N>1)
+			System.out.println(f(1, false)+1);
+		else
+			System.out.println(1);
+	}
+	
+	static int[][] mem;
+	
+	static int f(int i, boolean der) {
+		if(i>=trees.length-1)
+			return 1;
+		if(mem[i][der?0:1]>=0)
+			return mem[i][der?0:1];
+		int max=f(i+1,false);
+		if(der) {
+			if(trees[i][0]-trees[i-1][0]>trees[i-1][1]+trees[i][1])
+				max=Math.max(max, f(i+1, false)+1);
+		}	
+		else
+			if(trees[i][0]-trees[i-1][0]>trees[i][1])
+				max=Math.max(max, f(i+1, false)+1);
+		if(trees[i+1][0]-trees[i][0]>trees[i][1])
+			max=Math.max(max, f(i+1, true)+1);
+		return mem[i][der?0:1]=max;
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse::<usize>().unwrap(),
+        None => return,
+    };
+
+    let mut trees: Vec<[i64; 2]> = Vec::with_capacity(n);
+    for _ in 0..n {
+        let x = it.next().unwrap().parse::<i64>().unwrap();
+        let h = it.next().unwrap().parse::<i64>().unwrap();
+        trees.push([x, h]);
+    }
+
+    if n <= 1 {
+        print!("1");
+        return;
+    }
+
+    // dp[i][0] = f(i, true), dp[i][1] = f(i, false)
+    let mut dp: Vec<[i32; 2]> = vec![[0, 0]; n];
+    dp[n - 1] = [1, 1];
+
+    for i in (1..=n - 2).rev() {
+        // der = false
+        let mut best_false = dp[i + 1][1];
+        if trees[i][0] - trees[i - 1][0] > trees[i][1] {
+            best_false = best_false.max(dp[i + 1][1] + 1);
+        }
+        if trees[i + 1][0] - trees[i][0] > trees[i][1] {
+            best_false = best_false.max(dp[i + 1][0] + 1);
+        }
+        dp[i][1] = best_false;
+
+        // der = true
+        let mut best_true = dp[i + 1][1];
+        if trees[i][0] - trees[i - 1][0] > trees[i - 1][1] + trees[i][1] {
+            best_true = best_true.max(dp[i + 1][1] + 1);
+        }
+        if trees[i + 1][0] - trees[i][0] > trees[i][1] {
+            best_true = best_true.max(dp[i + 1][0] + 1);
+        }
+        dp[i][0] = best_true;
+    }
+
+    let ans = dp[1][1] + 1;
+    print!("{}", ans);
+}
+```
+
+Java:
+```
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class D {
+
+	int[] waits = new int[26];
+	char[] s;
+
+	int[] lengthsOfCharacters = new int[26];
+	long[][] mem = new long[26][100000];
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+
+		D d = new D();
+
+		for (int i = 0; i < d.waits.length; i++) {
+			d.waits[i] = scanner.nextInt();
+		}
+
+		d.s = scanner.next().toCharArray();
+
+		long strong = 0;
+
+		for (int i = 0; i < d.s.length; i++) {
+			d.s[i] -= 'a';
+			strong += d.waits[d.s[i]];
+			d.mem[d.s[i]][d.lengthsOfCharacters[d.s[i]]] = strong;
+			d.lengthsOfCharacters[d.s[i]]++;
+		}
+
+		long result = 0;
+		long tempLength = 0;
+		long tempCost = 0;
+
+		HashMap<Long, Long> map = new HashMap();
+		for (int i = 0; i < d.mem.length; i++) {
+			tempLength = d.lengthsOfCharacters[i];
+			tempCost = d.waits[i];
+			for (int j = 0; j < tempLength; j++) {
+				result += map.getOrDefault(d.mem[i][j] - tempCost, 0l);
+				map.put(d.mem[i][j], map.getOrDefault(d.mem[i][j], 0l) + 1);
+
+			}
+			map.clear();
+//			for (int j = 0; j < tempLength; j++) {
+//				for (int j2 = j + 1; j2 < tempLength; j2++) {
+//					if (d.mem[i][j2] - d.mem[i][j] - tempCost == 0) {
+//						result++;
+//					}
+//				}
+//			}
+		}
+
+		System.out.println(result);
+	}
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_string(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let mut waits: [i64; 26] = [0; 26];
+    for i in 0..26 {
+        waits[i] = sc.next_i32() as i64;
+    }
+
+    let s_str = sc.next_string();
+    let s_bytes = s_str.as_bytes();
+
+    let mut lengths_of_characters: [usize; 26] = [0; 26];
+    let mut mem: Vec<Vec<i64>> = vec![vec![0i64; 100000]; 26];
+
+    let mut strong: i64 = 0;
+    for &b in s_bytes.iter() {
+        let c = (b - b'a') as usize;
+        strong += waits[c];
+        let idx = lengths_of_characters[c];
+        mem[c][idx] = strong;
+        lengths_of_characters[c] += 1;
+    }
+
+    let mut result: i64 = 0;
+    let mut map: HashMap<i64, i64> = HashMap::new();
+
+    for i in 0..26 {
+        let temp_len = lengths_of_characters[i];
+        let temp_cost = waits[i];
+        for j in 0..temp_len {
+            let v = mem[i][j];
+            let need = v - temp_cost;
+            if let Some(cnt) = map.get(&need) {
+                result += *cnt;
+            }
+            *map.entry(v).or_insert(0) += 1;
+        }
+        map.clear();
+    }
+
+    println!("{}", result);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

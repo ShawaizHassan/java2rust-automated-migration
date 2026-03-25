@@ -1,0 +1,308 @@
+INDEX: 506 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class _1599_C {
+    public static void main(String[] args) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+        StringTokenizer line = new StringTokenizer(in.readLine());
+        int n = Integer.parseInt(line.nextToken());
+        double p = Double.parseDouble(line.nextToken());
+        int total = choose_three(n);
+        for(int i = 0; i <= n; i++) {
+            double prob = 0;
+            double p1 = (double)i * choose_two(n - i) / total;
+            double p2 = (double)choose_two(i) * (n - i) / total;
+            double p3 = (double)choose_three(i) / total;
+            prob = p1 / 2 + p2 + p3;
+            if(prob >= p) {
+                out.println(i);
+                break;
+            }
+        }
+        in.close();
+        out.close();
+    }
+    static int choose_two(int n) {
+        if(n < 2) return 0;
+        return n * (n - 1) / 2;
+    }
+    static int choose_three(int n) {
+        if(n < 3) return 0;
+        return n * (n - 1) * (n - 2) / 6;
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class WizardsAndHugePrize
+{
+	static int n, l, k, a[];
+	static double[] p;
+	static double[][][] dp;
+	static int offset = 201;
+	public static void main(String[] args) throws IOException
+	{
+		Scanner sc = new Scanner();
+		n = sc.nextInt();
+		l = sc.nextInt();
+		k = sc.nextInt();
+		p = new double[n];
+		a = new int[n];
+		for (int i = 0; i < n; i++)
+			p[i] = sc.nextInt()/100.0;
+		for (int i = 0; i < n; i++)
+			a[i] = sc.nextInt();
+		dp = new double[205][205][410];
+		for (int i = 0; i < dp.length; i++)
+			for (int j = 0; j < dp.length; j++)
+				Arrays.fill(dp[i][j], -1);
+		System.out.println(prob(0, 0, k));
+	}
+	
+	private static double prob(int ind, int won, int rem)
+	{
+		if(ind == n)
+			if(won >= l && rem >= 0)
+				return 1;
+			else
+				return 0;
+		if(Math.abs(dp[ind][won][rem+offset] + 1) > 1e-8)
+			return dp[ind][won][rem+offset];
+		double ans = 0;
+		ans = p[ind] * prob(ind+1, won+1, Math.min(rem + a[ind], 201))
+			+ (1-p[ind]) * prob(ind+1, won, rem);
+		return dp[ind][won][rem+offset] = ans;
+	}
+
+	static class Scanner
+	{
+		BufferedReader br; StringTokenizer st;
+		public Scanner()
+		{
+			br = new BufferedReader(new InputStreamReader(System.in));
+		}
+		public String next() throws IOException
+		{
+			while(st == null || !st.hasMoreTokens())
+				st = new StringTokenizer(br.readLine());
+			return st.nextToken();
+		}
+		public int nextInt() throws IOException
+		{
+			return Integer.parseInt(next());
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+static mut N: usize = 0;
+static mut L: usize = 0;
+static mut K: i32 = 0;
+static mut A: Vec<i32> = Vec::new();
+static mut P: Vec<f64> = Vec::new();
+static mut DP: Vec<Vec<Vec<f64>>> = Vec::new();
+
+const OFFSET: i32 = 201;
+
+fn prob(ind: usize, won: usize, rem: i32) -> f64 {
+    unsafe {
+        if ind == N {
+            if won >= L && rem >= 0 {
+                return 1.0;
+            } else {
+                return 0.0;
+            }
+        }
+        let idx = (rem + OFFSET) as usize;
+        let val = DP[ind][won][idx];
+        if (val + 1.0).abs() > 1e-8 {
+            return val;
+        }
+        let rem_win = std::cmp::min(rem + A[ind], 201);
+        let ans = P[ind] * prob(ind + 1, won + 1, rem_win) + (1.0 - P[ind]) * prob(ind + 1, won, rem);
+        DP[ind][won][idx] = ans;
+        ans
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    unsafe {
+        N = it.next().unwrap().parse::<usize>().unwrap();
+        L = it.next().unwrap().parse::<usize>().unwrap();
+        K = it.next().unwrap().parse::<i32>().unwrap();
+
+        P = vec![0.0; N];
+        A = vec![0; N];
+
+        for i in 0..N {
+            let x = it.next().unwrap().parse::<i32>().unwrap();
+            P[i] = (x as f64) / 100.0;
+        }
+        for i in 0..N {
+            A[i] = it.next().unwrap().parse::<i32>().unwrap();
+        }
+
+        DP = vec![vec![vec![-1.0f64; 410]; 205]; 205];
+
+        let res = prob(0, 0, K);
+        println!("{}", res);
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.text.*;
+
+public class Solution {
+    
+   
+    public static double solve(int tour, int winsNeeded, int emptyBags, int n, int[] prob, int[] award, double[][][] memo) {
+        if(tour == n && (winsNeeded > 0 || emptyBags < 0)) return 0;
+        if(tour == n) return 1;
+        if(memo[tour][winsNeeded][emptyBags + 201] != -1) return memo[tour][winsNeeded][emptyBags + 201];
+        double p = prob[tour] / 100.0;
+        
+        double ans = p * solve(tour + 1, Math.max(winsNeeded - 1, 0), (award[tour] == -1)? emptyBags - 1 : Math.min(205, emptyBags + award[tour]), n, prob, award, memo)
+                    + (1 - p) * solve(tour + 1, winsNeeded, emptyBags, n, prob, award, memo);
+        
+        memo[tour][winsNeeded][emptyBags + 201] = ans;
+        return ans;   
+    }
+
+    public static void main(String args[]) throws Exception {
+        Scanner s = new Scanner(System.in);
+        int n = s.nextInt();
+        int l = s.nextInt();
+        int k = s.nextInt();
+        int[] prob = new int[n];
+        int[] award = new int[n];
+        for(int i = 0; i < n; i++){
+            prob[i] = s.nextInt();
+        }
+        for(int i = 0; i < n; i++){
+            award[i] = s.nextInt();
+        }
+        double[][][] memo = new double[n + 1][l + 1][500];
+        for(int i = 0; i < n + 1; i++){
+            for(int j = 0; j < l + 1; j++){
+                Arrays.fill(memo[i][j], -1);
+            }
+        }
+        System.out.println(solve(0, l, k, n, prob, award, memo));
+    
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn solve(
+    tour: usize,
+    wins_needed: usize,
+    empty_bags: i32,
+    n: usize,
+    prob: &Vec<i32>,
+    award: &Vec<i32>,
+    memo: &mut Vec<Vec<Vec<f64>>>,
+) -> f64 {
+    if tour == n && (wins_needed > 0 || empty_bags < 0) {
+        return 0.0;
+    }
+    if tour == n {
+        return 1.0;
+    }
+
+    let idx = (empty_bags + 201) as isize;
+    if idx < 0 || idx >= 500 {
+        // Should not happen with given Java logic/constraints, but avoid panic.
+        return 0.0;
+    }
+    let idxu = idx as usize;
+
+    if memo[tour][wins_needed][idxu] != -1.0 {
+        return memo[tour][wins_needed][idxu];
+    }
+
+    let p = prob[tour] as f64 / 100.0;
+
+    let next_wins = if wins_needed > 0 { wins_needed - 1 } else { 0 };
+    let next_empty = if award[tour] == -1 {
+        empty_bags - 1
+    } else {
+        let v = empty_bags + award[tour];
+        if v > 205 { 205 } else { v }
+    };
+
+    let ans = p * solve(tour + 1, next_wins, next_empty, n, prob, award, memo)
+        + (1.0 - p) * solve(tour + 1, wins_needed, empty_bags, n, prob, award, memo);
+
+    memo[tour][wins_needed][idxu] = ans;
+    ans
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let l: usize = it.next().unwrap().parse().unwrap();
+    let k: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut prob = vec![0i32; n];
+    let mut award = vec![0i32; n];
+
+    for i in 0..n {
+        prob[i] = it.next().unwrap().parse().unwrap();
+    }
+    for i in 0..n {
+        award[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut memo = vec![vec![vec![-1.0f64; 500]; l + 1]; n + 1];
+
+    let ans = solve(0, l, k, n, &prob, &award, &mut memo);
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

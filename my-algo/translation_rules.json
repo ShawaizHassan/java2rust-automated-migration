@@ -1,0 +1,189 @@
+{
+    "io_parsing": {
+        "translation_rule_map": {
+            "Read+split_whitespace": "Default fast input (Scanner/Tokenizer equivalent).",
+            "Byte scanner": "Fastest for huge input; avoids UTF-8 overhead.",
+            "String out buffer": "Faster than many println!/PrintWriter calls.",
+            "i64 then cast": "Safe default; cast to usize only for indexing."
+        },
+        "translation_rules": [
+            "Prefer stdin read + token parsing; avoid Scanner-style logic.",
+            "Use read_to_string + split_whitespace by default (handles multi-line).",
+            "If input is large, use byte-based scanner (read_to_end + next_i64).",
+            "Parse ints as i64; cast to i32/usize only at the use-site.",
+            "Accumulate output in String and print once."
+        ],
+        "examples": [
+            {
+                "java_code": "Scanner sc=new Scanner(System.in);int n=sc.nextInt();long m=sc.nextLong();System.out.println(n+m);",
+                "rust_translation": "use std::io::{self,Read};fn main(){let mut s=String::new();io::stdin().read_to_string(&mut s).unwrap();let mut it=s.split_whitespace();let n:i64=it.next().unwrap().parse().unwrap();let m:i64=it.next().unwrap().parse().unwrap();println!(\"{}\",n+m);}"
+            },
+            {
+                "java_code": "BufferedReader br=new BufferedReader(new InputStreamReader(System.in));String[] p=br.readLine().split(\" \");int a=Integer.parseInt(p[0]);int b=Integer.parseInt(p[1]);System.out.println(a*b);",
+                "rust_translation": "use std::io::{self,Read};fn main(){let mut s=String::new();io::stdin().read_to_string(&mut s).unwrap();let mut it=s.split_whitespace();let a:i64=it.next().unwrap().parse().unwrap();let b:i64=it.next().unwrap().parse().unwrap();println!(\"{}\",a*b);}"
+            },
+            {
+                "java_code": "PrintWriter out=new PrintWriter(System.out);for(int i=0;i<n;i++)out.println(i);out.close();",
+                "rust_translation": "fn main(){let n:usize=10;let mut out=String::new();for i in 0..n{out.push_str(&format!(\"{}\\n\",i));}print!(\"{}\",out);}"
+            }
+        ]
+    },
+    "arrays_indexing": {
+        "translation_rule_map": {
+            "usize index": "Rust arrays/Vec require usize indices; Java uses int freely.",
+            "n+1 sizing": "1-indexed arrays in Java need Vec of length n+1 in Rust.",
+            "bounds/offsets": "i-1 / i+1 patterns must be guarded and casted safely.",
+            "2D mapping": "int[][] → Vec<Vec<T>> (simple) or flat Vec<T> (fast)."
+        },
+        "translation_rules": [
+            "If a variable is used inside indexing (a[i], a[i+k]), make it usize in Rust (or cast at index site).",
+            "Cast computed indices at the last moment: a[(i+k) as usize], not everywhere.",
+            "If Java uses 1..=n indexing, allocate vec![..; n+1] and keep index range 1..=n.",
+            "When Java uses i-1 or i+1 in indices, ensure the loop bounds prevent underflow/overflow before casting to usize.",
+            "For k-1 indices, ensure k>=1 before indexing to avoid usize underflow.",
+            "Prefer Vec<T> over fixed arrays for n read from input; use vec![init; n].",
+            "For 2D arrays: use vec![vec![init; m]; n] (clear) or a flat Vec<T> with idx=r*m+c (faster)."
+        ],
+        "examples": [
+            {
+                "java_code": "int[] a = new int[n];\nfor (int i=0;i<n;i++) a[i]=i;",
+                "rust_translation": "let n:usize=/*...*/;let mut a=vec![0i64;n];for i in 0..n{a[i]=i as i64;}"
+            },
+            {
+                "java_code": "int[] a = new int[n+1];\nfor (int i=1;i<=n;i++) a[i]=i;",
+                "rust_translation": "let n:usize=/*...*/;let mut a=vec![0i64;n+1];for i in 1..=n{a[i]=i as i64;}"
+            },
+            {
+                "java_code": "dp[i] = Math.max(dp[i-a], dp[i-b]) + 1;",
+                "rust_translation": "dp[i]= (dp[i-a].max(dp[i-b]))+1; // i,a,b are usize; ensure i>=a,b"
+            },
+            {
+                "java_code": "res += dp[i + l][(l - 1) & 1];",
+                "rust_translation": "res += dp[i+l][(l-1)&1];"
+            },
+            {
+                "java_code": "int[][] g = new int[n][m]; g[i][j] = 1;",
+                "rust_translation": "let mut g=vec![vec![0i32;m];n];g[i][j]=1;"
+            }
+        ]
+    },
+    "numeric_mod_arith": {
+        "translation_rule_map": {
+            "i64 default": "Use i64 for CP math; cast to usize only for indexing.",
+            "i128 mul": "Safe (a*b)%MOD: compute in i128 then cast.",
+            "norm mod": "Keep results in [0,MOD): add MOD before %.",
+            "mod_pow": "Use mod_pow for pow/inv (prime MOD).",
+            "bitmask typed": "Use u64/usize masks; type shifts (1u64<<(k as u32))."
+        },
+        "translation_rules": [
+            "Default numeric type i64; counters usize.",
+            "mod mul: ((a as i128*b as i128)%(MOD as i128)) as i64.",
+            "mod sub/neg: (x%MOD+MOD)%MOD or (a-b+MOD)%MOD.",
+            "Apply %MOD after each add/mul in loops.",
+            "inv (prime MOD): mod_pow(a, MOD-2).",
+            "Bitmask: mask u64; bit=1u64<<(i as u32); test (mask&bit)!=0."
+        ],
+        "examples": [
+            {
+                "java_code": "bad=(bad*2)%mod; prod=(prod*j)%mod; ans=(prod-bad+mod)%mod;",
+                "rust_translation": "const MOD:i64=1_000_000_007;let ans=(prod-bad+MOD)%MOD;"
+            },
+            {
+                "java_code": "x = (x + a*b) % mod;",
+                "rust_translation": "x=(x+(((a as i128*b as i128)%(MOD as i128)) as i64))%MOD;"
+            },
+            {
+                "java_code": "if((mask&(1<<i))!=0){...}",
+                "rust_translation": "let bit=1u64<<(i as u32);if (mask&bit)!=0{/*...*/}"
+            }
+        ]
+    },
+    "datastructures": {
+        "translation_rule_map": {
+            "ArrayList→Vec": "Default dynamic array in Rust.",
+            "HashMap freq": "Java getOrDefault/put → Rust entry().or_insert(0)+=1.",
+            "HashSet→HashSet": "Membership/unique elements.",
+            "PriorityQueue→BinaryHeap": "Rust heap is max-heap; use Reverse for min-heap.",
+            "Queue/Deque→VecDeque": "BFS/2-pointer windows with push/pop both ends.",
+            "Sorting": "Arrays.sort→arr.sort(); use reverse or custom cmp for descending.",
+            "argmax": "If map used only for max label, track (best_sum,best_label) instead."
+        },
+        "translation_rules": [
+            "ArrayList<T>→Vec<T>; use Vec::with_capacity(n) when size known.",
+            "HashMap counting: *map.entry(k).or_insert(0) += 1;",
+            "HashMap getOrDefault: map.get(&k).unwrap_or(&0).",
+            "HashSet: set.contains(&x); set.insert(x);",
+            "Min-heap: BinaryHeap<Reverse<T>>; push Reverse(val), pop unwrap.0.",
+            "Queue: VecDeque; push_back/pop_front for BFS.",
+            "Sorting: vec.sort() ascending; vec.sort_by(|a,b| b.cmp(a)) descending.",
+            "If Java builds Map<sum,label> just to print max label, skip map; track best (sum,label) directly."
+        ],
+        "examples": [
+            {
+                "java_code": "ArrayList<Integer> a=new ArrayList<>();a.add(x);int v=a.get(i);",
+                "rust_translation": "let mut a=Vec::new();a.push(x);let v=a[i];"
+            },
+            {
+                "java_code": "HashMap<Integer,Integer> mp=new HashMap<>();mp.put(x,mp.getOrDefault(x,0)+1);",
+                "rust_translation": "let mut mp=HashMap::new();*mp.entry(x).or_insert(0)+=1;"
+            },
+            {
+                "java_code": "HashSet<Integer> st=new HashSet<>();if(st.contains(x)){}st.add(x);",
+                "rust_translation": "let mut st=HashSet::new();if st.contains(&x){}st.insert(x);"
+            },
+            {
+                "java_code": "PriorityQueue<Integer> pq=new PriorityQueue<>();pq.add(x);int m=pq.poll();",
+                "rust_translation": "let mut pq=BinaryHeap::new();pq.push(Reverse(x));let m=pq.pop().unwrap().0;"
+            },
+            {
+                "java_code": "Queue<Integer> q=new ArrayDeque<>();q.add(s);int u=q.poll();",
+                "rust_translation": "let mut q=VecDeque::new();q.push_back(s);let u=q.pop_front().unwrap();"
+            },
+            {
+                "java_code": "Arrays.sort(arr);",
+                "rust_translation": "arr.sort();"
+            },
+            {
+                "java_code": "for(Map.Entry<Integer,Integer> e:mp.entrySet()) sum+=e.getKey()*e.getValue();",
+                "rust_translation": "for (k,v) in mp.iter(){ sum += (*k)*(*v); }"
+            }
+        ]
+    },
+    "mut_ownership": {
+        "translation_rule_map": {
+            "let mut": "Java reassignments→Rust mut.",
+            "&/&mut": "Pass big data by reference.",
+            "clone()": "Only when needed.",
+            "in-place": "DP/arrays need mut borrows.",
+            "bytes": "Rust String not indexable; use s.as_bytes()[i].",
+            "split filter": "Java split may yield empty; filter empties in Rust.",
+            "digit→idx": "Digit char to index: (c-b'0') as usize.",
+            "borrow conflict": "Compute first then assign."
+        },
+        "translation_rules": [
+            "Reassignments need let mut.",
+            "Pass large Vec/String as & or &mut.",
+            "Avoid moves; iterate by borrow: for &x in v.iter().",
+            "For in-place updates prefer indexing (a[i]=...), not moving elements.",
+            "clone() only if borrowing can't work.",
+            "String/char ops: let b=s.as_bytes(); b[i]==b'X'/b'.'/b'0'.",
+            "split(\"X\"): s.split(\"X\").filter(|t|!t.is_empty()).",
+            "Digit to index: (c-b'0') as usize.",
+            "If borrow conflict: compute val first, then assign."
+        ],
+        "examples": [
+            {
+                "java_code": "int ans=0;for(int i=0;i<n;i++)ans+=a[i];",
+                "rust_translation": "let mut ans:i64=0;for i in 0..n{ans+=a[i];}"
+            },
+            {
+                "java_code": "for(int x:arr){sum+=x;} // arr used later",
+                "rust_translation": "for &x in arr.iter(){sum+=x as i64;} // borrow, no move"
+            },
+            {
+                "java_code": "if(s.charAt(i)=='X') cnt++;",
+                "rust_translation": "let b=s.as_bytes(); if b[i]==b'X' { cnt+=1; }"
+            }
+        ]
+    }
+}

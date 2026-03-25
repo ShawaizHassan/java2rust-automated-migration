@@ -1,0 +1,226 @@
+INDEX: 165 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class Homgo
+{
+public static void main(String[] args)
+{
+String s1=new String();
+String s2=new String();
+Scanner in=new Scanner(System.in);
+
+HashMap <String,Integer> a = new HashMap <String,Integer> ();
+s1=in.next();
+int i;
+for (i=0;i<10;i++)
+{
+s2=in.next();
+a.put(s2,i);
+}
+
+for (i=0;i<s1.length();i=i+10)
+System.out.print(a.get(s1.substring(i,i+10)));
+
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+
+public class A {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        ArrayList<String>[]g = new ArrayList[4];
+        for (int i = 0; i < 4; i++) {
+            g[i] = new ArrayList<String>();
+        }
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("rat", 0);
+        map.put("woman", 1);
+        map.put("child", 1);
+        map.put("man", 2);
+        map.put("captain", 3);
+        for (int i = 1; i <= n; i++) {
+            String name = sc.next();
+            int ind = map.get(sc.next());
+            g[ind].add(name);
+        }
+        for (int i = 0; i < 4; i++) {
+            for (String s : g[i]) {
+                System.out.println(s);
+            }
+        }
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next(&mut self) -> Option<String> {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        if self.idx >= self.input.len() {
+            return None;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        Some(String::from_utf8(self.input[start..self.idx].to_vec()).unwrap())
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next().unwrap().parse::<i32>().unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut g: Vec<Vec<String>> = vec![Vec::new(), Vec::new(), Vec::new(), Vec::new()];
+
+    let mut map: HashMap<String, i32> = HashMap::new();
+    map.insert("rat".to_string(), 0);
+    map.insert("woman".to_string(), 1);
+    map.insert("child".to_string(), 1);
+    map.insert("man".to_string(), 2);
+    map.insert("captain".to_string(), 3);
+
+    for _ in 0..n {
+        let name = sc.next().unwrap();
+        let role = sc.next().unwrap();
+        let ind = *map.get(&role).unwrap() as usize;
+        g[ind].push(name);
+    }
+
+    let mut out = String::new();
+    for i in 0..4 {
+        for s in &g[i] {
+            out.push_str(s);
+            out.push('\n');
+        }
+    }
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.HashMap;
+import java.util.Scanner;
+
+
+public class Football {
+
+    public static void main(String[] args) {
+        int g[] = new int[]{0,0};
+        int c = 0;
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        String names[] = new String[2];
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        String s;
+        for(int i = 0 ; i<n ; i++){
+            s = in.next();
+            Integer j = map.get(s);
+            if(j == null){
+                names[c] = s;
+                j = c;
+                map.put(s, j);
+                c++;
+            }
+            g[j]++;
+        }
+        if(g[0]>g[1]){
+            System.out.println(names[0]);
+        }else{
+            System.out.println(names[1]);
+        }
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut g = [0i32, 0i32];
+    let mut c: usize = 0;
+    let mut map: HashMap<String, usize> = HashMap::new();
+    let mut names: [String; 2] = [String::new(), String::new()];
+
+    for _ in 0..n {
+        let s = it.next().unwrap().to_string();
+        let idx = if let Some(&j) = map.get(&s) {
+            j
+        } else {
+            names[c] = s.clone();
+            map.insert(s, c);
+            c += 1;
+            c - 1
+        };
+        g[idx] += 1;
+    }
+
+    if g[0] > g[1] {
+        println!("{}", names[0]);
+    } else {
+        println!("{}", names[1]);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

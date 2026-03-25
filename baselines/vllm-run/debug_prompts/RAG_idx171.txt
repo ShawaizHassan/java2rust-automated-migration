@@ -1,0 +1,270 @@
+INDEX: 171 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+public class ImBoredWithLife {
+    public static void main(String[]args) {
+        Scanner s = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+        int n=s.nextInt();
+        int m=s.nextInt();
+        int mi=Math.min(n,m);
+        System.out.println(factorial(mi));
+    }
+
+    private static int factorial(int n) {
+        if(n==1)
+            return 1;
+        else
+            return n*factorial(n-1);
+    }
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.lang.reflect.Field;
+import java.util.*;
+
+public class CodeChef {
+    static int mod = (int)1e9+7;
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        Functions f  = new Functions();
+       int testCase = sc.nextInt();
+       while (testCase-->0){
+           long n = sc.nextLong();
+          long r = sc.nextLong();
+         if(r<n){
+             System.out.println(r*((long)r+1)/2);
+         }
+         else{
+             long ans = (n-1)*(n)/2;
+             System.out.println(ans+1);
+         }
+       }
+    }
+
+
+}
+class Functions extends CodeChef{
+    public int[] setIntegerArray(int n){
+        int [] arr = new int[n];
+        for(int i=0;i<n;i++)
+            arr[i] =sc.nextInt();
+        return arr;
+    }
+    public long[] setLongArray(int n){
+        long [] arr = new long[n];
+        for(int i=0;i<n;i++)
+            arr[i] =sc.nextLong();
+        return arr;
+    }
+    public long factorial(int n){
+        long fact = 1L;
+        for(int i=2;i<=n;i++)fact=  (fact*i)%mod;
+        return fact;
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i64();
+        let r = sc.next_i64();
+        if r < n {
+            let ans = r * (r + 1) / 2;
+            out.push_str(&format!("{}\n", ans));
+        } else {
+            let ans = (n - 1) * n / 2;
+            out.push_str(&format!("{}\n", ans + 1));
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class Main {
+ public static void main(String[] args) {
+     Scanner in=new Scanner(System.in);
+     int t=in.nextInt();
+     while(t-->0)
+     {
+         int n=in.nextInt();
+         int k=in.nextInt();
+         long a[]=new long[n*k];
+         for(int i=0;i<n*k;i++)
+         a[i]=in.nextLong();
+        int mi=(int)Math.ceil(n/2);
+        int j=(n*k)-1-mi;
+        long sum=0;
+        while(k-->0)
+        {
+            sum+=a[j];
+            j=j-mi-1;
+        }
+        System.out.println(sum);
+     }
+ }   
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut t = sc.next_i32();
+    let mut out = String::new();
+
+    while t > 0 {
+        t -= 1;
+        let n = sc.next_i32();
+        let mut k = sc.next_i32();
+        let total = (n as i64) * (k as i64);
+        let mut a: Vec<i64> = Vec::with_capacity(total as usize);
+        for _ in 0..total {
+            a.push(sc.next_i64());
+        }
+
+        let mi = (((n as f64) / 2.0).ceil()) as i32;
+        let mut j: i64 = total - 1 - (mi as i64);
+        let mut sum: i64 = 0;
+
+        while k > 0 {
+            k -= 1;
+            sum += a[j as usize];
+            j = j - (mi as i64) - 1;
+        }
+
+        out.push_str(&format!("{}\n", sum));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

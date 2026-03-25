@@ -1,0 +1,420 @@
+INDEX: 44 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+public class RaceTime2 {
+	public static boolean clock (int h, int m, int s, int t1, int t2) {
+		int t1_s = t1 * 5;
+		if (t1_s >= 60)
+			t1_s -= 60;
+		boolean solution_s = false;
+		int t2_s = t2 * 5;
+		if (t2_s >= 60)
+			t2_s -= 60;
+		while (t1_s != s) {
+			if (t1_s == t2_s) {
+				solution_s = true;
+				break;
+			}
+			t1_s++;
+			if (t1_s > 59)
+				t1_s -= 60;
+		}
+		if (!solution_s)
+			return false;
+
+		double t1_m = (double)t1 * (double)5;
+		if (t1_m >= 60)
+			t1_m -= 60;
+		double m1 = (double)m;
+		boolean solution_m = false;
+		if (s > 0)
+			m1 += 0.5;
+		if (m1 >= 60)
+			m1 -= 60;
+		double t2_m = (double)t2 * (double)5;
+		if (t2_m >= 60)
+			t2_m -= 60;
+		while (t1_m != (double)m1) {
+			if (t1_m == t2_m) {
+				solution_m = true;
+				break;
+			}
+			t1_m += 0.5;
+			if (t1_m >= 60)
+				t1_m -= 60;
+		}
+		if (!solution_m)
+			return false;
+
+		double t1_h = (double)t1;
+		double h1 = (double)h;
+                boolean solution_h = false;
+                if (m > 0 || s > 0)
+                        h1 += 0.5;
+		if (h1 > 12)
+			h1 -= 12;
+                while (t1_h != (double)h1) {
+                        if (t1_h == (double)t2) {
+                                solution_h = true;
+                                break;
+                        }
+                        t1_h += 0.5;
+                        if (t1_h > 12)
+                                t1_h -= 12;
+                }
+                if (!solution_h)
+                        return false;
+		return true;
+	}
+
+	public static boolean anti (int h, int m, int s, int t1, int t2) {
+                int t1_s = t1 * 5;
+		if (t1_s >= 60)
+			t1_s -= 60;
+                boolean solution_s = false;
+		int t2_s = t2 * 5;
+		if (t2_s >= 60)
+			t2_s -= 60;
+                while (t1_s != s) {
+                        if (t1_s == t2_s) {
+                                solution_s = true;
+                                break;
+                        }
+                        t1_s--;
+                        if (t1_s < 0)
+                                t1_s += 60;
+                }
+                if (!solution_s)
+                        return false;
+
+                double t1_m = (double)t1 * (double)5;
+		if (t1_m >= 60)
+			t1_m -= 60;
+                double m1 = (double)m;
+                boolean solution_m = false;
+                if (s > 0)
+                        m1 += 0.5;
+                if (m1 >= 60)
+                        m1 -= 60;
+		double t2_m = (double)t2 * (double)5;
+		if (t2_m >= 60)
+			t2_m -= 60;
+                while (t1_m != (double)m1) {
+                        if (t1_m == t2_m) {
+                                solution_m = true;
+                                break;
+                        }
+                        t1_m -= 0.5;
+                        if (t1_m < 0)
+                                t1_m += 60;
+                }
+                if (!solution_m)
+                        return false;
+
+                double t1_h = (double)t1;
+                double h1 = (double)h;
+                boolean solution_h = false;
+                if (m > 0 || s > 0)
+                        h1 += 0.5;
+                if (h1 > 12)
+                        h1 -= 12;
+                while (t1_h != (double)h1) {
+                        if (t1_h == (double)t2) {
+	                        solution_h = true;
+                                break;
+                        }
+                        t1_h -= 0.5;
+                        if (t1_h < 0.5)
+                                t1_h += 12;
+                }
+                if (!solution_h)
+                        return false;
+                return true;
+        }
+
+	public static void main (String[] args) throws Exception {
+		Scanner sc = new Scanner (System.in);
+		int h = sc.nextInt();
+		int m = sc.nextInt();
+		int s = sc.nextInt();
+		int t1 = sc.nextInt();
+		int t2 = sc.nextInt();
+		if (clock (h, m, s, t1, t2) || anti (h, m, s, t1, t2)) {
+			System.out.println ("YES");
+		} else System.out.println ("NO");
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public Scanner sc;
+    
+    public void run() {
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int s = sc.nextInt();
+        long ans = 0;
+        for (int n1 = 0; n1 * 2 + 1 <= n; n1++)
+            for (int m1 = 0; m1 * 2 + 1 <= m; m1++) {
+                int cnt = 0;
+                if ((n1*2+1) * (m1*2+1) == s) {
+                    cnt = 2*(n1+1)*(m1+1)-1;
+                }
+                else if ((n1*2+1) * (m1*2+1) > s) {
+                    if (((n1*2+1)*(m1*2+1)-s) % 4 != 0) continue;
+                    int t = ((n1*2+1)*(m1*2+1)-s) / 4;
+                    for (int w = 1; w <= n1; w++) {
+                        if (t % w != 0) continue;
+                        int h = t / w;
+                        if (1 <= h && h <= m1)
+                            cnt += 2;
+                    }
+                }
+                ans += (n-2*n1)*(m-2*m1)*cnt;
+            }
+        
+        System.out.println(ans);
+    }
+    
+    public static void main(String[] args) {
+        Main main = new Main();
+        try { main.sc = new Scanner(new FileInputStream("test.in")); }
+        catch (FileNotFoundException e) { main.sc = new Scanner(System.in); }
+        main.run();
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::fs::File;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new(mut reader: impl Read) -> Self {
+        let mut input = Vec::new();
+        reader.read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let scanner_source: Box<dyn Read> = match File::open("test.in") {
+        Ok(f) => Box::new(f),
+        Err(_) => Box::new(io::stdin()),
+    };
+    let mut sc = Scanner::new(scanner_source);
+
+    let n = sc.next_i32();
+    let m = sc.next_i32();
+    let s = sc.next_i32();
+
+    let mut ans: i64 = 0;
+
+    let mut n1: i32 = 0;
+    while n1 * 2 + 1 <= n {
+        let mut m1: i32 = 0;
+        while m1 * 2 + 1 <= m {
+            let mut cnt: i64 = 0;
+            let a = (n1 * 2 + 1) as i64;
+            let b = (m1 * 2 + 1) as i64;
+            let prod = a * b;
+            let s64 = s as i64;
+
+            if prod == s64 {
+                cnt = (2i64) * ((n1 + 1) as i64) * ((m1 + 1) as i64) - 1;
+            } else if prod > s64 {
+                let diff = prod - s64;
+                if diff % 4 != 0 {
+                    m1 += 1;
+                    continue;
+                }
+                let t = diff / 4;
+                let mut w: i32 = 1;
+                while w <= n1 {
+                    if t % (w as i64) == 0 {
+                        let h = (t / (w as i64)) as i32;
+                        if 1 <= h && h <= m1 {
+                            cnt += 2;
+                        }
+                    }
+                    w += 1;
+                }
+            }
+
+            ans += ((n - 2 * n1) as i64) * ((m - 2 * m1) as i64) * cnt;
+
+            m1 += 1;
+        }
+        n1 += 1;
+    }
+
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class WorkFile {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int q = s.nextInt();
+        while (q-->0) {
+            int n = s.nextInt(), m = s.nextInt();
+            long t1 = 0, min = m, max = m, k = 0;
+            for (int i=0; i<n; i++) {
+                int t2 = s.nextInt();
+                int l = s.nextInt(), h = s.nextInt();
+                if (k==1) continue;
+                long diff = t2-t1;
+                min-=diff;
+                max+=diff;
+                min = Math.max(min,l);
+                max = Math.min(max,h);
+                if (min>max) {
+                    k=1; continue;
+                }
+                t1=t2;
+            }
+            if (k==1) System.out.println("NO");
+            else System.out.println("YES");
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let q = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..q {
+        let n = sc.next_i32();
+        let m = sc.next_i64();
+
+        let mut t1: i64 = 0;
+        let mut minv: i64 = m;
+        let mut maxv: i64 = m;
+        let mut k: i64 = 0;
+
+        for _ in 0..n {
+            let t2 = sc.next_i64();
+            let l = sc.next_i64();
+            let h = sc.next_i64();
+
+            if k == 1 {
+                continue;
+            }
+
+            let diff = t2 - t1;
+            minv -= diff;
+            maxv += diff;
+
+            if minv < l {
+                minv = l;
+            }
+            if maxv > h {
+                maxv = h;
+            }
+
+            if minv > maxv {
+                k = 1;
+                continue;
+            }
+            t1 = t2;
+        }
+
+        if k == 1 {
+            out.push_str("NO\n");
+        } else {
+            out.push_str("YES\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

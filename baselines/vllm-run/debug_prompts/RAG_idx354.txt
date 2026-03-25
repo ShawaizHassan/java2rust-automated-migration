@@ -1,0 +1,510 @@
+INDEX: 354 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// Problem: A. Elevator or Stairs?
+// Contest: Codeforces - Mail.Ru Cup 2018 Round 1
+// URL: https://codeforces.com/problemset/problem/1054/A
+// Memory Limit: 256 MB
+// Time Limit: 1000 ms
+// Powered by CP Editor (https://github.com/cpeditor/cpeditor)
+
+import java.util.*;
+import java.io.*;
+
+public class Main {
+
+	static PrintWriter out;
+	static FastReader fr;
+	// make it false if Multiple test case is not in the question
+	static boolean multipleTC = false;
+	static int TestCase = 1;
+
+	// for pre processing if needed
+	void pre() throws Exception {
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		new Main().run();
+	}
+
+	// input output handled here
+	private Object solve() throws Exception {
+		// code
+		int y = fr.ni(), x = fr.ni(), z = fr.ni(), t1 = fr.ni(), t2 = fr.ni(), t3 = fr.ni();
+		int timeElv = (Math.abs(y - z) * t2 + 2 * t3) + Math.abs(x - y) * t2 + t3;
+		int timeStr = Math.abs(y - x) * t1;
+		// deb(timeElv, timeStr);
+		if (timeElv <= timeStr)
+			return "YES";
+		return "NO";
+	}
+
+	void run() throws Exception {
+		// long start_time = System.nanoTime();
+
+		try {
+			fr = new FastReader("in0.txt");
+			out = new PrintWriter("out0.txt");
+		} catch (Exception e) {
+			fr = new FastReader();
+			out = new PrintWriter(System.out);
+		}
+		pre();
+		StringBuilder print = new StringBuilder("");
+
+		int T = (multipleTC) ? fr.ni() : 1;
+		for (int t = 1; t <= T; t++) {
+			TestCase = t;
+			print.append(solve()).append("\n");
+		}
+
+		p(print);
+		// long end_time = System.nanoTime();
+		// System.out.printf("Running Time in sec : %2.10f", (double) (end_time -
+		// start_time) * (double) 1e-9);
+
+		out.flush();
+		out.close();
+	}
+
+	static void p(Object o) {
+		out.print(o);
+	}
+
+	static void pln(Object o) {
+		out.println(o);
+	}
+
+	static void psp(Object o) {
+		out.print(o + " ");
+	}
+
+	static void pnf(Object o) {
+		out.println(o);
+		out.flush();
+	}
+
+	static void deb(Object... x) {
+		System.out.print("#" + TestCase + " = ");
+		for (int i = 0; i < x.length - 1; i++)
+			System.out.print(x[i] + " , ");
+		System.out.println(x[x.length - 1]);
+
+	}
+
+	static void in(int a) throws Exception {
+		a = fr.ni();
+	}
+
+	static void in(long a) throws Exception {
+		a = fr.ni();
+	}
+
+	static void in(String[] a) throws Exception {
+		a = fr.nln().trim().split(" ");
+	}
+
+	static void in(String a) throws Exception {
+		a = fr.next();
+	}
+
+	static void in(int a[]) throws Exception {
+		for (int i = 0; i < a.length; i++) {
+			a[i] = fr.ni();
+		}
+	}
+
+	static void in(long a[]) throws Exception {
+		for (int i = 0; i < a.length; i++) {
+			a[i] = fr.nl();
+		}
+	}
+
+	static void in(int a[][]) throws Exception {
+		for (int i = 0; i < a.length; i++) {
+			for (int j = 0; j < a[0].length; j++) {
+				a[i][j] = fr.ni();
+			}
+		}
+	}
+
+	class FastReader {
+		BufferedReader br;
+		StringTokenizer st;
+
+		public FastReader() {
+			br = new BufferedReader(new InputStreamReader(System.in));
+		}
+
+		public FastReader(String s) throws Exception {
+			br = new BufferedReader(new FileReader(s));
+		}
+
+		String next() throws Exception {
+			while (st == null || !st.hasMoreElements()) {
+				try {
+					st = new StringTokenizer(br.readLine());
+				} catch (IOException e) {
+					throw new Exception(e.toString());
+				}
+			}
+			return st.nextToken();
+		}
+
+		String nextLine() throws Exception {
+			String str = "";
+			try {
+				str = br.readLine();
+			} catch (IOException e) {
+				throw new Exception(e.toString());
+			}
+			return str;
+		}
+
+		String n() throws Exception {
+			return fr.next();
+		}
+
+		String nln() throws Exception {
+			return fr.nextLine().trim();
+		}
+
+		int ni() throws Exception {
+			return Integer.parseInt(fr.next());
+		}
+
+		long nl() throws Exception {
+			return Long.parseLong(fr.next());
+		}
+
+		double nd() throws Exception {
+			return Double.parseDouble(fr.next());
+		}
+
+		int[] nextIntArray(int n) throws Exception {
+			int[] a = new int[n];
+			for (int i = 0; i < n; i++) {
+				a[i] = fr.ni();
+			}
+			return a;
+		}
+
+		long[] nextLongArray(int n) throws Exception {
+			long[] a = new long[n];
+			for (int i = 0; i < n; i++) {
+				a[i] = fr.nl();
+			}
+			return a;
+		}
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class Main
+{
+    public static class AL<T> extends ArrayList<T> {};
+    public static class HM<T,Integer> extends HashMap<T,T> {};
+    public static class HS<T> extends HashSet<T> {};
+    
+    public static void main(String[] args) throws IOException 
+	{
+        FastReader fr=new FastReader();
+        PrintWriter pr=new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+        int t=fr.nxtInt();
+        while(t-->0)
+        {
+            int n=fr.nxtInt(),m=fr.nxtInt(),a=fr.nxtInt(),b=fr.nxtInt();
+            
+            if(n*a==m*b)
+            {
+                pr.println("YES");
+                String tmp=String.join("", Collections.nCopies(a, "1"))+String.join("0", Collections.nCopies(m-a+1, ""));
+
+                int s=0;
+                for(s=1;s<m;s++) if(s*n%m==0) break;
+                
+                for(int i=0,j=0;i<n;i++,j=(j+s)%m)
+                    pr.println(tmp.substring(m-j)+tmp.substring(0,m-j));
+            }
+            else pr.println("NO");
+        }
+		pr.flush();
+		pr.close();
+    }
+    
+    
+    static class FastReader 
+    { 
+        BufferedReader br; 
+        StringTokenizer st; 
+  
+        public FastReader(){br = new BufferedReader(new InputStreamReader(System.in));} 
+  
+        String nxt() 
+        { 
+            while (st == null || !st.hasMoreElements()) 
+            { 
+                try{st=new StringTokenizer(br.readLine());} 
+                catch (IOException  e){e.printStackTrace();} 
+            } 
+            return st.nextToken(); 
+        } 
+  
+        int nxtInt(){return Integer.parseInt(nxt());} 
+        long nxtLong(){return Long.parseLong(nxt());} 
+        double nxtDoub(){return Double.parseDouble(nxt());} 
+  
+        String nxtLn() 
+        { 
+            String str = ""; 
+            try{str = br.readLine();} 
+            catch (IOException e){e.printStackTrace();} 
+            return str; 
+        } 
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let t = fs.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = fs.next_i32();
+        let m = fs.next_i32();
+        let a = fs.next_i32();
+        let b = fs.next_i32();
+
+        if (n as i64) * (a as i64) == (m as i64) * (b as i64) {
+            out.push_str("YES\n");
+
+            let mut tmp = String::new();
+            if a > 0 {
+                tmp.extend(std::iter::repeat('1').take(a as usize));
+            }
+            // Java: String.join("0", Collections.nCopies(m-a+1, ""))
+            // produces exactly m-a zeros.
+            let zeros = m - a;
+            if zeros > 0 {
+                tmp.extend(std::iter::repeat('0').take(zeros as usize));
+            }
+
+            let mut s: i32 = 0;
+            for cand in 1..m {
+                if ((cand as i64) * (n as i64)) % (m as i64) == 0 {
+                    s = cand;
+                    break;
+                }
+            }
+
+            let bytes = tmp.as_bytes();
+            for i in 0..(n as usize) {
+                let j = ((i as i64) * (s as i64)).rem_euclid(m as i64) as usize;
+                let k = (m as usize).wrapping_sub(j);
+                out.push_str(std::str::from_utf8(&bytes[k..]).unwrap());
+                out.push_str(std::str::from_utf8(&bytes[..k]).unwrap());
+                out.push('\n');
+            }
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class Main {
+	static boolean GET = true;
+	static void solve(int t, int w) throws IOException {
+		long a = nl();
+		long b = nl();
+		if(a % b == 0) {
+			println("0");
+			return;
+		}
+		long q = 0;
+		try {
+			q = a / b;
+		}catch(Exception e) {}
+		++q;
+		b = b * q;
+		println(b - a);
+	}
+	
+	//default java template to get started quickly...
+	public static void main(String[] string) throws IOException {
+		int t = 1;
+		if(GET)
+			t = ni();
+		for(int i = 1; i <= t; ++i)
+			solve(t, i);
+		out.flush();
+	}
+	static int ni() {
+		return sc.nextInt();
+	}
+	static long nl() {
+		return sc.nextLong();
+	}
+	static String str() {
+		return sc.next();
+	}
+	static void print(Object... o) {
+		int len = o.length;
+		if(String.valueOf(o[len - 1]).equals(" ")) {
+			for(int i = 0; i < len; ++i)
+				out.print(String.valueOf(o[i]) + " ");
+			return;
+		}
+		for(int i = 0; i < len; ++i)
+			out.print(String.valueOf(o[i]));
+	}
+	static void println(Object... o) {
+		int len = o.length;
+		if(len == 0) {
+			out.println();
+			return;
+		}
+		for(int i = 0; i < len; ++i)
+			out.println(String.valueOf(o[i]));
+	}
+	
+	static Scanner sc = new Scanner(System.in);
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static PrintWriter out = new PrintWriter(System.out);
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.skip_whitespace();
+        let mut sign: i64 = 1;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut val: i64 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            val = val * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        val * sign
+    }
+}
+
+fn solve(sc: &mut FastScanner, out: &mut String) {
+    let a = sc.next_i64();
+    let mut b = sc.next_i64();
+
+    if a % b == 0 {
+        out.push_str("0\n");
+        return;
+    }
+
+    let mut q: i64 = a / b;
+    q += 1;
+    b = b * q;
+    out.push_str(&(b - a).to_string());
+    out.push('\n');
+}
+
+fn main() {
+    const GET: bool = true;
+
+    let mut sc = FastScanner::new();
+    let mut out = String::new();
+
+    let mut t: i32 = 1;
+    if GET {
+        t = sc.next_i32();
+    }
+    for _ in 0..t {
+        solve(&mut sc, &mut out);
+    }
+
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

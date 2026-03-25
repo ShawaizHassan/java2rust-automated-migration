@@ -1,0 +1,259 @@
+INDEX: 61 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Factory{
+
+	public static boolean productionWillStop(long a, long m){
+		for (int i = 0; i < 100000; i++) {
+			if (a % m == 0){
+				System.out.println("Yes");
+				return true;
+			}
+			a += a % m;
+		}
+		System.out.println("No");
+		return false;
+	}
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		long a = in.nextLong();
+		long m = in.nextLong();
+		productionWillStop(a, m);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class Tprimes {
+    private static Scanner s = new Scanner(System.in);
+    static long LIMIT =1000001;
+    static long i,j;
+     static long[] prime= new long[1000001];
+     private static void primelist(){
+        prime[0]=1; prime[1]=1;
+        for( i = 2; i< LIMIT; i++){
+            if(prime[(int) i]==0){
+                for( j = i*i; j< LIMIT; j+=i){
+                    prime[(int) j]=1;
+                }
+            }
+        }
+     }
+     private static boolean perfectsquare(long n){
+         double sq =  Math.sqrt(n);
+         if( sq - Math.floor(sq) == 0)
+             return true;
+         return false;
+     }
+
+    public static void main(String[] args) {
+        primelist();
+        long n = s.nextLong();
+        for (int m = 0; m < n; m++) {
+            long x = s.nextLong();
+            if(x==4){
+                System.out.println("YES");
+            }else if(x%2 == 0){
+                System.out.println("NO");
+            }else if ( perfectsquare(x) && prime[(int) Math.sqrt(x)] == 0) {
+                System.out.println("YES");
+            } else {
+                System.out.println("NO");
+            }
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const LIMIT: usize = 1_000_001;
+
+fn primelist() -> Vec<u8> {
+    let mut prime = vec![0u8; LIMIT];
+    prime[0] = 1;
+    prime[1] = 1;
+    for i in 2..LIMIT {
+        if prime[i] == 0 {
+            let ii = (i as u64) * (i as u64);
+            if ii >= LIMIT as u64 {
+                continue;
+            }
+            let mut j = ii as usize;
+            while j < LIMIT {
+                prime[j] = 1;
+                j += i;
+            }
+        }
+    }
+    prime
+}
+
+fn perfectsquare(n: i64) -> bool {
+    if n < 0 {
+        return false;
+    }
+    let sq = (n as f64).sqrt();
+    sq - sq.floor() == 0.0
+}
+
+fn main() {
+    let prime = primelist();
+
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i64 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..n {
+        let x: i64 = it.next().unwrap().parse().unwrap();
+        if x == 4 {
+            out.push_str("YES\n");
+        } else if x % 2 == 0 {
+            out.push_str("NO\n");
+        } else if perfectsquare(x) {
+            let r = (x as f64).sqrt() as usize;
+            if r < LIMIT && prime[r] == 0 {
+                out.push_str("YES\n");
+            } else {
+                out.push_str("NO\n");
+            }
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.PrintWriter;
+import java.util.*;
+
+public class Q3 {
+    public static int gcd(int a, int b) {
+        if (a == 0)
+            return b;
+        return gcd(b % a, a);
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        PrintWriter out = new PrintWriter(System.out);
+
+        int N = in.nextInt(), M = in.nextInt();
+        ArrayList<String> arr = new ArrayList<>();
+
+        if(M<(N-1)){
+            out.println("Impossible");
+        }else {
+
+
+            for (int i = 1; i <= N && M > 0; i++) {
+                for (int j = i + 1; j <= N && M > 0; j++) {
+                    if (gcd(j, i) == 1) {
+                        arr.add(i + " " + j);
+                        M--;
+                    }
+                }
+            }
+
+            if (M == 0) {
+                out.println("Possible");
+                for (String i : arr)
+                    out.println(i);
+            } else {
+                out.println("Impossible");
+            }
+        }
+
+        out.close();
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn gcd(a: i32, b: i32) -> i32 {
+    if a == 0 {
+        b
+    } else {
+        gcd(b % a, a)
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let mut m: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut arr: Vec<String> = Vec::new();
+
+    if m < (n - 1) {
+        print!("Impossible\n");
+    } else {
+        let mut i = 1;
+        while i <= n && m > 0 {
+            let mut j = i + 1;
+            while j <= n && m > 0 {
+                if gcd(j, i) == 1 {
+                    arr.push(format!("{} {}", i, j));
+                    m -= 1;
+                }
+                j += 1;
+            }
+            i += 1;
+        }
+
+        if m == 0 {
+            let mut out = String::new();
+            out.push_str("Possible\n");
+            for s in arr {
+                out.push_str(&s);
+                out.push('\n');
+            }
+            print!("{}", out);
+        } else {
+            print!("Impossible\n");
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

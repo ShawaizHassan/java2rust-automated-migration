@@ -1,0 +1,308 @@
+INDEX: 269 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+
+public class RoutineProblem {
+
+	/**
+	 * @param args
+	 */
+	
+	public static int GCD(int a, int b) {
+		   if (b==0) return a;
+		   return GCD(b,a%b);
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		int a = sc.nextInt();
+		int b = sc.nextInt();
+		int c = sc.nextInt();
+		int d = sc.nextInt();
+		if(a*d == b*c) {
+			System.out.println("0/1");
+		} else if(a*d > b*c) {
+			int g = GCD(a*d-b*c,a*d);
+			System.out.println((a*d-b*c)/g + "/" + a*d/g);
+		} else {
+			int g = GCD(b*c-a*d,b*c);
+			System.out.println((b*c-a*d)/g + "/" + b*c/g);
+		}
+		
+		
+		
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+public class Main{
+  public static void main(String[] args){
+    Scanner sc = new Scanner(System.in);
+    int a,b,c,d,e,f;
+    long g, h;
+    
+    f = sc.nextInt();
+    for(e= 0;e < f;e++){
+      a = sc.nextInt();
+      b = sc.nextInt();
+      int x[] = new int [a*b];
+      for(c = 0;c < (a*b);c++){
+        x[c] = sc.nextInt();
+      }
+      Arrays.sort(x);
+      d = 0;
+      if(a % 2 != 0){
+        d = (a+1)/2;
+      }
+      else{
+        d = a/2;
+      }
+      int j = d-1;
+      g = 0;
+      d = a-d;
+      int i = 0;
+      for(c = (a*b)-1-d;c >= 0;c -= a){
+        
+        //System.out.println(x[c]+" "+c+" "+e);
+        g += x[c];
+        i++;
+        if(i == b){
+            break;
+        }
+        if(a > 2){
+            c += j;
+        }
+      }
+      System.out.println(g);
+    }
+  }
+}
+        
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let f: i32 = sc.next_i32();
+    for _e in 0..f {
+        let a: i32 = sc.next_i32();
+        let b: i32 = sc.next_i32();
+
+        let n: usize = (a as i64 * b as i64) as usize;
+        let mut x: Vec<i32> = vec![0; n];
+        for c in 0..n {
+            x[c] = sc.next_i32();
+        }
+        x.sort();
+
+        let mut d: i32;
+        if a % 2 != 0 {
+            d = (a + 1) / 2;
+        } else {
+            d = a / 2;
+        }
+        let j: i32 = d - 1;
+        let mut g: i64 = 0;
+        d = a - d;
+        let mut i: i32 = 0;
+
+        let mut c: i32 = (a * b) - 1 - d;
+        while c >= 0 {
+            g += x[c as usize] as i64;
+            i += 1;
+            if i == b {
+                break;
+            }
+            if a > 2 {
+                c += j;
+            }
+            c -= a;
+        }
+
+        println!("{}", g);
+    }
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+public class Taxi 
+{
+    public static void main(String args[])
+    {
+        Scanner ip = new Scanner(System.in);
+        int a = ip.nextInt();
+        int c1=0,g2=0,g3=0,c4=0,b,c,d;
+        int[] x = new int[a];
+        for(int i=0;i<x.length;i++)
+        {
+            x[i]=ip.nextInt();
+            if(x[i]==1)
+            c1++;
+            else if(x[i]==2)
+            g2++;
+            else if(x[i]==3)
+            g3++;
+            else
+            c4++;
+        }
+        if(g3>c1)
+        {
+            b=g3-c1;
+            if(g2%2==0)
+                System.out.println(c4+(g3-b)+b+(g2/2));
+            else
+                System.out.println(c4+(g3-b)+b+(g2/2)+1);
+        }
+        else if(g3<c1 && g2%2==0)
+        {
+            c=c1-g3;
+            if((c%4)==0)
+                System.out.println(c4+(c1-c)+(g2/2)+(c/4));
+            else
+                System.out.println(c4+(c1-c)+(g2/2)+(c/4)+1);
+        }
+        else if(g3<c1 && g2%2!=0)
+        {
+            d=c1-g3;
+            if((d%4)<=2)
+                System.out.println(c4+(c1-d)+(g2/2)+(d/4)+1);
+            else if((d%4)==0)
+                System.out.println(c4+(c1-d)+(g2/2)+(d/4)+1);
+            else
+                System.out.println(c4+(c1-d)+(g2/2)+(d/4)+2);
+        }
+        else
+        {
+            if(g2%2==0)
+                System.out.println(c4+g3+(g2/2));
+            else
+                System.out.println(c4+g3+(g2/2)+1);
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let a: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut c1: i32 = 0;
+    let mut g2: i32 = 0;
+    let mut g3: i32 = 0;
+    let mut c4: i32 = 0;
+
+    let mut x: Vec<i32> = vec![0; a as usize];
+    for i in 0..x.len() {
+        let val: i32 = it.next().unwrap().parse().unwrap();
+        x[i] = val;
+        if x[i] == 1 {
+            c1 += 1;
+        } else if x[i] == 2 {
+            g2 += 1;
+        } else if x[i] == 3 {
+            g3 += 1;
+        } else {
+            c4 += 1;
+        }
+    }
+
+    let ans: i32;
+    if g3 > c1 {
+        let b = g3 - c1;
+        if g2 % 2 == 0 {
+            ans = c4 + (g3 - b) + b + (g2 / 2);
+        } else {
+            ans = c4 + (g3 - b) + b + (g2 / 2) + 1;
+        }
+    } else if g3 < c1 && g2 % 2 == 0 {
+        let c = c1 - g3;
+        if (c % 4) == 0 {
+            ans = c4 + (c1 - c) + (g2 / 2) + (c / 4);
+        } else {
+            ans = c4 + (c1 - c) + (g2 / 2) + (c / 4) + 1;
+        }
+    } else if g3 < c1 && g2 % 2 != 0 {
+        let d = c1 - g3;
+        if (d % 4) <= 2 {
+            ans = c4 + (c1 - d) + (g2 / 2) + (d / 4) + 1;
+        } else if (d % 4) == 0 {
+            ans = c4 + (c1 - d) + (g2 / 2) + (d / 4) + 1;
+        } else {
+            ans = c4 + (c1 - d) + (g2 / 2) + (d / 4) + 2;
+        }
+    } else {
+        if g2 % 2 == 0 {
+            ans = c4 + g3 + (g2 / 2);
+        } else {
+            ans = c4 + g3 + (g2 / 2) + 1;
+        }
+    }
+
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

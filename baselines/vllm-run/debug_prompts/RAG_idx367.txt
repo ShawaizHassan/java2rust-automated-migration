@@ -1,0 +1,486 @@
+INDEX: 367 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.util.InputMismatchException;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author prakharjain
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        OutputWriter out = new OutputWriter(outputStream);
+        CNewYearAndPermutation solver = new CNewYearAndPermutation();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class CNewYearAndPermutation {
+        public void solve(int testNumber, InputReader in, OutputWriter out) {
+            int n = in.nextInt();
+            int m = in.nextInt();
+
+            long[] fac = factorial(n, m);
+            long[] ifac = factorialInverse(n, m);
+
+            long ans = n * fac[n];
+            ans %= m;
+
+            for (int i = 2; i <= n; i++) {
+                long ca = fac[i];
+                ca *= fac[n - i + 1];
+                ca %= m;
+                ca *= ifac[n];
+                ca %= m;
+                ca *= (n - i + 1);
+                ca %= m;
+                ca *= fac[n];
+                ca %= m;
+
+                ans += ca;
+                ans %= m;
+            }
+
+            out.println(ans);
+        }
+
+        long[] factorial(int n, int mod) {
+            long[] factorial = new long[n + 1];
+
+            factorial[0] = 1;
+
+            for (int i = 1; i <= n; i++) {
+                factorial[i] = i * factorial[i - 1];
+                factorial[i] %= mod;
+            }
+
+            return factorial;
+        }
+
+        long[] factorialInverse(int n, int mod) {
+            long[] factorialInverse = new long[n + 1];
+
+            long[] inv = new long[n + 1];
+
+            inv[1] = 1;
+
+            for (int i = 2; i <= n; i++) {
+                inv[i] = inv[mod % i];
+                inv[i] *= (mod - mod / i);
+                inv[i] %= mod;
+            }
+
+            factorialInverse[0] = 1;
+
+            for (int i = 1; i <= n; i++) {
+                factorialInverse[i] = inv[i] * factorialInverse[i - 1];
+                factorialInverse[i] %= mod;
+            }
+
+            return factorialInverse;
+        }
+
+    }
+
+    static class OutputWriter {
+        private final PrintWriter writer;
+
+        public OutputWriter(OutputStream outputStream) {
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+        }
+
+        public OutputWriter(Writer writer) {
+            this.writer = new PrintWriter(writer);
+        }
+
+        public void close() {
+            writer.close();
+        }
+
+        public void println(long i) {
+            writer.println(i);
+        }
+
+    }
+
+    static class InputReader {
+        private InputStream stream;
+        private byte[] buf = new byte[1024];
+        private int curChar;
+        private int numChars;
+        private InputReader.SpaceCharFilter filter;
+
+        public InputReader(InputStream stream) {
+            this.stream = stream;
+        }
+
+        public static boolean isWhitespace(int c) {
+            return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+        }
+
+        public int read() {
+            if (numChars == -1) {
+                throw new InputMismatchException();
+            }
+            if (curChar >= numChars) {
+                curChar = 0;
+                try {
+                    numChars = stream.read(buf);
+                } catch (IOException e) {
+                    throw new InputMismatchException();
+                }
+                if (numChars <= 0) {
+                    return -1;
+                }
+            }
+            return buf[curChar++];
+        }
+
+        public int nextInt() {
+            int c = read();
+            while (isSpaceChar(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int res = 0;
+            do {
+                if (c < '0' || c > '9') {
+                    throw new InputMismatchException();
+                }
+                res *= 10;
+                res += c - '0';
+                c = read();
+            } while (!isSpaceChar(c));
+            return res * sgn;
+        }
+
+        public boolean isSpaceChar(int c) {
+            if (filter != null) {
+                return filter.isSpaceChar(c);
+            }
+            return isWhitespace(c);
+        }
+
+        public interface SpaceCharFilter {
+            public boolean isSpaceChar(int ch);
+
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Aldo Culquicondor
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskD solver = new TaskD();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskD {
+    int n, m;
+    int[][] map;
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        n = in.nextInt();
+        m = in.nextInt();
+        map = new int[n+1][m+1];
+        for (int i = 0; i < n; ++i) {
+            String s = in.next();
+            for (int j = 0; j < m; ++j)
+                map[i][j] = s.charAt(j) == 'B' ? -1 : 1;
+        }
+        int ans = 0;
+        for (int i = n - 1; i >= 0; --i)
+            for (int j = m - 1; j >= 0; --j)
+                if (map[i+1][j] + map[i][j+1] - map[i+1][j+1] - map[i][j] != 0)
+                    ++ans;
+        out.println(ans);
+    }
+}
+
+class InputReader {
+    private BufferedReader reader;
+    private StringTokenizer tokenizer;
+    public InputReader(InputStream stream) {
+        reader = new BufferedReader(new InputStreamReader(stream), 32768);
+        tokenizer = null;
+    }
+    public String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct InputReader {
+    data: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { data: input.into_bytes(), idx: 0 }
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+
+    fn next(&mut self) -> String {
+        self.skip_whitespace();
+        let start = self.idx;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.data[start..self.idx].to_vec()).unwrap()
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+fn main() {
+    let mut inr = InputReader::new();
+    let n = inr.next_i32() as usize;
+    let m = inr.next_i32() as usize;
+
+    let mut map = vec![vec![0i32; m + 1]; n + 1];
+
+    for i in 0..n {
+        let s = inr.next();
+        let bytes = s.as_bytes();
+        for j in 0..m {
+            map[i][j] = if bytes[j] == b'B' { -1 } else { 1 };
+        }
+    }
+
+    let mut ans: i32 = 0;
+    for i in (0..n).rev() {
+        for j in (0..m).rev() {
+            if map[i + 1][j] + map[i][j + 1] - map[i + 1][j + 1] - map[i][j] != 0 {
+                ans += 1;
+            }
+        }
+    }
+
+    print!("{}", ans);
+    println!();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

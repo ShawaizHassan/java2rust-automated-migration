@@ -1,0 +1,435 @@
+INDEX: 414 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.valueOf(st.nextToken());
+		int sum = n + n - 1;
+		//System.out.println("sum==" + sum);
+		if (checkAllNine(sum) || sum == 9) {
+			System.out.println(1);
+			return;
+		}
+		if (sum < 9) {
+			System.out.println(n * (n - 1) / 2);
+			return;
+		}
+
+		//
+
+		long ans = 0;
+
+		// len >= 2
+		int len = cntLen(sum);
+		int left = sum / (int) (Math.pow(10, len - 1));
+
+		int firstNum = getFirst(sum, len, left);
+
+		len = cntLen(firstNum);
+		int loop = (int) (Math.pow(10, len - 1));
+		left = firstNum / (int) (Math.pow(10, len - 1));
+		if (firstNum < 10)
+			left = 0;
+		if (left == 9) {
+			if (firstNum <= n)
+				System.out.println(firstNum / 2);
+			else {
+				System.out.println(n - firstNum / 2);
+			}
+			return;
+		}
+		// System.out.println("left==" + left);
+		while (left >= 0) {
+			// System.out.println("firstNum==" + firstNum);
+			if (firstNum > n) {
+				int half = firstNum / 2 + 1;
+				ans += (n - half + 1);
+			}
+
+			else
+				ans += firstNum / 2;
+			// System.out.println("ans==" + ans);
+			firstNum -= loop;
+			left--;
+		}
+		System.out.println(ans);
+	}
+
+	public static int getFirst(int sum, int len, int left) {
+		int firstNum = -1;
+		int rightSum = 0;
+
+		for (int i = 0; i < len - 1; i++) {
+			rightSum *= 10;
+			rightSum += 9;
+		}
+		if (sum % (int) (Math.pow(10, len - 1)) != rightSum)
+			left--;
+		// System.out.println("rightSum==" + rightSum);
+		firstNum = left * (int) (Math.pow(10, len - 1)) + rightSum;
+		//System.out.println("firstNum==" + firstNum);
+		// System.out.println();
+		return firstNum;
+	}
+
+	public static int cntLen(int n) {
+		int i = 0;
+		while (n != 0) {
+			i++;
+			n /= 10;
+		}
+		return i;
+	}
+
+	public static boolean checkAllNine(int n) {
+		while (n != 0) {
+			if (n % 9 != 0)
+				return false;
+			n /= 10;
+		}
+		return true;
+	}
+
+	public static void printArray(int a[], int n) {
+		for (int i = 0; i < n; i++) {
+			System.out.print(a[i] + " ");
+		}
+		System.out.println();
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+
+
+public class Solution{
+			
+
+	static class Pair{
+		int x,y;
+		Pair(int x,int y)
+		{
+			this.x=x;
+			this.y=y;
+		}
+	}
+
+	public static void main(String args[]) throws IOException
+	{
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out=new PrintWriter(System.out);
+
+		int n=Integer.parseInt(br.readLine());
+		int a[]=new int[n];
+
+		String s[]=br.readLine().split(" ");
+		for(int i=0;i<n;i++)
+			a[i]=Integer.parseInt(s[i]);
+
+		Set<Integer> set=new HashSet<Integer>();
+
+		ArrayList<Pair> ans=new ArrayList<Pair>();
+
+		int i=0;
+		int left=1;
+		while(i<n)
+		{
+			if(!set.contains(a[i]))
+				set.add(a[i]);
+			else
+			{
+				set.clear();
+				Pair x=new Pair(left,i+1);
+				ans.add(x);
+				left=i+2;
+			}
+			i++;
+		}		
+
+		int len=ans.size();
+		if(len!=0)
+		{
+			out.println(len);
+
+			for(i=0;i<len;i++)
+			{
+				Pair x=ans.get(i);
+
+				if(i==len-1)
+					out.println(x.x+" "+n);
+				else
+					out.println(x.x+" "+x.y);
+			}
+		}
+		else
+			out.println(-1);
+
+
+
+		out.flush();
+		out.close();
+			
+
+	}
+}
+```
+Translated Rust:
+```
+use std::collections::HashSet;
+use std::io::{self, Read};
+
+#[derive(Clone, Copy)]
+struct Pair {
+    x: i32,
+    y: i32,
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n_i32 = sc.next_i32();
+    let n: usize = n_i32 as usize;
+
+    let mut a: Vec<i32> = vec![0; n];
+    for i in 0..n {
+        a[i] = sc.next_i32();
+    }
+
+    let mut set: HashSet<i32> = HashSet::new();
+    let mut ans: Vec<Pair> = Vec::new();
+
+    let mut i: usize = 0;
+    let mut left: i32 = 1;
+    while i < n {
+        if !set.contains(&a[i]) {
+            set.insert(a[i]);
+        } else {
+            set.clear();
+            ans.push(Pair {
+                x: left,
+                y: (i as i32) + 1,
+            });
+            left = (i as i32) + 2;
+        }
+        i += 1;
+    }
+
+    let len = ans.len();
+    let mut out = String::new();
+    if len != 0 {
+        out.push_str(&format!("{}\n", len));
+        for i in 0..len {
+            let x = ans[i];
+            if i == len - 1 {
+                out.push_str(&format!("{} {}\n", x.x, n_i32));
+            } else {
+                out.push_str(&format!("{} {}\n", x.x, x.y));
+            }
+        }
+    } else {
+        out.push_str("-1\n");
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class C {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int t = in.nextInt();
+        for (int test = 0; test < t; test++) {
+            int n = in.nextInt();
+            int k = in.nextInt();
+            char[] seq = in.next().toCharArray();
+
+            int res = 0;
+
+            int left = 0, right = 0;
+
+            int count = 0;
+            for (int i = 0; i < n;) {
+                int j = i + 1;
+
+                for (; j < n; j++) {
+                    if (seq[j] == '1') break;
+                }
+
+                left = seq[i] == '1' ? k : 0;
+                right = j < n && seq[j] == '1' ? k : 0;
+                int len = j - i;
+
+                if (left == k) len--;
+                len -= left + right;
+
+                if (len > 0) {
+                    res += (len + k) / (k + 1);
+                }
+                i = j;
+            }
+            System.out.println(res);
+        }
+
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i32;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+    fn next_string(&mut self) -> String {
+        self.skip_whitespace();
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32() as usize;
+        let k = sc.next_i32();
+        let s = sc.next_string();
+        let seq = s.as_bytes();
+
+        let mut res: i32 = 0;
+
+        let mut i: usize = 0;
+        while i < n {
+            let mut j = i + 1;
+            while j < n {
+                if seq[j] == b'1' {
+                    break;
+                }
+                j += 1;
+            }
+
+            let left = if seq[i] == b'1' { k } else { 0 };
+            let right = if j < n && seq[j] == b'1' { k } else { 0 };
+            let mut len = (j - i) as i32;
+
+            if left == k {
+                len -= 1;
+            }
+            len -= left + right;
+
+            if len > 0 {
+                res += (len + k) / (k + 1);
+            }
+            i = j;
+        }
+
+        out.push_str(&format!("{}\n", res));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

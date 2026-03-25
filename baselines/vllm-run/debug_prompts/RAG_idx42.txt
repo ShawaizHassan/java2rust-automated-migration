@@ -1,0 +1,252 @@
+INDEX: 42 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Main{
+    
+        public static void main(String args[])
+    {   
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        HashMap<Integer,Integer> mp=new HashMap<Integer,Integer>();
+        while(mp.get(n)==null)
+        {   
+            mp.put(n, 1);
+            n=n+1;
+            while(n%10==0) n/=10;
+        }
+        System.out.println(mp.size()) ;
+        
+
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.*;
+import java.math.*;
+
+public class Main {
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+       int t=sc.nextInt(),m=sc.nextInt();Map<Integer,Integer>mp=new HashMap<Integer,Integer>();
+       while(t>0)
+       {
+           int n=sc.nextInt();
+           for(int i=0;i<n;i++)
+           {
+               int x;x=sc.nextInt();
+               if(mp.containsKey(x))
+               {
+                   int cnt=mp.get(x);
+                   mp.put(x, cnt++);
+               }
+               else
+               {
+                   mp.put(x, 1);
+               }
+           }
+         t--;
+       }
+        if(mp.size()==m)System.out.println("YES");
+        else System.out.println("NO");
+        //  System.out.println();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let mut t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut mp: HashMap<i32, i32> = HashMap::new();
+
+    while t > 0 {
+        let n: i32 = it.next().unwrap().parse().unwrap();
+        for _ in 0..n {
+            let x: i32 = it.next().unwrap().parse().unwrap();
+            if mp.contains_key(&x) {
+                let cnt = *mp.get(&x).unwrap();
+                mp.insert(x, cnt); // matches Java bug: cnt++ doesn't update stored value
+            } else {
+                mp.insert(x, 1);
+            }
+        }
+        t -= 1;
+    }
+
+    if mp.len() as i32 == m {
+        print!("YES");
+    } else {
+        print!("NO");
+    }
+}
+```
+
+Java:
+```
+
+import java.io.*;
+import java.util.*;
+
+public class test5 {
+	public static final int mod=1000000007;
+	public static void main(String[] args) throws IOException{
+		//BufferedReader sc=new BufferedReader(new InputStreamReader(System.in));
+		Scanner sc=new Scanner(System.in);
+		PrintWriter out=new PrintWriter(System.out);
+		int t=sc.nextInt();
+		while(t-->0) {
+			int n=sc.nextInt();
+			int k=sc.nextInt();
+			int d=sc.nextInt();
+			int[] arr=new int[n];
+			for(int i=0;i<n;i++) arr[i]=sc.nextInt();
+			if(d==1) {
+				System.out.println(1);
+				continue;
+			}
+			
+			Map<Integer,Integer> mp=new HashMap<>();
+			for(int i=0;i<d;i++) {				
+				mp.put(arr[i], mp.getOrDefault(arr[i], 0)+1);
+			}
+			int min=mp.size();
+			for(int i=1;i+d-1<n;i++) {
+				if(mp.get(arr[i-1])==1) {
+					mp.remove(arr[i-1]);
+				} else {
+					mp.put(arr[i-1], mp.get(arr[i-1])-1);
+				}
+				mp.put(arr[i+d-1], mp.getOrDefault(arr[i+d-1], 0)+1);
+				min=Math.min(min, mp.size());
+			}
+			System.out.println(min);
+		}
+		out.flush();
+		out.close();		
+	}
+	
+
+}
+
+
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32() as usize;
+        let _k = sc.next_i32();
+        let d = sc.next_i32() as usize;
+
+        let mut arr = vec![0i32; n];
+        for i in 0..n {
+            arr[i] = sc.next_i32();
+        }
+
+        if d == 1 {
+            out.push_str("1\n");
+            continue;
+        }
+
+        let mut mp: HashMap<i32, i32> = HashMap::new();
+        for i in 0..d {
+            *mp.entry(arr[i]).or_insert(0) += 1;
+        }
+
+        let mut min_distinct = mp.len();
+
+        for i in 1..=n - d {
+            let left = arr[i - 1];
+            if let Some(cnt) = mp.get_mut(&left) {
+                if *cnt == 1 {
+                    mp.remove(&left);
+                } else {
+                    *cnt -= 1;
+                }
+            }
+
+            let right = arr[i + d - 1];
+            *mp.entry(right).or_insert(0) += 1;
+
+            let sz = mp.len();
+            if sz < min_distinct {
+                min_distinct = sz;
+            }
+        }
+
+        out.push_str(&format!("{}\n", min_distinct));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

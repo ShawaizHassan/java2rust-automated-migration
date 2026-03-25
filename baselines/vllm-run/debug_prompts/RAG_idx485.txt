@@ -1,0 +1,282 @@
+INDEX: 485 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+/*
+If you want to aim high, aim high
+Don't let that studying and grades consume you
+Just live life young
+******************************
+If I'm the sun, you're the moon
+Because when I go up, you go down
+*******************************
+I'm working for the day I will surpass you
+https://www.a2oj.com/Ladder16.html
+*/
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+   public class E
+   {
+      static long MOD = 998244353L;
+      public static void main(String omkar[]) throws Exception
+      {
+         BufferedReader infile = new BufferedReader(new InputStreamReader(System.in));  
+         StringTokenizer st = new StringTokenizer(infile.readLine());
+         long N = Long.parseLong(st.nextToken());
+         long M = Long.parseLong(st.nextToken());
+         long L = Long.parseLong(st.nextToken());
+         long R = Long.parseLong(st.nextToken());
+         //dont panic 
+         //that makes you lose Omkar energy
+         if((N*M)%2 == 1)
+         {
+            //here?
+            long temp = N*M;
+            BigInteger exp = new BigInteger(temp+"");
+            BigInteger base = new BigInteger((R-L+1)+"");
+            BigInteger mod = new BigInteger(MOD+"");
+            long res = base.modPow(exp, mod).longValue();
+            System.out.println((res+MOD)%MOD);
+         }
+         else
+         {
+            long temp = N*M;
+            BigInteger exp = new BigInteger(temp+"");
+            BigInteger base = new BigInteger((R-L+1)+"");
+            BigInteger mod = new BigInteger(MOD+"");
+            long res = base.modPow(exp, mod).longValue();
+            //res = (res*power(2,MOD-2,MOD))%MOD;
+            if((R-L)%2 == 0)
+               res++;
+            res = (res*power(2,MOD-2,MOD))%MOD;
+            System.out.println(res);
+         }
+      }
+      public static long power(long x, long y, long p) 
+      { 
+          long res = 1L;      
+          x = x % p;  
+          while (y > 0) 
+          { 
+              if((y & 1)==1) 
+                  res = (res * x) % p; 
+              y = y >> 1;  
+              x = (x * x) % p;  
+          } 
+          return res; 
+      }
+   }
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+/*
+If you want to aim high, aim high
+Don't let that studying and grades consume you
+Just live life young
+******************************
+If I'm the sun, you're the moon
+Because when I go up, you go down
+*******************************
+I'm working for the day I will surpass you
+https://www.a2oj.com/Ladder16.html
+*/
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+   public class x1009E
+   {
+      static long MOD = 998244353L;
+      public static void main(String omkar[]) throws Exception
+      {
+         BufferedReader infile = new BufferedReader(new InputStreamReader(System.in));  
+         StringTokenizer st = new StringTokenizer(infile.readLine());
+         int N = Integer.parseInt(st.nextToken());
+         int[] arr = new int[N];
+         st = new StringTokenizer(infile.readLine());
+         for(int i=0; i < N; i++)
+            arr[i] = Integer.parseInt(st.nextToken());
+         long res = 0L;
+         long curr = arr[0];
+         for(int i=0; i < N; i++)
+         {
+            res = (res+curr)%MOD;
+            if(i+1 < N)
+            {
+               long addend = arr[i+1]-arr[i];
+               addend = (addend*power(power(2,i+1,MOD),MOD-2,MOD))%MOD;
+               curr += addend;
+               curr %= MOD;
+            }
+         }
+         res = (res*power(2, N, MOD))%MOD;
+         res = (res*power(2, MOD-2, MOD))%MOD;
+         System.out.println(res);
+      }
+      public static long power(long x, long y, long p) 
+      { 
+          long res = 1L;      
+          x = x % p;  
+          while (y > 0) 
+          { 
+              if((y & 1)==1) 
+                  res = (res * x) % p; 
+              y = y >> 1;  
+              x = (x * x) % p;  
+          } 
+          return res; 
+      }
+   }
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 998_244_353;
+
+fn power(mut x: i64, mut y: i64, p: i64) -> i64 {
+    let mut res: i64 = 1;
+    x %= p;
+    while y > 0 {
+        if (y & 1) == 1 {
+            res = (res * x) % p;
+        }
+        y >>= 1;
+        x = (x * x) % p;
+    }
+    res
+}
+
+fn main() {
+    // Fast token scanner
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+    let mut arr: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        arr.push(it.next().unwrap().parse::<i32>().unwrap());
+    }
+
+    let mut res: i64 = 0;
+    let mut curr: i64 = arr[0] as i64;
+
+    for i in 0..n {
+        res = (res + curr) % MOD;
+
+        if i + 1 < n {
+            let mut addend: i64 = (arr[i + 1] as i64) - (arr[i] as i64);
+            let denom = power(2, (i + 1) as i64, MOD);
+            let inv = power(denom, MOD - 2, MOD);
+            addend = (addend * inv) % MOD;
+            curr += addend;
+            curr %= MOD;
+        }
+    }
+
+    res = (res * power(2, n as i64, MOD)) % MOD;
+    res = (res * power(2, MOD - 2, MOD)) % MOD;
+
+    println!("{}", res);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+//*****************   Agar firdaus bar roo-e zameen ast,Hameen ast-o hameen ast-o hameen ast.    *****************\\
+
+public class Main{
+
+    public static long fast_exp(long base, long exp) {
+        long MOD = 1000000007;
+        long res=1;
+        while(exp>0) {
+            if(exp%2==1) res=(res*base)%MOD;
+            base=(base*base)%MOD;
+            exp/=2;
+        }
+        return res%MOD;
+    }
+    public static void swap(char c1,char c2){
+        char temp = c1;
+        c1=c2;
+        c2=temp;
+    }
+
+    public static void main(String[] args)throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter pw = new PrintWriter(System.out);
+        int n = Integer.parseInt(br.readLine());
+        String[] str = br.readLine().split(" ");
+        int thomas=0;
+        int rank=1;
+        for(int i=0;i<4;i++) thomas+=Integer.parseInt(str[i]);
+        for(int i=0;i<n-1;i++){
+            str = br.readLine().split(" ");
+            int sum=0;
+            for(int j=0;j<4;j++) sum+=Integer.parseInt(str[j]);
+            if(sum>thomas) rank++;
+        }
+        pw.println(rank);
+        pw.flush();
+        pw.close();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut thomas: i32 = 0;
+    for _ in 0..4 {
+        thomas += it.next().unwrap().parse::<i32>().unwrap();
+    }
+
+    let mut rank: i32 = 1;
+    for _ in 0..(n - 1) {
+        let mut sum: i32 = 0;
+        for _ in 0..4 {
+            sum += it.next().unwrap().parse::<i32>().unwrap();
+        }
+        if sum > thomas {
+            rank += 1;
+        }
+    }
+
+    print!("{}", rank);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

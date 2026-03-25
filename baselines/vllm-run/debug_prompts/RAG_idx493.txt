@@ -1,0 +1,371 @@
+INDEX: 493 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// practice with rainboy
+import java.io.*;
+import java.util.*;
+
+public class CF1096G {
+	static final int MD = 998244353;
+	static long[] ww, ww_;
+	static long power(int a, int k) {
+		if (k == 0)
+			return 1;
+		long p = power(a, k / 2);
+		p = p * p % MD;
+		if (k % 2 == 1)
+			p = p * a % MD;
+		return p;
+	}
+	static void init() {
+		ww = new long[21];
+		ww_ = new long[21];
+		for (int h = 0; h <= 20; h++) {
+			ww[h] = power(3, MD - 1 >> h);
+			ww_[h] = power(3, MD - 1 - (MD - 1 >> h));
+		}
+	}
+	static void ntt(int[] aa, int n, boolean inverse) {
+		for (int i = 1, j = 0; i < n; i++) {
+			int b = n;
+			do
+				j ^= b >>= 1;
+			while ((j & b) == 0);
+			if (i < j) {
+				int tmp = aa[i]; aa[i] = aa[j]; aa[j] = tmp;
+			}
+		}
+		for (int h = 0, b; (b = 1 << h) < n; h++) {
+			long w_ = inverse ? ww_[h + 1] : ww[h + 1];
+			for (int i = 0; i < n; i += b * 2) {
+				long w = 1;
+				for (int j = 0; j < b; j++) {
+					int l = i + j, r = l + b;
+					long u = aa[l], v = aa[r] * w;
+					aa[l] = (int) ((u + v) % MD);
+					aa[r] = (int) ((u - v) % MD);
+					w = w * w_ % MD;
+				}
+			}
+		}
+	}
+	public static void main(String[] args) throws IOException {
+		init();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken()) / 2;
+		int k = Integer.parseInt(st.nextToken());
+		int n_ = 1;
+		while (n_ < n * 9 + 1)
+			n_ *= 2;
+		int[] aa = new int[n_];
+		st = new StringTokenizer(br.readLine());
+		while (k-- > 0) {
+			int d = Integer.parseInt(st.nextToken());
+			aa[d] = 1;
+		}
+		ntt(aa, n_, false);
+		for (int i = 0; i < n_; i++)
+			aa[i] = (int) power(aa[i], n);
+		ntt(aa, n_, true);
+		long v = power(n_, MD - 2);
+		for (int i = 0; i < n_; i++) {
+			aa[i] = (int) (aa[i] * v % MD);
+			if (aa[i] < 0)
+				aa[i] += MD;
+		}
+		long ans = 0;
+		for (int i = 0; i <= n * 9; i++) {
+			long a = aa[i];
+			ans = (ans + a * a) % MD;
+		}
+		System.out.println(ans);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+// upsolve with rainboy
+import java.io.*;
+import java.util.*;
+
+public class CF1188C extends PrintWriter {
+	CF1188C() { super(System.out, true); }
+	Scanner sc = new Scanner(System.in);
+	public static void main(String[] $) {
+		CF1188C o = new CF1188C(); o.main(); o.flush();
+	}
+
+	static final int MD = 998244353;
+	void main() {
+		int n = sc.nextInt();
+		int k = sc.nextInt();
+		int[] aa = new int[n];
+		for (int i = 0; i < n; i++)
+			aa[i] = sc.nextInt();
+		Arrays.sort(aa);
+		int[] dp = new int[n];
+		int ans = 0;
+		for (int x = 1; x * (k - 1) <= aa[n - 1] - aa[0]; x++) {
+			Arrays.fill(dp, 1);
+			for (int h = 1; h < k; h++) {
+				for (int i = 1; i < n; i++)
+					dp[i] = (dp[i] + dp[i - 1]) % MD;
+				for (int j = n - 1, i = j; j >= 0; j--) {
+					while (i >= 0 && aa[j] - aa[i] < x)
+						i--;
+					dp[j] = i >= 0 ? dp[i] : 0;
+				}
+			}
+			for (int i = 0; i < n; i++)
+				ans = (ans + dp[i]) % MD;
+		}
+		println(ans);
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MD: i32 = 998_244_353;
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let k = sc.next_i32();
+
+    let mut aa = vec![0i32; n];
+    for i in 0..n {
+        aa[i] = sc.next_i32();
+    }
+    aa.sort();
+
+    let mut dp = vec![0i32; n];
+    let mut ans: i32 = 0;
+
+    let diff = aa[n - 1] - aa[0];
+    let mut x: i32 = 1;
+    while (x as i64) * ((k - 1) as i64) <= diff as i64 {
+        dp.fill(1);
+
+        for _h in 1..k {
+            for i in 1..n {
+                let mut v = dp[i] + dp[i - 1];
+                if v >= MD {
+                    v -= MD;
+                }
+                dp[i] = v;
+            }
+            let mut i_idx: isize = (n as isize) - 1;
+            for j in (0..n).rev() {
+                while i_idx >= 0 && aa[j] - aa[i_idx as usize] < x {
+                    i_idx -= 1;
+                }
+                dp[j] = if i_idx >= 0 { dp[i_idx as usize] } else { 0 };
+            }
+        }
+
+        for i in 0..n {
+            ans += dp[i];
+            if ans >= MD {
+                ans -= MD;
+            }
+        }
+
+        x += 1;
+    }
+
+    print!("{ans}\n");
+}
+```
+
+Java:
+```
+// practice with rainboy
+import java.io.*;
+import java.util.*;
+
+public class CF223C extends PrintWriter {
+	CF223C() { super(System.out, true); }
+	Scanner sc = new Scanner(System.in);
+	public static void main(String[] $) {
+		CF223C o = new CF223C(); o.main(); o.flush();
+	}
+
+	static final int MD = 1000000007;
+	int d_, x_, y_;
+	void gcd_(int a, int b) {
+		if (b == 0) {
+			d_ = a; x_ = 1; y_ = 0;
+		} else {
+			gcd_(b, a % b);
+			int t = x_ - a / b * y_; x_ = y_; y_ = t;
+		}
+	}
+	int inv(int a) {
+		gcd_(a, MD);
+		return x_ < 0 ? x_ + MD : x_;
+	}
+	void main() {
+		int n = sc.nextInt();
+		int k = sc.nextInt();
+		int[] aa = new int[n];
+		for (int i = 0; i < n; i++)
+			aa[i] = sc.nextInt();
+		int[] ch = new int[n];
+		ch[0] = 1;
+		for (int i = 1; i < n; i++)
+			ch[i] = (int) ((long) ch[i - 1] * (k - 1 + i) % MD * inv(i) % MD);
+		for (int j = n - 1; j >= 0; j--) {
+			long a = 0;
+			for (int i = 0; i <= j; i++)
+				a = (a + (long) aa[i] * ch[j - i]) % MD;
+			aa[j] = (int) a;
+		}
+		for (int i = 0; i < n; i++)
+			print(aa[i] + " ");
+		println();
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MD: i32 = 1_000_000_007;
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn gcd_ext(a: i32, b: i32, d: &mut i32, x: &mut i32, y: &mut i32) {
+    if b == 0 {
+        *d = a;
+        *x = 1;
+        *y = 0;
+    } else {
+        gcd_ext(b, a % b, d, x, y);
+        let t = *x - (a / b) * *y;
+        let nx = *y;
+        let ny = t;
+        *x = nx;
+        *y = ny;
+    }
+}
+
+fn inv(a: i32) -> i32 {
+    let mut d = 0i32;
+    let mut x = 0i32;
+    let mut y = 0i32;
+    gcd_ext(a, MD, &mut d, &mut x, &mut y);
+    if x < 0 { x + MD } else { x }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let k = sc.next_i32();
+
+    let mut aa = vec![0i32; n];
+    for i in 0..n {
+        aa[i] = sc.next_i32();
+    }
+
+    let mut ch = vec![0i32; n];
+    ch[0] = 1;
+    for i in 1..n {
+        let ii = i as i32;
+        let val = (ch[i - 1] as i64)
+            * ((k - 1 + ii) as i64 % MD as i64) % MD as i64
+            * (inv(ii) as i64) % MD as i64;
+        ch[i] = val as i32;
+    }
+
+    for j in (0..n).rev() {
+        let mut a = 0i64;
+        for i in 0..=j {
+            a = (a + aa[i] as i64 * ch[j - i] as i64) % MD as i64;
+        }
+        aa[j] = a as i32;
+    }
+
+    let mut out = String::new();
+    for i in 0..n {
+        out.push_str(&format!("{} ", aa[i]));
+    }
+    out.push('\n');
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

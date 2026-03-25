@@ -1,0 +1,311 @@
+INDEX: 268 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class program
+{
+	public static void main(String args[])
+	{
+		Scanner sc=new Scanner(System.in);
+	   int n=sc.nextInt();
+	   int m=sc.nextInt();
+	   int a[]=new int[m];
+	    int x[]=new int[101];
+	   for(int i=0;i<m;i++)
+	  {  a[i]=sc.nextInt();
+	     x[a[i]]++;
+	  }
+       int l = 0;
+		int r = 101;
+		while(r - l > 1) {
+			int mm = l + r >>> 1;
+			int k = 0;
+			for (int i = 0; i <= 100; i++) {
+				k += x[i] / mm;
+			}
+			if (k >= n) {
+				l = mm;
+			} else {
+				r = mm;
+			}
+		}
+		System.out.println(l);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class a {
+public static void main(String[] args)
+{
+    Scanner input = new Scanner(System.in);
+    int n = input.nextInt(), m = input.nextInt();
+    int[] data = new int[n];
+    int[] upper = new int[n];
+    int[] ts = new int[m], ls = new int[m], rs = new int[m], ds = new int[m];
+    Arrays.fill(upper, 1000000000);
+    for(int i = 0; i<m; i++)
+    {
+        int type = input.nextInt();
+        ts[i] = type;
+        if(type == 1)
+        {
+            ls[i] = input.nextInt()-1; rs[i] = input.nextInt()-1; ds[i] = input.nextInt();
+            for(int j = ls[i]; j<=rs[i]; j++) data[j] += ds[i];
+        }
+        else
+        {
+            ls[i] = input.nextInt()-1; rs[i] = input.nextInt()-1; ds[i] = input.nextInt();
+            for(int j = ls[i]; j<=rs[i]; j++) upper[j] = Math.min(upper[j], ds[i] - data[j]);
+        }
+    }
+    int[] copy = new int[n];
+    for(int i =0; i<n; i++) copy[i] = upper[i];
+    boolean good = true;
+    for(int i = 0; i<m; i++)
+    {
+        int type = ts[i], l = ls[i], r = rs[i], d = ds[i];
+        if(type == 1)
+        {
+            for(int j = l; j<=r; j++) copy[j] += d;
+        }
+        else
+        {
+            int max = d;
+            int mm = -2000000000;
+            for(int j = l; j<=r; j++) mm = Math.max(mm,copy[j]);
+            //System.out.println(mm);
+            good &= mm == max;
+        }
+    }
+    if(good)
+    {
+        System.out.println("YES");
+        for(int i= 0; i<n; i++) System.out.print(upper[i]+" ");
+    }
+    else System.out.println("NO");
+}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32() as usize;
+
+    let mut data = vec![0i32; n];
+    let mut upper = vec![1_000_000_000i32; n];
+
+    let mut ts = vec![0i32; m];
+    let mut ls = vec![0usize; m];
+    let mut rs = vec![0usize; m];
+    let mut ds = vec![0i32; m];
+
+    for i in 0..m {
+        let t = sc.next_i32();
+        ts[i] = t;
+        let l = (sc.next_i32() - 1) as usize;
+        let r = (sc.next_i32() - 1) as usize;
+        let d = sc.next_i32();
+        ls[i] = l;
+        rs[i] = r;
+        ds[i] = d;
+
+        if t == 1 {
+            for j in l..=r {
+                data[j] += d;
+            }
+        } else {
+            for j in l..=r {
+                let cand = d - data[j];
+                if cand < upper[j] {
+                    upper[j] = cand;
+                }
+            }
+        }
+    }
+
+    let mut copy = upper.clone();
+    let mut good = true;
+
+    for i in 0..m {
+        let t = ts[i];
+        let l = ls[i];
+        let r = rs[i];
+        let d = ds[i];
+
+        if t == 1 {
+            for j in l..=r {
+                copy[j] += d;
+            }
+        } else {
+            let mut mm = -2_000_000_000i32;
+            for j in l..=r {
+                if copy[j] > mm {
+                    mm = copy[j];
+                }
+            }
+            good &= mm == d;
+        }
+    }
+
+    if good {
+        let mut out = String::new();
+        out.push_str("YES\n");
+        for i in 0..n {
+            out.push_str(&format!("{} ", upper[i]));
+        }
+        print!("{out}");
+    } else {
+        print!("NO");
+    }
+}
+```
+
+Java:
+```
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int d = in.nextInt();
+        int h[] = new int[n];
+        int m[] = new int[n];
+        for (int i=0;i<n;i++){
+            h[i] = in.nextInt();
+            m[i] = in.nextInt();
+        }
+        if (h[0]*60+m[0]>=d+1){
+            System.out.println(0+" "+0);
+            return;
+        }
+        for (int i=1;i<n;i++){
+            if (h[i]*60+m[i]-h[i-1]*60-m[i-1]>=2*(d+1)){
+                int mm = m[i-1]+d+1;
+                if (mm>=60){
+                    System.out.println(h[i-1]+mm/60+" "+(mm%60));
+                    return;
+                }
+                else {
+                    System.out.println(h[i-1]+" "+mm);
+                    return;
+                }
+            }
+        }
+        int mm =m[n-1]+d+1;
+        if (mm>=60){
+            System.out.println(h[n-1]+mm/60+" "+(mm%60));
+            return;
+        }
+        else {
+            System.out.println(h[n-1]+" "+mm);
+            return;
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let d: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut h: Vec<i32> = vec![0; n];
+    let mut m: Vec<i32> = vec![0; n];
+
+    for i in 0..n {
+        h[i] = it.next().unwrap().parse().unwrap();
+        m[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    if h[0] * 60 + m[0] >= d + 1 {
+        println!("0 0");
+        return;
+    }
+
+    for i in 1..n {
+        let cur = h[i] * 60 + m[i];
+        let prev = h[i - 1] * 60 + m[i - 1];
+        if cur - prev >= 2 * (d + 1) {
+            let mm = m[i - 1] + d + 1;
+            if mm >= 60 {
+                println!("{} {}", h[i - 1] + mm / 60, mm % 60);
+            } else {
+                println!("{} {}", h[i - 1], mm);
+            }
+            return;
+        }
+    }
+
+    let mm = m[n - 1] + d + 1;
+    if mm >= 60 {
+        println!("{} {}", h[n - 1] + mm / 60, mm % 60);
+    } else {
+        println!("{} {}", h[n - 1], mm);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

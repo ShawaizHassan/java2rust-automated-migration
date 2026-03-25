@@ -1,0 +1,454 @@
+INDEX: 476 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class e{
+
+	static long mod = 998244353;
+
+	public static void main(String[] args){
+		JS scan = new JS();
+		long n = scan.nextLong();
+		long m = scan.nextLong();
+		long L = scan.nextLong();
+		long R = scan.nextLong();
+		long h = R-L;
+		
+		long e = 0;
+		long o = 0;
+		if(h % 2 == 1){
+			long d = (h+1)/2;
+			e = d;
+			o = d;
+		}
+		else{
+			long d = h/2;
+			e = d;
+			o = d;
+			if(L % 2 == 1) o++;
+			else e++;
+		}
+
+		long[][] mat = {{e, o},{o, e}};
+		long[][] pphard = pow(mat, m*n);
+		long ans = pphard[0][0];
+		if((n*m)%2==1) ans += pphard[0][1];
+		System.out.println(ans%mod);
+	}
+
+	static long[][] pow(long[][] a, long pow){
+		if(pow == 0) return iden(a.length);
+		if(pow % 2 == 1){
+			long[][] res = pow(a, pow-1);
+			return mult(res, a);
+		}
+		long[][] res = pow(a, pow/2);
+		return mult(res, res);
+	}
+
+	static long[][] iden(int n){
+		long[][] res = new long[n][n];
+		for(int i = 0; i < n; i++) res[i][i] = 1;
+		return res;
+	}
+
+	static long[][] mult(long[][] a, long[][] b){
+		long[][] res = new long[a.length][b[0].length];
+		for(int i = 0; i < a.length; i++){
+			for(int j = 0; j < b[0].length; j++){
+				for(int k = 0; k < a[0].length; k++){
+					res[i][j] += (a[i][k]%mod)*(b[k][j]%mod);
+					res[i][j] %= mod;
+				}
+			}
+		}
+		return res;
+	}
+
+	static class JS{
+		public int BS = 1<<16;
+		public char NC = (char)0;
+		byte[] buf = new byte[BS];
+		int bId = 0, size = 0;
+		char c = NC;
+		double num = 1;
+		BufferedInputStream in;
+ 
+		public JS() {
+			in = new BufferedInputStream(System.in, BS);
+		}
+ 
+		public JS(String s) throws FileNotFoundException {
+			in = new BufferedInputStream(new FileInputStream(new File(s)), BS);
+		}
+ 
+		public char nextChar(){
+			while(bId==size) {
+				try {
+					size = in.read(buf);
+				}catch(Exception e) {
+					return NC;
+				}				
+				if(size==-1)return NC;
+				bId=0;
+			}
+			return (char)buf[bId++];
+		}
+ 
+		public int nextInt() {
+			return (int)nextLong();
+		}
+ 
+		public long nextLong() {
+			num=1;
+			boolean neg = false;
+			if(c==NC)c=nextChar();
+			for(;(c<'0' || c>'9'); c = nextChar()) {
+				if(c=='-')neg=true;
+			}
+			long res = 0;
+			for(; c>='0' && c <='9'; c=nextChar()) {
+				res = (res<<3)+(res<<1)+c-'0';
+				num*=10;
+			}
+			return neg?-res:res;
+		}
+ 
+		public double nextDouble() {
+			double cur = nextLong();
+			return c!='.' ? cur:cur+nextLong()/num;
+		}
+ 
+		public String next() {
+			StringBuilder res = new StringBuilder();
+			while(c<=32)c=nextChar();
+			while(c>32) {
+				res.append(c);
+				c=nextChar();
+			}
+			return res.toString();
+		}
+ 
+		public String nextLine() {
+			StringBuilder res = new StringBuilder();
+			while(c<=32)c=nextChar();
+			while(c!='\n') {
+				res.append(c);
+				c=nextChar();
+			}
+			return res.toString();
+		}
+ 
+		public boolean hasNext() {
+			if(c>32)return true;
+			while(true) {
+				c=nextChar();
+				if(c==NC)return false;
+				else if(c>32)return true;
+			}
+		}
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class C {
+    static final int MOD = 1000000007;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine();
+        solve(s);
+        br.close();
+    }
+
+    private static void solve(String s) {
+        int n = s.length();
+        long[] comb = new long[n];
+        long[] sums = new long[n];
+        long[] pows = new long[n];
+        pows[0] = 1;
+        for (int i = 1; i < n; i++) {
+            pows[i] = 10 * pows[i-1] % MOD;
+        }
+        for (int i = 1; i < n; i++) {
+            sums[i] = (sums[i-1] + pows[i-1] * i) % MOD;
+        }
+        for (int i = 0; i < n; i++) {
+            comb[i] = (1l * i * (i+1) / 2) % MOD;
+        }
+        long res = 0;
+        for (int i = 0; i < n; i++) {
+            int c = s.charAt(i) - '0';
+            res += mult(mult(pows[n-1-i], comb[i]), c) + mult(sums[n-1-i], c);
+            if (res > MOD)
+                res %= MOD;
+        }
+        System.out.println(res);
+    }
+
+    private static int mult(long a, long b) {
+        return (int)(a * b % MOD);
+    }
+
+    private static int mod(int i, int mag) {
+        long res = i % MOD;
+        while (mag-- > 0) {
+            res *= 10;
+            res %= MOD;
+        }
+        return (int)res;
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 1_000_000_007;
+
+fn mult(a: i64, b: i64) -> i64 {
+    (a * b) % MOD
+}
+
+fn solve(s: &str) {
+    let bytes = s.as_bytes();
+    let n = bytes.len();
+    if n == 0 {
+        println!("0");
+        return;
+    }
+
+    let mut comb = vec![0i64; n];
+    let mut sums = vec![0i64; n];
+    let mut pows = vec![0i64; n];
+
+    pows[0] = 1;
+    for i in 1..n {
+        pows[i] = (10 * pows[i - 1]) % MOD;
+    }
+    for i in 1..n {
+        sums[i] = (sums[i - 1] + (pows[i - 1] * (i as i64)) % MOD) % MOD;
+    }
+    for i in 0..n {
+        let ii = i as i64;
+        comb[i] = ((ii * (ii + 1) / 2) % MOD) as i64;
+    }
+
+    let mut res: i64 = 0;
+    for i in 0..n {
+        let c = (bytes[i] - b'0') as i64;
+        let idx = n - 1 - i;
+        res += mult(mult(pows[idx], comb[i]), c) + mult(sums[idx], c);
+        if res > MOD {
+            res %= MOD;
+        }
+    }
+    println!("{}", res);
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let s = input.lines().next().unwrap_or("");
+    solve(s);
+}
+```
+
+Java:
+```
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+public class Main
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		Scanner sc = new Scanner(System.in);
+		long back = -1, inf = sc.nextLong(), sup = sc.nextLong(), inc=  sc.nextLong(), lim, dat, start, c;
+		String res = "", si = "", sinc = "";
+		c = 0;
+		dat = (long)Math.pow(inc, c);
+			while(dat < inf){
+				c++;
+				if(inc >= 688813)
+					dat = mult(inc, c);
+				else
+					dat = (long)Math.pow(inc, c);
+			}
+		if( dat >= inf){
+			start = dat;
+		} else {
+			start = (long)Math.pow(inc, c+1);
+		}
+		if(start == 1){
+			res = "1 ";
+			start = (long)Math.pow(inc, c+1);
+		}
+		sinc = ""+inc;
+		for(long i = start ; i <= sup; i*=inc){
+			if(i < 0 || back > i)
+				break;
+			res = res + i + " ";
+			si = ""+i;
+			
+			if((si.length()+sinc.length()-1) > 18 && i*inc != sup){
+				break;
+			}
+			back = i;
+		}
+		
+		if(res.length() != 0)	
+			System.out.println(res);
+			else
+			System.out.println("-1");
+			
+	}
+	
+	private static long mult(long n, long cant){
+		long res = 1;
+		while(cant != 0){
+			res = res*n;
+			cant--;
+		}
+		return res;
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastInput {
+    data: Vec<u8>,
+    idx: usize,
+}
+impl FastInput {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { data: input.into_bytes(), idx: 0 }
+    }
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut val: i64 = 0;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            val = val * 10 + (self.data[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        val * sign
+    }
+}
+
+fn mult(n: i64, mut cant: i64) -> i64 {
+    let mut res: i64 = 1;
+    while cant != 0 {
+        res = res.wrapping_mul(n);
+        cant -= 1;
+    }
+    res
+}
+
+fn pow_java_like(base: i64, exp: i64) -> i64 {
+    let b = base as f64;
+    let e = exp as f64;
+    b.powf(e) as i64
+}
+
+fn main() {
+    let mut sc = FastInput::new();
+
+    let mut back: i64 = -1;
+    let inf: i64 = sc.next_i64();
+    let sup: i64 = sc.next_i64();
+    let inc: i64 = sc.next_i64();
+
+    let mut res = String::new();
+    let mut si = String::new();
+    let sinc = inc.to_string();
+
+    let mut c: i64 = 0;
+    let mut dat: i64 = pow_java_like(inc, c);
+
+    while dat < inf {
+        c += 1;
+        if inc >= 688813 {
+            dat = mult(inc, c);
+        } else {
+            dat = pow_java_like(inc, c);
+        }
+    }
+
+    let mut start: i64;
+    if dat >= inf {
+        start = dat;
+    } else {
+        start = pow_java_like(inc, c + 1);
+    }
+
+    if start == 1 {
+        res.push_str("1 ");
+        start = pow_java_like(inc, c + 1);
+    }
+
+    let mut i = start;
+    while i <= sup {
+        if i < 0 || back > i {
+            break;
+        }
+        res.push_str(&i.to_string());
+        res.push(' ');
+
+        si.clear();
+        si.push_str(&i.to_string());
+
+        let len_check = (si.len() + sinc.len()).saturating_sub(1);
+        if len_check > 18 && i.wrapping_mul(inc) != sup {
+            break;
+        }
+        back = i;
+
+        i = i.wrapping_mul(inc);
+    }
+
+    if !res.is_empty() {
+        println!("{}", res);
+    } else {
+        println!("-1");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

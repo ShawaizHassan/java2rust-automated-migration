@@ -1,0 +1,353 @@
+INDEX: 336 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class recycle {
+
+	public static void main(String[] args) throws IOException {
+		
+		FastScanner qwe = new FastScanner(System.in);
+		long[] fact = new long[21];
+		fact[0] = 1;
+		for (int i = 1; i < fact.length; i++) {
+			fact[i] = fact[i-1]*i;
+		}
+		
+		int n = qwe.nextInt();
+		int even = 2*n-2;
+		System.out.println(fact[even]/fact[even/2]/fact[even/2]);
+		
+		
+	}
+	
+	static class FastScanner {
+		BufferedReader br;
+		StringTokenizer st;
+		
+		public FastScanner(InputStream in) throws IOException{
+			br = new BufferedReader(new InputStreamReader(in));
+			st = new StringTokenizer(br.readLine().trim());
+		}
+		public int numTokens() throws IOException {
+			if(!st.hasMoreTokens()){
+				st = new StringTokenizer(br.readLine().trim());
+				return numTokens();
+			}
+			return st.countTokens();
+		}
+		public String next() throws IOException {
+			if(!st.hasMoreTokens()){
+				st = new StringTokenizer(br.readLine().trim());
+				return next();
+			}
+			return st.nextToken();
+		}
+		public double nextDouble() throws IOException{
+			return Double.parseDouble(next());
+		}
+		public float nextFloat() throws IOException{
+			return Float.parseFloat(next());
+		}
+		public long nextLong() throws IOException{
+			return Long.parseLong(next());
+		}
+		public int nextInt() throws IOException{
+			return Integer.parseInt(next());
+		}
+		public String nextLine() throws IOException{
+			return br.readLine().trim();
+		}
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+public class test {
+	static int MAX = 2001000001;
+	
+	public static void main(String[] argvs) throws Exception{
+		FastScanner scan = new FastScanner(System.in);
+		int n = scan.nextInt();
+		if(n % 2 == 0) System.out.println(-1);
+		else {
+			for(int i = 0; i < 3; ++i){
+				StringBuilder sb = new StringBuilder();
+				for(int j = 0; j < n; ++j){
+					if(i < 2){
+						sb.append(j + " ");
+					} else {
+						sb.append((j + j) % n + " ");
+					}
+				}
+				System.out.println(sb);
+			}
+		}
+	}
+	
+	static class FastScanner {
+		BufferedReader br;
+		StringTokenizer st;
+
+		public FastScanner(InputStream in) throws Exception {
+			br = new BufferedReader(new InputStreamReader(in));
+			st = new StringTokenizer(br.readLine().trim());
+		}
+
+		public int numTokens() throws Exception {
+			if (!st.hasMoreTokens()) {
+				st = new StringTokenizer(br.readLine().trim());
+				return numTokens();
+			}
+			return st.countTokens();
+		}
+
+		public boolean hasNext() throws Exception {
+			if (!st.hasMoreTokens()) {
+				st = new StringTokenizer(br.readLine().trim());
+				return hasNext();
+			}
+			return true;
+		}
+
+		public String next() throws Exception {
+			if (!st.hasMoreTokens()) {
+				st = new StringTokenizer(br.readLine().trim());
+				return next();
+			}
+			return st.nextToken();
+		}
+
+		public double nextDouble() throws Exception {
+			return Double.parseDouble(next());
+		}
+
+		public float nextFloat() throws Exception {
+			return Float.parseFloat(next());
+		}
+
+		public long nextLong() throws Exception {
+			return Long.parseLong(next());
+		}
+
+		public int nextInt() throws Exception {
+			return Integer.parseInt(next());
+		}
+
+		public String nextLine() throws Exception {
+			return br.readLine();
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut scan = FastScanner::new();
+    let n: i32 = scan.next_i32();
+
+    if n % 2 == 0 {
+        println!("-1");
+    } else {
+        for i in 0..3i32 {
+            let mut sb = String::new();
+            for j in 0..n {
+                if i < 2 {
+                    sb.push_str(&j.to_string());
+                    sb.push(' ');
+                } else {
+                    let val = (j + j) % n;
+                    sb.push_str(&val.to_string());
+                    sb.push(' ');
+                }
+            }
+            println!("{}", sb);
+        }
+    }
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.StringTokenizer;
+
+
+public class cf244c {
+  public static void main(String[] args) {
+    FastScanner in = new FastScanner(System.in);
+    int n = in.nextInt();
+    HashSet<Integer> allSet = new HashSet<Integer>();
+    HashSet<Integer> curSet = new HashSet<Integer>();
+    for(int i=0; i<n; i++) {
+      int x = in.nextInt();
+      HashSet<Integer> nextSet = new HashSet<Integer>();
+      nextSet.add(x);
+      for(int z : curSet)
+        nextSet.add(x|z);
+      allSet.addAll(nextSet);
+      curSet = nextSet;
+    }
+    System.out.println(allSet.size());
+  }
+  static class FastScanner {
+    BufferedReader br;
+    StringTokenizer st;
+    
+    public FastScanner(InputStream in) {
+      br = new BufferedReader(new InputStreamReader(in));
+      scanLine();
+    }
+    public void scanLine() {
+      try {
+        st = new StringTokenizer(br.readLine().trim());
+      } catch(Exception e) {
+        throw new RuntimeException(e.getMessage());
+      }
+    }
+    public int numTokens() {
+      if(!st.hasMoreTokens()) {
+        scanLine();
+        return numTokens();
+      }
+      return st.countTokens();
+    }
+    public String next() {
+      if(!st.hasMoreTokens()) {
+        scanLine();
+        return next();
+      }
+      return st.nextToken();
+    }
+    public double nextDouble() {
+      return Double.parseDouble(next());
+    }
+    public long nextLong() {
+      return Long.parseLong(next());
+    }
+    public int nextInt() {
+      return Integer.parseInt(next());
+    }
+  }
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashSet;
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign: i32 = 1;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as usize;
+
+    let mut all_set: HashSet<i32> = HashSet::new();
+    let mut cur_set: HashSet<i32> = HashSet::new();
+
+    for _ in 0..n {
+        let x = fs.next_i32();
+        let mut next_set: HashSet<i32> = HashSet::new();
+        next_set.insert(x);
+        for &z in cur_set.iter() {
+            next_set.insert(x | z);
+        }
+        all_set.extend(next_set.iter().copied());
+        cur_set = next_set;
+    }
+
+    println!("{}", all_set.len());
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

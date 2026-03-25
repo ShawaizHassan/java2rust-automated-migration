@@ -1,0 +1,443 @@
+INDEX: 328 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.*;
+
+public class C774E {
+
+    static StringBuffer ans1 = new StringBuffer("");
+    static FastScanner sc = new FastScanner();
+    static PrintWriter printWriter = new PrintWriter(System.out);
+
+    public static void solve(int n, int m) {
+        int depth = 0, temp = n;
+        while(temp > 1) {
+            temp /= 2;
+            depth++;
+        }
+        int[] dp = new int[depth + 1];
+        boolean[] visited = new boolean[m * depth + 1];
+        int size = 0;
+        for (int i = 1; i <= depth; i++) {
+            for(int j = 1; j <= m; j++) {
+                if(!visited[i * j]) size++;
+                visited[i * j] = true;
+            }
+            dp[i] = size;
+        }
+        long res = 1;
+        boolean[] used = new boolean[n + 1];
+        for(int i = 2; i <= n; i++) {
+            if(used[i]) continue;
+            int k = i, count = 0;
+            while(k <= n) {
+                used[k] = true;
+                count++;
+                if(k * 1L * i != k * i) break;
+                k *= i;
+            }
+            res += dp[count];
+        }
+        printWriter.println(res);
+    }
+
+    public static void main(String[] args) {
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        solve(n, m);
+        printWriter.flush();
+    }
+
+
+    /*****************************************************************
+     ******************** DO NOT READ AFTER THIS LINE *****************
+     *****************************************************************/
+    static class FastScanner {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer("");
+
+        String next() {
+            while (!st.hasMoreTokens())
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        int[] readArray(int n) {
+            int[] a = new int[n];
+            for (int i = 0; i < n; i++)
+                a[i] = nextInt();
+            return a;
+        }
+
+        long[] readLongArray(int n) {
+            long[] a = new long[n];
+            for (int i = 0; i < n; i++)
+                a[i] = nextLong();
+            return a;
+        }
+
+        int[][] read2dArray(int n, int m) {
+            int arr[][] = new int[n][m];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    arr[i][j] = nextInt();
+                }
+            }
+            return arr;
+        }
+
+        ArrayList<Integer> readArrayList(int n) {
+            ArrayList<Integer> arr = new ArrayList<Integer>();
+            for (int i = 0; i < n; i++) {
+                int a = nextInt();
+                arr.add(a);
+            }
+            return arr;
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.StringTokenizer;
+
+
+public class C{
+	
+	
+	
+	public static void main(String[] args) throws IOException {
+		
+		
+		FastScanner sc=new FastScanner();
+		
+		int n = sc.nextInt();
+		int m = sc.nextInt();
+		int arr[] = sc.readArray(n);
+		int lis[] = sc.readArray(m);
+		
+		for(int ans = 0; ans<(1<<9); ans++) {
+			if(isvalid(ans,arr,lis)) {
+				System.out.println(ans);
+				break;
+			}
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
+ 
+	private static boolean isvalid(int ans, int[] arr, int[] lis) {
+		for(int i=0; i<arr.length; i++) {
+			boolean flag = false;
+			for(int j=0; j<lis.length; j++) {
+				long val = arr[i] & lis[j];
+				if((val|ans) == ans) {
+					flag = true;
+					break;
+				}
+			}
+			if(flag== false) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+
+
+
+	static void sort(int[] a) {
+		ArrayList<Integer> l=new ArrayList<>();
+		for (int i:a) l.add(i);
+		Collections.sort(l);
+		for (int i=0; i<a.length; i++) a[i]=l.get(i);
+	}
+	
+	static class FastScanner {
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st=new StringTokenizer("");
+		String next() {
+			while (!st.hasMoreTokens())
+				try {
+					st=new StringTokenizer(br.readLine());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			return st.nextToken();
+		}
+		
+		int nextInt() {
+			return Integer.parseInt(next());
+		}
+		int[] readArray(int n) {
+			int[] a=new int[n];
+			for (int i=0; i<n; i++) a[i]=nextInt();
+			return a;
+		}
+		long nextLong() {
+			return Long.parseLong(next());
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn read_array_i32(&mut self, n: usize) -> Vec<i32> {
+        let mut a = Vec::with_capacity(n);
+        for _ in 0..n {
+            a.push(self.next_i32());
+        }
+        a
+    }
+}
+
+fn isvalid(ans: i32, arr: &[i32], lis: &[i32]) -> bool {
+    for &ai in arr {
+        let mut flag = false;
+        for &lj in lis {
+            let val: i64 = (ai & lj) as i64;
+            if ((val | ans as i64) as i64) == ans as i64 {
+                flag = true;
+                break;
+            }
+        }
+        if !flag {
+            return false;
+        }
+    }
+    true
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32() as usize;
+    let arr = sc.read_array_i32(n);
+    let lis = sc.read_array_i32(m);
+
+    for ans in 0..(1 << 9) {
+        if isvalid(ans, &arr, &lis) {
+            println!("{}", ans);
+            break;
+        }
+    }
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class ModuloSum
+{
+
+private static StringTokenizer st;
+    
+    public static void nextLine(BufferedReader br) throws IOException
+    {
+        st = new StringTokenizer(br.readLine());
+    }
+    
+    public static int nextInt()
+    {
+        return Integer.parseInt(st.nextToken());
+    }
+    
+    public static String next()
+    {
+        return st.nextToken();
+    }
+    
+    public static long nextLong()
+    {
+        return Long.parseLong(st.nextToken());
+    }
+
+    public static double nextDouble()
+    {
+        return Double.parseDouble(st.nextToken());
+    }
+    
+    public static void main(String[] args) throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        nextLine(br);
+        int n=nextInt();
+        int m=nextInt();
+        nextLine(br);
+        int[] arr=new int[n];
+        boolean res = false;
+        for (int i=0;i<n ;i++ ) {
+            arr[i]=nextInt();
+            arr[i]%=m;
+            if (arr[i]%m==0) {
+                res=true;
+            }
+        }
+       if(n>=m){res=true;}// pigeonhole principle
+        if(res){System.out.println("YES");return;}
+ 
+        boolean[][] can = new boolean[n+1][m+1];
+        for(int i=1;i<=n;i++){
+            can[i][arr[i-1]]=true;
+            for(int j=0;j<m;j++){
+                if(can[i-1][j]){
+                    can[i][j]=true;     //do not take ith
+                    int temp = (arr[i-1]+j)%m;
+                    can[i][temp]=true;  //take ith
+                    if(temp==0){
+                       // System.out.println("here "+temp);
+                        res=true;}
+                }
+            }
+           // System.out.println(Arrays.toString(can[i]));
+        }
+ 
+ 
+ 
+ 
+ 
+        if(res){System.out.println("YES");}
+        else {System.out.println("NO");}
+         
+    
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m_i32: i32 = it.next().unwrap().parse().unwrap();
+    let m_usize: usize = m_i32 as usize;
+
+    let mut arr: Vec<usize> = vec![0; n];
+    let mut res = false;
+
+    for i in 0..n {
+        let mut v: i32 = it.next().unwrap().parse().unwrap();
+        v %= m_i32;
+        if v % m_i32 == 0 {
+            res = true;
+        }
+        arr[i] = v as usize;
+    }
+
+    if n >= m_usize {
+        res = true;
+    }
+    if res {
+        print!("YES\n");
+        return;
+    }
+
+    let mut can = vec![vec![false; m_usize + 1]; n + 1];
+
+    for i in 1..=n {
+        can[i][arr[i - 1]] = true;
+        for j in 0..m_usize {
+            if can[i - 1][j] {
+                can[i][j] = true;
+                let temp = (arr[i - 1] + j) % m_usize;
+                can[i][temp] = true;
+                if temp == 0 {
+                    res = true;
+                }
+            }
+        }
+    }
+
+    if res {
+        print!("YES\n");
+    } else {
+        print!("NO\n");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

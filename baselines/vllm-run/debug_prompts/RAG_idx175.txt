@@ -1,0 +1,320 @@
+INDEX: 175 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import jdk.swing.interop.SwingInterOpUtils;
+
+import java.util.Scanner;
+
+public class cp {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int k = 0, l = 0, count = 0;
+
+
+        int ar[][] = new int[5][5];
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                ar[i][j] = scan.nextInt();
+                if (ar[i][j] == 1) {
+                    k = i;
+                    l = j;
+                }
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if (k != 2) {
+
+
+                if (k > 2) {
+                    k--;
+                } else {
+                    k++;
+                }
+
+                count = count + 1;
+
+            }
+            if (l != 2) {
+                {
+                    if (l > 2) {
+                        l--;
+                    } else {
+                        l++;
+                    }
+                }
+                count = count + 1;
+            }
+
+
+
+           else if (k == 2 && l == 2)
+            break;
+
+
+    }
+
+
+        System.out.println(count);
+
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+/**
+ *
+ * @author HP
+ */
+public class Question3 {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int testCases = s.nextInt();
+        while(testCases-->0) {
+            int size =s.nextInt();
+            int k = s.nextInt();
+            s.nextLine();
+            char positions[] = s.nextLine().toCharArray();
+            int count=0, j, res=0;
+            int l;
+            for(l=0;l<=k&&l<size;l++) {
+                if(positions[l]=='1')
+                    break;
+            }
+            if(l>k||l==size) {
+                positions[0]= '1';
+                res++;
+            }
+            for(int i= 0 ; i < size; i++) {
+                if(positions[i]=='0') {
+                    count++;
+                }
+                if(positions[i]=='1') {
+                    count = 0;
+                }
+                if(count>k) {
+                    j = 1;
+                    while(j<=k) {
+                        if(i+j<size&&positions[i+j]=='1')
+                            break;
+                        j++;
+                    }
+                    if(j>k) {
+                        positions[i] = '1';
+                        res++;
+                    }
+                    count = 0;
+                }
+            }
+            System.out.println(res);
+//            System.out.println(String.valueOf(positions));
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_string(&mut self) -> String {
+        self.skip_whitespace();
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8_lossy(&self.input[start..self.idx]).to_string()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let test_cases = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..test_cases {
+        let size = sc.next_i32() as usize;
+        let k = sc.next_i32() as usize;
+        let line = sc.next_string();
+        let mut positions: Vec<u8> = line.into_bytes();
+
+        let mut count: usize = 0;
+        let mut res: i32 = 0;
+
+        let mut l: usize = 0;
+        while l <= k && l < size {
+            if positions[l] == b'1' {
+                break;
+            }
+            l += 1;
+        }
+        if l > k || l == size {
+            if size > 0 {
+                positions[0] = b'1';
+                res += 1;
+            }
+        }
+
+        for i in 0..size {
+            if positions[i] == b'0' {
+                count += 1;
+            }
+            if positions[i] == b'1' {
+                count = 0;
+            }
+            if count > k {
+                let mut j: usize = 1;
+                while j <= k {
+                    if i + j < size && positions[i + j] == b'1' {
+                        break;
+                    }
+                    j += 1;
+                }
+                if j > k {
+                    positions[i] = b'1';
+                    res += 1;
+                }
+                count = 0;
+            }
+        }
+
+        out.push_str(&format!("{}\n", res));
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.lang.*;
+public class stringcheck{
+    public static void main(String [] args ){
+        Scanner sc=new Scanner(System.in);
+        String s=sc.nextLine();
+        s.toLowerCase();
+        int k=sc.nextInt();
+        int l=s.length();
+        int i;
+        if(k>l)
+            System.out.println("impossible");
+        else{
+            int count=0;
+            int a[]=new int[26];
+            for(i=0;i<l;i++){
+                char ch=s.charAt(i);
+                a[((int)ch)-97]++;
+            }
+            for(i=0;i<26;i++){
+                if(a[i]>=1)
+                    ++count;
+            }
+            if(count>=k)
+                System.out.println("0");
+            else
+                System.out.println(k-count);
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+
+    // Java's Scanner.nextLine() reads the first line (may be empty).
+    // Then nextInt() reads the next integer token (possibly on later lines).
+    let mut parts = input.splitn(2, '\n');
+    let s_line = parts.next().unwrap_or("");
+    let rest = parts.next().unwrap_or("");
+
+    // Java code calls s.toLowerCase() but does NOT assign it back, so it has no effect.
+    let s = s_line.to_string();
+
+    let k: i32 = rest.split_whitespace().next().unwrap().parse().unwrap();
+
+    let l: i32 = s.len() as i32;
+
+    if k > l {
+        println!("impossible");
+    } else {
+        let mut count: i32 = 0;
+        let mut a = vec![0i32; 26];
+
+        for ch in s.bytes() {
+            // Matches Java logic: a[((int)ch)-97]++ (assumes 'a'..'z')
+            let idx = (ch as i32) - 97;
+            a[idx as usize] += 1;
+        }
+
+        for i in 0..26 {
+            if a[i] >= 1 {
+                count += 1;
+            }
+        }
+
+        if count >= k {
+            println!("0");
+        } else {
+            println!("{}", k - count);
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

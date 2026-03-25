@@ -1,0 +1,315 @@
+INDEX: 297 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class A
+{
+    public static void main(String args[])
+    {
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int m=sc.nextInt();
+        int count=0,flag=0;
+        if(n==m)
+        System.out.println(0);
+        else
+        {
+            while(m!=n)
+            {
+                if(m%(n*2)==0)
+                {
+                    count++;
+                    n=n*2;
+                }
+                else if(m%(n*3)==0)
+                {
+                    count++;
+                    n=n*3;
+                }
+                else
+                {
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==1)
+            System.out.println(-1);
+            else
+            System.out.println(count);
+        }
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.HashSet;
+import java.util.*;
+
+public class Test {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int test = sc.nextInt();
+        for(int ii=0;ii<test;ii++){
+            long n = sc.nextLong();
+            int count  = 0;boolean flag = true;
+            while(true){
+                count++;
+                if( n>1 && n%2==0)
+                    n = n/2;
+                else if(n >1 && n%3==0)
+                    n = 2 * (n/3);
+                else if(n>1 && n%5==0)
+                    n = 4 * (n/5);
+                else if(n==1) {
+                 count--;   break;
+                }else{
+                    flag = false;
+                    break;
+                }
+                // System.out.println(n);
+            }
+            if(flag)
+                System.out.println(count);
+            else
+                System.out.println("-1");
+        }
+
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let test = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..test {
+        let mut n = sc.next_i64();
+        let mut count: i32 = 0;
+        let mut flag = true;
+
+        loop {
+            count += 1;
+            if n > 1 && n % 2 == 0 {
+                n /= 2;
+            } else if n > 1 && n % 3 == 0 {
+                n = 2 * (n / 3);
+            } else if n > 1 && n % 5 == 0 {
+                n = 4 * (n / 5);
+            } else if n == 1 {
+                count -= 1;
+                break;
+            } else {
+                flag = false;
+                break;
+            }
+        }
+
+        if flag {
+            out.push_str(&format!("{}\n", count));
+        } else {
+            out.push_str("-1\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+import java.math.*;
+
+public class evenSubSum{
+	
+	static void count(ArrayList<Integer> a, int n)
+	{
+		int flag=0;
+		int oddcount=0;
+		int prev=0;
+		int next=0;
+		for(int i=0; i<n; i++)
+		{
+			
+			if(a.get(i)%2==0)
+			{
+				flag=1;
+				System.out.println("1");
+				System.out.println(i+1);
+				break;
+			}
+		}
+
+		if(flag==0)
+		{	
+			if(n==1)
+			{
+				System.out.println("-1");
+			}
+			else
+			{
+				System.out.println("2");
+				System.out.println("1 2");
+			}
+		}
+	}
+	
+	
+	public static void main(String args[])
+	{
+		Scanner sc=new Scanner(System.in);
+		int t=sc.nextInt();
+		for(int i=0; i<t; i++)
+		{
+			ArrayList<Integer> a= new ArrayList<Integer>();
+			int n=sc.nextInt();
+			for(int j=0; j<n; j++)
+			{
+				int x=sc.nextInt();
+				a.add(x);
+			}
+			count(a,n);
+		}
+		
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn count(a: &Vec<i32>, n: usize, out: &mut String) {
+    let mut flag = 0i32;
+    let mut oddcount = 0i32;
+    let mut prev = 0i32;
+    let mut next = 0i32;
+
+    for i in 0..n {
+        if a[i] % 2 == 0 {
+            flag = 1;
+            out.push_str("1\n");
+            out.push_str(&(i + 1).to_string());
+            out.push('\n');
+            break;
+        }
+    }
+
+    if flag == 0 {
+        if n == 1 {
+            out.push_str("-1\n");
+        } else {
+            out.push_str("2\n");
+            out.push_str("1 2\n");
+        }
+    }
+
+    let _ = oddcount;
+    let _ = prev;
+    let _ = next;
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32() as usize;
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32() as usize;
+        let mut a: Vec<i32> = Vec::with_capacity(n);
+        for _ in 0..n {
+            let x = sc.next_i32();
+            a.push(x);
+        }
+        count(&a, n, &mut out);
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

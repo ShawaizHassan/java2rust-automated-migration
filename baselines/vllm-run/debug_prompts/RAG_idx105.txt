@@ -1,0 +1,210 @@
+INDEX: 105 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class A{
+    
+    public static void main(String args[]){
+        Scanner s=new Scanner(System.in);
+        int n=s.nextInt();
+        int a[]=new int[n];
+        for(int i=0;i<n;i++)
+           a[i]=s.nextInt();
+        int sm=0;
+        Arrays.sort(a);
+        for(int i=0;i<n-1;i+=2)
+           sm+=a[i+1]-a[i];
+        System.out.println(sm);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class Lamp {	
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner in=new Scanner(System.in);
+		int n=in.nextInt();
+		int m=in.nextInt();
+		int[]a=new int[n+2];
+		a[n+1]=m;
+		
+		for(int i=1;i<n+1;i++)
+		a[i]=in.nextInt();
+		int seg=0;
+		int max=0;
+		int t=0;
+		int ans=0;
+		
+		for(int i=1; i<=n+1; i+=2)
+		ans+=a[i]-a[i-1];
+		int sm=ans;
+		for(int i=1; i<=n; i+=2){
+			t+=a[i]-a[i-1];
+			if(a[i]+1!=a[i+1]&&a[i]+1!=m){
+				seg=2*t+m-a[i]-sm-1;
+				ans=Math.max(seg,ans);
+			}
+		}
+	System.out.println(ans);
+		in.close();
+	}
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: i32 = it.next().unwrap().parse().unwrap();
+
+    let n_usize = n as usize;
+    let mut a = vec![0i32; n_usize + 2];
+    a[n_usize + 1] = m;
+
+    for i in 1..=n_usize {
+        a[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut seg: i32 = 0;
+    let mut t: i32 = 0;
+    let mut ans: i32 = 0;
+
+    let mut i = 1usize;
+    while i <= n_usize + 1 {
+        ans += a[i] - a[i - 1];
+        i += 2;
+    }
+
+    let sm = ans;
+
+    let mut i2 = 1usize;
+    while i2 <= n_usize {
+        t += a[i2] - a[i2 - 1];
+        if a[i2] + 1 != a[i2 + 1] && a[i2] + 1 != m {
+            seg = 2 * t + m - a[i2] - sm - 1;
+            if seg > ans {
+                ans = seg;
+            }
+        }
+        i2 += 2;
+    }
+
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+ 
+public class Lamp {
+	
+ 
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner in=new Scanner(System.in);
+		int n=in.nextInt();int m=in.nextInt();
+		int[]a=new int[n+2];
+		a[n+1]=m;
+		for(int i=1;i<n+1;i++)
+			a[i]=in.nextInt();
+		int seg=0;int max=0;int t=0;int ans=0;
+		for(int i=1; i<=n+1; i+=2)
+			ans+=a[i]-a[i-1];
+int sm=ans;		for(int i=1; i<=n; i+=2)
+		{
+			t+=a[i]-a[i-1];
+			if(a[i]+1!=a[i+1]&&a[i]+1!=m)
+			{
+				seg=2*t+m-a[i]-sm-1;
+				ans=Math.max(seg,ans);
+			}
+		}
+	System.out.println(ans);
+		in.close();
+	}
+ 
+ 
+	}
+ 
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut a = vec![0i32; n + 2];
+    a[n + 1] = m;
+    for i in 1..=n {
+        a[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut seg: i32 = 0;
+    let mut t: i32 = 0;
+    let mut ans: i32 = 0;
+
+    let mut i = 1usize;
+    while i <= n + 1 {
+        ans += a[i] - a[i - 1];
+        i += 2;
+    }
+
+    let sm = ans;
+
+    let mut i2 = 1usize;
+    while i2 <= n {
+        t += a[i2] - a[i2 - 1];
+        if a[i2] + 1 != a[i2 + 1] && a[i2] + 1 != m {
+            seg = 2 * t + m - a[i2] - sm - 1;
+            if seg > ans {
+                ans = seg;
+            }
+        }
+        i2 += 2;
+    }
+
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

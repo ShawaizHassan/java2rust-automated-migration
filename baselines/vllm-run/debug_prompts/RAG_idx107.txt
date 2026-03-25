@@ -1,0 +1,319 @@
+INDEX: 107 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author Bisoye
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        APaintTheNumbers solver = new APaintTheNumbers();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class APaintTheNumbers {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+
+            int n = in.nextInt();
+
+            int[] A = new int[n];
+            for (int i = 0; i < n; i++) {
+                int c = in.nextInt();
+
+                A[i] = c;
+            }
+
+            Arrays.sort(A);
+
+            boolean rem[] = new boolean[n];
+            int count = 0;
+            for (int i = 0; i < n; i++) {
+                if (rem[i]) continue;
+                for (int j = i; j < n; j++) {
+                    if (rem[j]) continue;
+                    if (A[j] % A[i] == 0) {
+                        rem[j] = true;
+                    }
+                }
+                count++;
+            }
+            out.println(count);
+
+
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskD solver = new TaskD();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskD {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            int T = in.nextInt();
+            while (T-- > 0) {
+                run(in, out);
+            }
+        }
+
+        private void run(Scanner in, PrintWriter out) {
+            int n = in.nextInt();
+            int[] a = new int[2 * n + 1];
+            for (int i = 1; i <= 2 * n; i++) a[i] = in.nextInt();
+            List<Integer> list = new ArrayList<Integer>();
+            for (int i = 1; i <= 2 * n; ) {
+                // [i, j)
+                int j = i + 1;
+                while (j <= 2 * n && a[j] < a[i]) j++;
+                list.add(j - i);
+                i = j;
+            }
+            boolean[] dp = new boolean[n + 1];
+            Arrays.fill(dp, false);
+            dp[0] = true;
+            for (Integer v : list) {
+                for (int i = n; i >= v; i--) {
+                    if (dp[i - v]) dp[i] = true;
+                }
+            }
+            out.println(dp[n] ? "YES" : "NO");
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn run(scan: &mut Scanner) -> String {
+    let n = scan.next_i32() as usize;
+    let mut a = vec![0i32; 2 * n + 1];
+    for i in 1..=2 * n {
+        a[i] = scan.next_i32();
+    }
+
+    let mut list: Vec<usize> = Vec::new();
+    let mut i = 1usize;
+    while i <= 2 * n {
+        let mut j = i + 1;
+        while j <= 2 * n && a[j] < a[i] {
+            j += 1;
+        }
+        list.push(j - i);
+        i = j;
+    }
+
+    let mut dp = vec![false; n + 1];
+    dp[0] = true;
+    for &v in &list {
+        for idx in (v..=n).rev() {
+            if dp[idx - v] {
+                dp[idx] = true;
+            }
+        }
+    }
+
+    if dp[n] { "YES\n".to_string() } else { "NO\n".to_string() }
+}
+
+fn main() {
+    let mut scan = Scanner::new();
+    let t = scan.next_i32();
+    let mut out = String::new();
+    for _ in 0..t {
+        out.push_str(&run(&mut scan));
+    }
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author ky112233
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskA solver = new TaskA();
+        int testCount = Integer.parseInt(in.next());
+        for (int i = 1; i <= testCount; i++)
+            solver.solve(i, in, out);
+        out.close();
+    }
+
+    static class TaskA {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            int n = in.nextInt();
+            int[] a = new int[n];
+            for (int i = 0; i < n; i++) a[i] = in.nextInt();
+            Arrays.sort(a);
+            for (int i = 1; i < n; i++)
+                if (a[i] - a[i - 1] == 1) {
+                    out.println(2);
+                    return;
+                }
+            out.println(1);
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32() as usize;
+    let mut out = String::new();
+
+    for _case in 0..t {
+        let n = sc.next_i32() as usize;
+        let mut a: Vec<i32> = Vec::with_capacity(n);
+        for _ in 0..n {
+            a.push(sc.next_i32());
+        }
+        a.sort();
+
+        let mut ans = 1i32;
+        for i in 1..n {
+            if a[i] - a[i - 1] == 1 {
+                ans = 2;
+                break;
+            }
+        }
+        out.push_str(&format!("{}\n", ans));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

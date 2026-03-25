@@ -1,0 +1,394 @@
+INDEX: 83 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.Arrays;
+
+import java.util.StringTokenizer;
+
+
+public class Codeforces {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskA solve = new TaskA();
+        solve.solve(1, in, out);
+        out.close();
+    }
+    static class TaskA {
+        public void solve(int testNumber, InputReader in, PrintWriter out) {
+           int n = in.nextInt();
+           int m = in.nextInt();
+           
+           int arr[] = new int[m];
+           
+           
+           for(int i = 0; i < m; ++i) {
+               arr[i] = in.nextInt();
+           }
+           
+           Arrays.sort(arr);
+           
+           int minimum = Integer.MAX_VALUE;
+           
+           if(m > n) {
+               n--;
+                for(int i = 0; i < m - n; ++i) {
+                    minimum = Math.min(minimum, arr[i + n] - arr[i]);
+                }
+           } else if(m==n) {
+               minimum = Math.min(minimum, arr[n-1] - arr[0]);
+           } else {
+                for(int j = 0; j < n-1; ++j) {
+                    minimum = Math.min(minimum, arr[j + n-1] - arr[j]);
+                }
+           }
+           
+           
+           
+           out.println(minimum);
+           
+        }
+        
+        private static String reverse(String word) {
+            String out = "";
+            for(int i = word.length() -1; i >= 0; i--) {
+                out += word.charAt(i);
+            }
+            return out;
+        }
+    }
+    static class InputReader {
+        public BufferedReader reader;
+        public StringTokenizer tokenizer;
+ 
+        public InputReader(InputStream stream) {
+            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            tokenizer = null;
+        }
+ 
+        public String next() {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return tokenizer.nextToken();
+        }
+ 
+        public int nextInt() {
+            return Integer.parseInt(next());
+        }
+        
+        public double nextDouble() {
+            return Double.parseDouble(next());
+        }
+ 
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.util.StringTokenizer;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        int n = in.nextInt();
+        int[] a = new int[n+1];
+        int m = in.nextInt();
+        int counter = 0;
+        for(int i = 1; i <= n-1; i++){
+            a[i] = i+in.nextInt();
+        }
+        for(int i = 1; i <= n-1;){
+            i = a[i];
+            if(i == m)
+            {
+                out.print("YES");
+                counter++;
+                break;
+            }
+        }
+        if(counter == 0)
+            out.print("NO");
+    }
+}
+
+class InputReader {
+    public BufferedReader reader;
+    public StringTokenizer tokenizer;
+
+    public InputReader(InputStream stream) {
+        reader = new BufferedReader(new InputStreamReader(stream), 32768);
+        tokenizer = null;
+    }
+
+    public String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let mut a = vec![0i32; n + 1];
+    let m = sc.next_i32();
+    for i in 1..=n.saturating_sub(1) {
+        let x = sc.next_i32();
+        a[i] = i as i32 + x;
+    }
+
+    let mut i: i32 = 1;
+    let mut found = false;
+    while (i as usize) <= n.saturating_sub(1) {
+        i = a[i as usize];
+        if i == m {
+            found = true;
+            break;
+        }
+    }
+
+    if found {
+        print!("YES");
+    } else {
+        print!("NO");
+    }
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        
+        TaskA solver = new TaskA();
+        //int t = in.nextInt();
+        //for (int i = 0; i < t; i++) {
+            solver.solve(1, in, out);
+        //}
+        
+        out.close();
+    }
+}
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        int N = in.nextInt();
+        int K = in.nextInt();
+        if (K > (N-1)/2) {
+            out.println("-1");
+            return;
+        }
+        out.println(N*K);
+        for (int i = 1; i <= N; i++) {
+            for (int j = 0; j < K; j++) {
+                int loser = (i+j+1);
+                if (loser > N) loser -= N;
+                out.println(i + " " + loser);
+            }
+        }
+    }
+}
+
+class InputReader {
+    public BufferedReader reader;
+    public StringTokenizer tokenizer;
+
+    public InputReader(InputStream stream) {
+        reader = new BufferedReader(new InputStreamReader(stream));
+        tokenizer = null;
+    }
+
+    public String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct FastInput {
+    data: Vec<u8>,
+    idx: usize,
+}
+
+impl FastInput {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            data: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut val = 0i32;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            val = val * 10 + (self.data[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        val * sign
+    }
+}
+
+fn main() {
+    let mut input = FastInput::new();
+    let n: i32 = input.next_i32();
+    let k: i32 = input.next_i32();
+
+    let mut out = String::new();
+
+    if k > (n - 1) / 2 {
+        out.push_str("-1\n");
+        let mut w = io::BufWriter::new(io::stdout());
+        w.write_all(out.as_bytes()).unwrap();
+        return;
+    }
+
+    out.push_str(&(n * k).to_string());
+    out.push('\n');
+
+    for i in 1..=n {
+        for j in 0..k {
+            let mut loser = i + j + 1;
+            if loser > n {
+                loser -= n;
+            }
+            out.push_str(&i.to_string());
+            out.push(' ');
+            out.push_str(&loser.to_string());
+            out.push('\n');
+        }
+    }
+
+    let mut w = io::BufWriter::new(io::stdout());
+    w.write_all(out.as_bytes()).unwrap();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

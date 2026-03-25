@@ -1,0 +1,332 @@
+INDEX: 238 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+//Code by Sounak, IIEST
+import java.io.*;
+import java.math.*;
+import java.util.*;
+import java.util.Arrays;
+public class Test1{
+    public static void main(String args[])throws IOException{
+        FastReader sc = new FastReader();
+        StringBuilder sb = new StringBuilder();
+        int n=sc.nextInt();
+        int sum=(n/2+1)*((int)Math.ceil(n/2.0));
+        System.out.println(sum);
+    }
+}
+
+class FastReader {
+    BufferedReader br;
+    StringTokenizer st;
+ 
+    public FastReader() { br = new BufferedReader(new InputStreamReader(System.in)); }
+    String next() {
+        while (st == null || !st.hasMoreElements()) {
+            try {
+                st = new StringTokenizer(br.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return st.nextToken();
+    }
+    int nextInt() { return Integer.parseInt(next()); }
+    long nextLong() { return Long.parseLong(next()); }
+    double nextDouble() { return Double.parseDouble(next()); }
+    String nextLine() {
+        String str = "";
+        try {
+            str = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class q3 {
+
+	public static void main(String[] args) {
+		FastReader s = new FastReader();
+		
+		int t = s.nextInt();
+		
+		while(t-- > 0)
+		{
+			int n = s.nextInt();
+			System.out.println(Math.tan((Math.PI*(2*n-2))/(double)(4*n)));
+		}
+
+	}
+	static class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new  BufferedReader(new
+                    InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements())
+            {
+                try
+                {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException  e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt()
+        {
+            return Integer.parseInt(next());
+        }
+ 
+        long nextLong()
+        {
+            return Long.parseLong(next());
+        }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+            try
+            {
+                str = br.readLine();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return str;
+        }
+	}
+}
+
+
+```
+Translated Rust:
+```
+use std::f64::consts::PI;
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let mut t = fs.next_i32();
+    let mut out = String::new();
+
+    while t > 0 {
+        t -= 1;
+        let n = fs.next_i32() as f64;
+        let angle = (PI * (2.0 * n - 2.0)) / (4.0 * n);
+        let v = angle.tan();
+        out.push_str(&format!("{}\n", v));
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+
+public class A289 {
+
+    static class FastReader {
+
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastReader() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+    
+    public static void main(String[] args) {
+
+        FastReader in = new FastReader();
+        
+        int n = in.nextInt();
+        int k = in.nextInt();
+        
+        long sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += Math.abs(in.nextInt() - in.nextInt()) + 1;
+        }
+        
+        for (int i = 0; i <= k; i++) {
+            
+            if ( (sum + i) % k == 0) {
+                System.out.println(i);
+                return;
+            }
+            
+        }
+
+    }
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+
+    let n = fs.next_i32() as usize;
+    let k = fs.next_i32();
+
+    let mut sum: i64 = 0;
+    for _ in 0..n {
+        let a = fs.next_i32();
+        let b = fs.next_i32();
+        sum += (a - b).abs() as i64 + 1;
+    }
+
+    for i in 0..=k {
+        if (sum + i as i64) % k as i64 == 0 {
+            println!("{}", i);
+            return;
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

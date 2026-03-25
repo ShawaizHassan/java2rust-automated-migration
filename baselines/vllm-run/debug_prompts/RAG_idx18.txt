@@ -1,0 +1,442 @@
+INDEX: 18 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Domino {
+	static Scanner scn = new Scanner(System.in);
+
+	public static void main(String[] args) {
+
+		helper();
+	}
+
+	public static void helper() {
+
+		int n = (int)input();
+		int[][] arr = new int[n][2];
+		int s1 = 0, s2 = 0;
+		for (int i = 0; i < n; i++) {
+			arr[i][0] = (int)input();
+			arr[i][1] = (int)input();
+			s1 += arr[i][0];
+			s2 += arr[i][1];
+		}
+
+		if ((s1 & 1) == 0 && (s2 & 1) == 0) {
+			print(0);
+			return;
+		}
+
+		if ((s1 & 1) == 1 && (s2 & 1) == 1) {
+
+			for (int i = 0; i < n; i++) {
+				if (((arr[i][0] & 1) ^ (arr[i][1] & 1)) == 1) {
+					print(1);
+					return;
+				}
+			}
+		}
+
+		print(-1);
+
+	}
+
+
+	public static long input() {
+		return scn.nextLong();
+	}
+
+	public static String input(int... var) {
+		return scn.next();
+	}
+
+	public static void TakeInput(int[] arr) {
+		for (int i = 0; i < arr.length; i++)
+			arr[i] = (int)input();
+	}
+
+	public static void TakeInput(long[] arr) {
+		for (int i = 0; i < arr.length; i++)
+			arr[i] = input();
+	}
+
+	public static void printArray(int[] arr) {
+		for (int val : arr)
+			print(val + " ");
+
+		print("\n");
+	}
+
+	public static void printArray(long[] arr) {
+		for (long val : arr)
+			print(val + " ");
+
+		print("\n");
+	}
+
+	public static <T> void print(T t) {
+		System.out.print(t);
+	}
+	public static void print() {
+		System.out.println();
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class RankList {
+	static Scanner scn = new Scanner(System.in);
+
+	public static void main(String[] args) {
+
+		helper();
+	}
+
+	public static void helper() {
+
+		int n = (int)input();
+		int k = (int)input();
+		int[][] arr = new int[n][2];
+		for (int i = 0; i < n; i++) {
+			arr[i][0] = (int)input();
+			arr[i][1] = (int)input();
+		}
+
+		Arrays.sort(arr, (a, b) -> (a[0] != b[0] ? b[0] - a[0] : a[1] - b[1]));
+		int[] pair = arr[k - 1];
+
+		int idx1 = k - 1, idx2 = k - 1;
+		while (idx1 >= 0 && arr[idx1][0] == pair[0] && arr[idx1][1] == pair[1]) idx1--;
+		idx1++;
+		while (idx2 < n && arr[idx2][0] == pair[0] && arr[idx2][1] == pair[1]) idx2++;
+		idx2--;
+
+		print(idx2 - idx1 + 1);
+
+	}
+
+	public static long input() {
+		return scn.nextLong();
+	}
+
+	public static String input(int... var) {
+		return scn.next();
+	}
+
+	public static void TakeInput(int[] arr) {
+		for (int i = 0; i < arr.length; i++)
+			arr[i] = (int)input();
+	}
+
+	public static void TakeInput(long[] arr) {
+		for (int i = 0; i < arr.length; i++)
+			arr[i] = input();
+	}
+
+	public static void printArray(int[] arr) {
+		for (int val : arr)
+			print(val + " ");
+
+		print("\n");
+	}
+
+	public static void printArray(long[] arr) {
+		for (long val : arr)
+			print(val + " ");
+
+		print("\n");
+	}
+
+	public static <T> void print(T t) {
+		System.out.print(t);
+	}
+	public static void print() {
+		System.out.println();
+	}
+}
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+struct FastInput {
+    data: Vec<u8>,
+    idx: usize,
+}
+
+impl FastInput {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { data: input.into_bytes(), idx: 0 }
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        self.skip_whitespace();
+        let mut sign = 1i64;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.data[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut inp = FastInput::new();
+
+    let n = inp.next_i64() as i32;
+    let k = inp.next_i64() as i32;
+
+    let n_usize = n as usize;
+    let mut arr: Vec<[i32; 2]> = Vec::with_capacity(n_usize);
+    for _ in 0..n_usize {
+        let a = inp.next_i64() as i32;
+        let b = inp.next_i64() as i32;
+        arr.push([a, b]);
+    }
+
+    arr.sort_by(|x, y| {
+        if x[0] != y[0] {
+            y[0].cmp(&x[0])
+        } else {
+            x[1].cmp(&y[1])
+        }
+    });
+
+    let k_idx = (k - 1) as usize;
+    let pair = arr[k_idx];
+
+    let mut idx1 = k_idx as i32;
+    let mut idx2 = k_idx as i32;
+
+    while idx1 >= 0 {
+        let p = arr[idx1 as usize];
+        if p[0] == pair[0] && p[1] == pair[1] {
+            idx1 -= 1;
+        } else {
+            break;
+        }
+    }
+    idx1 += 1;
+
+    while (idx2 as usize) < n_usize {
+        let p = arr[idx2 as usize];
+        if p[0] == pair[0] && p[1] == pair[1] {
+            idx2 += 1;
+        } else {
+            break;
+        }
+    }
+    idx2 -= 1;
+
+    let ans = idx2 - idx1 + 1;
+    print!("{}", ans);
+}
+```
+
+Java:
+```
+import java.util.*;
+
+public class SpyStrings {
+
+	public static void main(String[] args) {
+
+		Scanner scn = new Scanner(System.in);
+		int t = scn.nextInt();
+
+		while (t-- > 0) {
+
+			int n = scn.nextInt();
+			int m = scn.nextInt();
+
+			char[][] arr = new char[n][m];
+			for (int i = 0; i < n; i++) {
+				String str = scn.next();
+				for (int j = 0; j < str.length(); j++) {
+					arr[i][j] = str.charAt(j);
+				}
+			}
+
+			helper(arr);
+
+		}
+	}
+
+	public static void helper(char[][] arr) {
+		char[] ans = arr[0];
+		for (int i = 0; i < arr[0].length; i++) {
+			char save = ans[i];
+			for (char d = 'a'; d <= 'z'; d++) {
+				ans[i] = d;
+
+				if (compare(ans, arr)) {
+					System.out.println(ans);
+					return;
+				}
+
+				ans[i] = save;
+			}
+		}
+
+		System.out.println(-1);
+	}
+
+	public static boolean compare(char[] ans, char[][] arr) {
+
+
+		for (int i = 0; i < arr.length; i++) {
+			int diff = 0;
+			for (int j = 0; j < arr[0].length; j++) {
+				if (arr[i][j] != ans[j]) {
+					diff++;
+				}
+			}
+
+			if (diff > 1) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_string().parse::<i32>().unwrap()
+    }
+    fn next_usize(&mut self) -> usize {
+        self.next_string().parse::<usize>().unwrap()
+    }
+    fn next_string(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn compare(ans: &[u8], arr: &[Vec<u8>]) -> bool {
+    let m = arr[0].len();
+    for i in 0..arr.len() {
+        let mut diff: i32 = 0;
+        for j in 0..m {
+            if arr[i][j] != ans[j] {
+                diff += 1;
+            }
+        }
+        if diff > 1 {
+            return false;
+        }
+    }
+    true
+}
+
+fn helper(arr: &[Vec<u8>]) -> Option<Vec<u8>> {
+    let mut ans = arr[0].clone();
+    let m = ans.len();
+
+    for i in 0..m {
+        let save = ans[i];
+        let mut d = b'a';
+        while d <= b'z' {
+            ans[i] = d;
+
+            if compare(&ans, arr) {
+                return Some(ans);
+            }
+
+            ans[i] = save;
+            d += 1;
+        }
+    }
+    None
+}
+
+fn main() {
+    let mut scn = Scanner::new();
+    let mut t = scn.next_i32();
+
+    let mut out = String::new();
+
+    while t > 0 {
+        t -= 1;
+
+        let n = scn.next_usize();
+        let m = scn.next_usize();
+
+        let mut arr: Vec<Vec<u8>> = Vec::with_capacity(n);
+        for _ in 0..n {
+            let s = scn.next_string();
+            let bytes = s.into_bytes();
+            // Input is assumed correct length m as in Java version
+            let mut row = vec![0u8; m];
+            for j in 0..bytes.len() {
+                row[j] = bytes[j];
+            }
+            arr.push(row);
+        }
+
+        if let Some(ans) = helper(&arr) {
+            out.push_str(&String::from_utf8(ans).unwrap());
+            out.push('\n');
+        } else {
+            out.push_str("-1\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

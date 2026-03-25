@@ -1,0 +1,276 @@
+INDEX: 192 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class substring
+{
+public static void main(String[] args)
+{
+Scanner input = new Scanner(System.in);
+String s = input.nextLine();
+Boolean found = false;
+int i = s.length();
+while(found==false)
+{
+i--;
+ArrayList<String> sub = new ArrayList<String>();
+for(int j = 0; j <= s.length() - i; j++)
+{
+if(sub.contains(s.substring(j, j+i)))
+found = true;
+else
+sub.add(s.substring(j, j+i));
+}
+
+}
+System.out.println(i);
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+
+public class TwoSubstrings {
+    public TwoSubstrings() {
+        super();
+    }
+
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        boolean ab = false, ba = false, found = false;
+
+        String sub = s.substring(0);
+
+        if (sub.contains("AB")) {
+            int index = sub.indexOf("AB");
+            ab = true;
+            sub = s.substring(index + 2);
+            if (sub.contains("BA")) {
+                ba = true;
+            }
+        }
+
+        if (ab && ba) {
+            System.out.println("YES");
+            found = true;
+
+        }
+
+        if (!found) {
+            sub = s.substring(0);
+            ab = false;
+            ba = false;
+
+            if (sub.contains("BA")) {
+                int index = sub.indexOf("BA");
+                ba = true;
+                sub = s.substring(index + 2);
+                if (sub.contains("AB")) {
+                    ab = true;
+                }
+            }
+            if (ab && ba) {
+                System.out.println("YES");
+
+            }
+        }
+
+
+        if (!ab || !ba) {
+            System.out.println("NO");
+        }
+
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let s = input.lines().next().unwrap_or("").to_string();
+
+    let mut ab = false;
+    let mut ba = false;
+    let mut found = false;
+
+    let mut sub: &str = &s[..];
+
+    if let Some(index) = sub.find("AB") {
+        ab = true;
+        sub = &s[index + 2..];
+        if sub.contains("BA") {
+            ba = true;
+        }
+    }
+
+    if ab && ba {
+        println!("YES");
+        found = true;
+    }
+
+    if !found {
+        sub = &s[..];
+        ab = false;
+        ba = false;
+
+        if let Some(index) = sub.find("BA") {
+            ba = true;
+            sub = &s[index + 2..];
+            if sub.contains("AB") {
+                ab = true;
+            }
+        }
+
+        if ab && ba {
+            println!("YES");
+        }
+    }
+
+    if !ab || !ba {
+        println!("NO");
+    }
+}
+```
+
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author islammohsen
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskD solver = new TaskD();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskD {
+        public int solve(String sub) {
+            int ret = 100000000;
+            for (int i = 1; i <= 10; i++) {
+                for (int j = 0; j < sub.length(); j++) {
+                    if (j + 2 * i >= sub.length())
+                        break;
+                    if (sub.charAt(j) == sub.charAt(j + i) && sub.charAt(j) == sub.charAt(j + 2 * i))
+                        ret = Math.min(ret, j + 2 * i);
+                }
+            }
+            if (ret > 10)
+                return 0;
+            else
+                return sub.length() - ret;
+        }
+
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            String s;
+            s = in.next();
+            int n = s.length();
+            long ans = 0;
+            for (int i = 0; i < n; i++) {
+                int lastIdx = i + 8;
+                if (lastIdx < n)
+                    ans += n - lastIdx;
+                String sub = s.substring(i, Math.min(lastIdx, n));
+                ans += solve(sub);
+            }
+            out.print(ans);
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn solve_sub(sub: &[u8]) -> i32 {
+    let mut ret: i32 = 100_000_000;
+    let len = sub.len();
+
+    for i in 1usize..=10usize {
+        for j in 0usize..len {
+            if j + 2 * i >= len {
+                break;
+            }
+            let c = sub[j];
+            if c == sub[j + i] && c == sub[j + 2 * i] {
+                let val = (j + 2 * i) as i32;
+                if val < ret {
+                    ret = val;
+                }
+            }
+        }
+    }
+
+    if ret > 10 {
+        0
+    } else {
+        len as i32 - ret
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let s = match it.next() {
+        Some(v) => v.as_bytes().to_vec(),
+        None => return,
+    };
+
+    let n = s.len();
+    let mut ans: i64 = 0;
+
+    for i in 0usize..n {
+        let last_idx = i + 8;
+        if last_idx < n {
+            ans += (n - last_idx) as i64;
+        }
+        let end = if last_idx < n { last_idx } else { n };
+        ans += solve_sub(&s[i..end]) as i64;
+    }
+
+    print!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

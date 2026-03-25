@@ -1,0 +1,528 @@
+INDEX: 431 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+import java.text.*;
+
+/**
+* @author soumitri12
+*/
+
+/* Name of the class has to be "Main" only if the class is public*/
+public class CF998B
+{
+    static class FastReader {
+        
+        BufferedReader br;
+        StringTokenizer st;
+        
+        public FastReader() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+        
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+        
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+        
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+        
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+        
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+    
+    static class Node {
+        
+        long pp;
+        long a, b;
+        
+        Node(long x, long y) {
+            a = x;
+            b = y;
+            pp = a * b;
+        }
+    }
+    static class Comp implements Comparator<Node> {
+        
+        public int compare(Node o1, Node o2) {
+            if (o1.pp > o2.pp) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+    static int gcd(int x, int y)
+    {
+        if(y==0) return x;
+        else return gcd(y,x%y);
+    } 
+    static long mod_pow(long a, long b, long mod)
+    {
+        a%=mod;
+        if(b==0) return 1%mod;
+        if((b&1)==1) return a*(mod_pow(a,b-1,mod))%mod;
+        else 
+        {
+            long u=mod_pow(a,b>>1,mod);
+            return (u*u)%mod;
+        }
+    }
+    static long _pow(long a, long b)
+    {
+        if(b==0) return 1;
+        if((b&1)==1) return a*_pow(a,b-1);
+        else 
+        {
+            long u=_pow(a,b>>1);
+            return u*u;
+        }
+    }
+    static int modInv(int a, int m)
+    {
+        if(gcd(a,m)!=1) return -999;
+        else return (a%m+m)%m;
+    }
+    static boolean isPowerOfTwo(int x) 
+    { 
+        return x!=0 && ((x&(x-1)) == 0);          
+    } 
+    static boolean isprime(int x) 
+    {
+        for(int i=2;i<=Math.sqrt(x);i++)
+        {
+            if(x%i==0) return false;
+        }
+        return true;
+    }
+    static boolean prime[];
+    static final int INT_MAX=1000007;
+
+    static void sieve() {
+        prime=new boolean[INT_MAX];
+        Arrays.fill(prime,true);
+        prime[0]=prime[1]=false;
+        for(int i=2;i<=Math.sqrt(INT_MAX);i++)
+        {
+            if(prime[i]) {
+                for(int j=i*2;j<INT_MAX;j+=i)
+                prime[j]=false;
+            }
+        }
+    }
+    static class Pair {
+        int ff,ss;
+        public Pair(int ff,int ss) {
+            this.ff=ff; this.ss=ss;
+        }
+    }
+    
+    public static void main(String[] args) {
+        FastReader sc=new FastReader();
+        PrintWriter out=new PrintWriter(System.out);
+        StringBuffer sb=new StringBuffer();
+        //your code starts here
+        int n=sc.nextInt(),w=sc.nextInt();
+        int a[]=new int[n];
+        for(int i=0;i<n;i++) a[i]=sc.nextInt();
+        int e=0,o=0;
+        ArrayDeque<Integer> stack=new ArrayDeque<>();
+        stack.push(a[0]);
+        ArrayList<Integer> cuts=new ArrayList<>();
+        /* for(int i=0;i<n-2;i++)
+        {
+            if(!stack.isEmpty()) {
+                if((stack.peek()&1)==(a[i]&1)) stack.push(a[i]);
+                else {
+                    cuts.add(Math.abs(a[i+1]-a[i])); stack.pop();
+                }
+            } else stack.push(a[i]);
+        } */
+
+        for(int i=0;i<n-1;i++)
+        {
+            if((a[i]&1)==0)++e;
+            else ++o;
+            if(e==o) cuts.add(Math.abs(a[i]-a[i+1]));
+        }
+        
+        n=cuts.size();
+
+        int dp[][]=new int[n+1][w+1];
+        for(int i=0;i<=n;i++) {
+            for(int j=0;j<=w;j++) {
+                if(i*j==0) dp[i][j]=0;
+            }
+        }
+        for(int i=1;i<=n;i++) {
+            for(int j=1;j<=w;j++) {
+                if(cuts.get(i-1)<=j) {
+                    dp[i][j]=Math.max(1+dp[i-1][j-cuts.get(i-1)],dp[i-1][j]);
+                } else dp[i][j]=dp[i-1][j];
+            }
+        }
+        int ans=dp[n][w];
+        out.println(ans);
+
+        out.close();
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.*;
+import java.io.*;
+
+public class A {
+
+	private static final int mod =(int)1e9+7;
+	public static void main(String[] args) throws Exception  {
+	      Scanner  sc=new Scanner(System.in);
+	      PrintWriter out=new PrintWriter(System.out);
+	       int t=sc.nextInt();
+	       while(t-->0) {
+	          long x=sc.nextLong();
+	          long y=sc.nextLong();
+	          long k=sc.nextLong();
+	          long req=y*k+x;
+	          long st=1;
+	         
+	        long s=(y+1)*k+-1;x--;	          long ans=(s+x-1)/x;
+	        System.out.println((s+x-1)/x+k);
+	         
+	         
+	       }
+	}
+
+
+	static boolean vis[]=new boolean[10001];
+	      static long gcd(long a, long b) 
+	      { 
+	          if (a == 0) 
+	              return b; 
+	          return gcd(b % a, a); 
+	      } 
+
+static long nCr(int n,int r) {
+  int dp[][]=new int[2001][2001];
+  for(int i=0;i<2001;i++) {
+    dp[0][i]=0;
+  }
+  for(int i=0;i<2001;i++) {
+    dp[i][0]=1;
+  }
+  for(int i=1;i<2001;i++) {
+    for(int j=1;j<2001;j++) {
+      if(i==j) {
+        dp[i][j]=1;
+      }else {
+        dp[i][j]=dp[i-1][j-1]+dp[i][j-1];
+      }
+    }
+  }
+  return dp[n][r];
+}
+
+
+      
+}
+class pair{
+  int wt,val;
+  pair(int wt,int val){
+    this.wt=wt;
+    this.val=val;
+  }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..t {
+        let mut x: i64 = it.next().unwrap().parse().unwrap();
+        let y: i64 = it.next().unwrap().parse().unwrap();
+        let k: i64 = it.next().unwrap().parse().unwrap();
+
+        let s: i64 = (y + 1) * k - 1;
+        x -= 1;
+
+        let val = (s + x - 1) / x + k;
+        out.push_str(&val.to_string());
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+
+#[allow(dead_code)]
+fn gcd(a: i64, b: i64) -> i64 {
+    if a == 0 {
+        return b;
+    }
+    gcd(b % a, a)
+}
+
+#[allow(dead_code)]
+struct Pair {
+    wt: i32,
+    val: i32,
+}
+
+#[allow(dead_code)]
+impl Pair {
+    fn new(wt: i32, val: i32) -> Self {
+        Self { wt, val }
+    }
+}
+```
+
+Java:
+```
+
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.*;
+
+public class A {
+
+static int mod=(int)1e9+7;
+ public static void main(String[] $) {
+
+  Scanner sc=new Scanner(System.in);
+int t=sc.nextInt();
+while(t-->0) {
+int n=sc.nextInt();
+int q=sc.nextInt();
+int a[]=new int[n];
+for(int i=0;i<n;i++) {
+  a[i]=sc.nextInt();
+}
+
+long sum=0;
+//for(int i=0;i<n;i++) {
+//  sum+=Math.max(0,a[i]-a[i+1]);
+//}
+long  dp[][]=new long[n+1][2];
+for(int i=0;i<=n;i++) {
+  for(int j=0;j<2;j++) {
+    dp[i][j]=-1;
+  }
+}
+long max=(solve(dp,a,n,0,0));
+System.out.println(max);
+
+//System.out.println(sum);
+
+}
+  
+}
+ static long solve(long dp[][],int a[],int n,int prev,long sum) {
+   if(n==0) {
+     return 0;
+   }
+//   if(n==1) {
+//     return a[n-1];
+//   }
+//  
+   if(dp[n][prev]!=-1) {
+    return dp[n][prev];
+   }
+   if(prev==0) {
+ return dp[n][0]=Math.max(a[n-1]+solve(dp,a,n-1,1,sum),solve(dp,a,n-1,0,sum));
+   }
+   else 
+   return dp[n][1]=Math.max(-1*a[n-1]+solve(dp,a,n-1,0,sum),solve(dp,a,n-1,1,sum));
+   
+   
+ }
+ static long s(long n) 
+ { 
+
+
+  long k = (long)(Math.log(n) / Math.log(2)); 
+
+ 
+  return k; 
+ } 
+static long pow(long x,long y) {
+  long res=1l;
+  while(y!=0) {
+    if(y%2==1) {
+      res=x*res%mod;
+    }
+    y/=2;
+    x=x*x%mod;
+  }
+  return res;
+}
+
+}
+class pair{
+  int x,y;
+  pair(int x,int y){
+    this.x=x;
+    this.y=y;
+  }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+const MOD: i64 = 1_000_000_007;
+
+fn solve(dp: &mut Vec<Vec<i64>>, a: &Vec<i32>, n: usize, prev: usize, _sum: i64) -> i64 {
+    if n == 0 {
+        return 0;
+    }
+    if dp[n][prev] != -1 {
+        return dp[n][prev];
+    }
+    let res = if prev == 0 {
+        let take = a[n - 1] as i64 + solve(dp, a, n - 1, 1, _sum);
+        let skip = solve(dp, a, n - 1, 0, _sum);
+        take.max(skip)
+    } else {
+        let take = -(a[n - 1] as i64) + solve(dp, a, n - 1, 0, _sum);
+        let skip = solve(dp, a, n - 1, 1, _sum);
+        take.max(skip)
+    };
+    dp[n][prev] = res;
+    res
+}
+
+#[allow(dead_code)]
+fn s(n: i64) -> i64 {
+    // Java: (long)(Math.log(n) / Math.log(2))
+    ( (n as f64).ln() / 2f64.ln() ) as i64
+}
+
+#[allow(dead_code)]
+fn pow(mut x: i64, mut y: i64) -> i64 {
+    let mut res: i64 = 1;
+    while y != 0 {
+        if y % 2 == 1 {
+            res = (x * res) % MOD;
+        }
+        y /= 2;
+        x = (x * x) % MOD;
+    }
+    res
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n_i32 = sc.next_i32();
+        let _q = sc.next_i32();
+        let n = n_i32 as usize;
+        let mut a = vec![0i32; n];
+        for i in 0..n {
+            a[i] = sc.next_i32();
+        }
+
+        let mut dp = vec![vec![-1i64; 2]; n + 1];
+        let maxv = solve(&mut dp, &a, n, 0, 0);
+        out.push_str(&format!("{}\n", maxv));
+    }
+
+    print!("{}", out);
+}
+
+#[allow(dead_code)]
+struct Pair {
+    x: i32,
+    y: i32,
+}
+impl Pair {
+    fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

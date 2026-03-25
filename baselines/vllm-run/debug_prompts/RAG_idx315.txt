@@ -1,0 +1,374 @@
+INDEX: 315 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class E {
+
+	public static void main(String[] args) throws IOException  {
+		Reader sc=new Reader();
+		Print pr=new Print();
+		int t=1;
+		while(t-->0) {
+			int n=sc.nextInt();
+            int a1=sc.nextInt();
+            int a3=sc.nextInt();
+            int a2=sc.nextInt();
+            int b1=sc.nextInt();
+            int b3=sc.nextInt();
+            int b2=sc.nextInt();
+            int min=0;
+            int max=0;
+            if(a1>b3)
+                max+=b3;
+            else
+                max+=a1;
+            if(a2>b1)
+                max+=b1;
+            else
+                max+=a2;
+            if(a3>b2)
+                max+=b2;
+            else
+                max+=a3;
+            if(a1>b2+b1)
+                min+=(Math.max(a1-(b2+b1),0));
+            if(a2>b3+b2)
+                min+=(Math.max(a2-(b3+b2),0));
+            if(a3>b1+b3)
+                min+=(Math.max(a3-(b1+b3),0));
+            pr.printLine(min+" "+max);
+		}
+        pr.close();
+	}
+
+	static class Reader {
+        final private int BUFFER_SIZE = 1 << 16;
+        private DataInputStream din; private byte[] buffer;
+        private int bufferPointer, bytesRead;
+        public Reader() { din = new DataInputStream(System.in); 
+            buffer = new byte[BUFFER_SIZE];  bufferPointer = bytesRead = 0; }
+        public Reader(String file_name) throws IOException {
+            din = new DataInputStream(new FileInputStream(file_name)); 
+            buffer = new byte[BUFFER_SIZE]; bufferPointer = bytesRead = 0; }
+        public String readLine() throws IOException { int cnt = 0, c;
+            byte[] buf = new byte[64]; while ((c = read()) != -1) { if (c == '\n') 
+            break; buf[cnt++] = (byte) c; } return new String(buf, 0, cnt); }
+        public int nextInt() throws IOException {
+            int ret = 0; byte c = read(); while (c <= ' ') c = read(); 
+            boolean neg = (c == '-'); if (neg) c = read(); do { 
+            ret = ret * 10 + c - '0'; } while ((c = read()) >= '0' && c <= '9'); 
+            if (neg) return -ret; return ret; } 
+        public long nextLong() throws IOException { long ret = 0; byte c = read(); 
+            while (c <= ' ') c = read(); boolean neg = (c == '-'); if (neg) c = read();
+            do { ret = ret * 10 + c - '0'; } while ((c = read()) >= '0' && c <= '9');
+            if (neg) return -ret; return ret; }
+        public double nextDouble() throws IOException { double ret = 0, 
+            div = 1; byte c = read(); while (c <= ' ') c = read();
+            boolean neg = (c == '-'); if (neg) c = read(); do {
+            ret = ret * 10 + c - '0'; } while ((c = read()) >= '0' && c <= '9');
+            if (c == '.') { while ((c = read()) >= '0' && c <= '9') {
+            ret += (c - '0') / (div *= 10); } } if (neg) return -ret;
+            return ret; }
+        private void fillBuffer() throws IOException {
+            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+            if (bytesRead == -1) buffer[0] = -1; }
+        private byte read() throws IOException { if (bufferPointer == bytesRead)
+            fillBuffer(); return buffer[bufferPointer++]; }
+        public void close() throws IOException { if (din == null) return;
+            din.close(); } 
+    }
+
+    static class Print {
+        private final BufferedWriter bw;
+        public Print() {
+            bw=new BufferedWriter(new OutputStreamWriter(System.out)); }
+        public void print(String str)throws IOException { bw.append(str); }
+        public void printLine(String str)throws IOException { print(str); 
+            bw.append("\n"); }
+        public void close()throws IOException { bw.close(); } 
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.io.BufferedInputStream;
+import java.util.Scanner;
+
+/**
+ * User: khuongnd
+ * Date: 6/12/12
+ * Time: 9:47 CH
+ */
+public class B {
+    private static int BUFFER_SIZE = 16 * 1024 * 1024;
+    private static int oo = Integer.MAX_VALUE / 2;
+    private int N;
+    private int a[];
+    private long result = 0;
+
+    public void read(Scanner reader) {
+        N = reader.nextInt();
+        int x = reader.nextInt();
+        int max = x;
+        int inc = 0;
+        for (int i = 1; i < N; i++) {
+            x = reader.nextInt();
+            if (x == max) {
+                inc = 0;
+            } else if (x > max) {
+                inc = 0;
+                max = x;
+            } else { // x < max
+                result += Math.max(0, max - x - inc);
+                inc = max - x;
+            }
+        }
+    }
+
+    public void print() {
+        System.out.println(result);
+    }
+
+    public static void main(String args[]) {
+        try {
+            Scanner reader = new Scanner(new BufferedInputStream(System.in, BUFFER_SIZE));
+            B b = new B();
+            b.read(reader);
+            b.print();
+            reader.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n = sc.next_i32();
+    if n <= 0 {
+        println!("0");
+        return;
+    }
+
+    let mut x = sc.next_i32();
+    let mut maxv = x;
+    let mut inc: i32 = 0;
+    let mut result: i64 = 0;
+
+    for _ in 1..(n as usize) {
+        x = sc.next_i32();
+        if x == maxv {
+            inc = 0;
+        } else if x > maxv {
+            inc = 0;
+            maxv = x;
+        } else {
+            let delta = maxv - x - inc;
+            if delta > 0 {
+                result += delta as i64;
+            }
+            inc = maxv - x;
+        }
+    }
+
+    println!("{}", result);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

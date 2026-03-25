@@ -1,0 +1,158 @@
+INDEX: 169 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class AlexRhombus{
+
+
+	public static void main(String[] args) {
+		
+		Scanner input = new Scanner(System.in);
+
+		int n = input.nextInt();
+		int sum = 1 ;
+
+		for (int i = 0 ; i<n ; i++){
+
+			sum = sum + 4*i ;
+		}
+		System.out.println(sum);
+
+
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt(), h = input.nextInt(),sum=0;
+        int []a = new int[n];
+        for(int i=0; i<n; i++){
+            a[i]=input.nextInt();
+        }
+        for(int i=0; i<n; i++){
+            if(a[i]<=h)
+                sum ++;
+            else sum =sum+2;
+        }
+        System.out.println(sum);
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let h: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut sum: i32 = 0;
+    let mut a: Vec<i32> = vec![0; n];
+    for i in 0..n {
+        a[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    for i in 0..n {
+        if a[i] <= h {
+            sum += 1;
+        } else {
+            sum += 2;
+        }
+    }
+
+    println!("{}", sum);
+}
+```
+
+Java:
+```
+
+
+
+import java.util.*;
+
+
+public class Main {
+    
+    public static void main(String[] args){
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt();
+        int m = input.nextInt();
+        int a[] = new int[n];
+        long sum=0;
+        for (int i = 0; i < n; i++) {
+            a[i] = input.nextInt();
+            sum+=a[i];
+        }
+        sum+=(n-1);
+        if(sum==m)
+            System.out.println("YES");
+        else
+            System.out.println("NO");
+        
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: i64 = it.next().unwrap().parse().unwrap();
+
+    let mut sum: i64 = 0;
+    for _ in 0..(n as usize) {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        sum += x as i64;
+    }
+    sum += (n - 1) as i64;
+
+    if sum == m {
+        println!("YES");
+    } else {
+        println!("NO");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

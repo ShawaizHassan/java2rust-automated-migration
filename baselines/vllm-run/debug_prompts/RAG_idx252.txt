@@ -1,0 +1,319 @@
+INDEX: 252 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+import java.util.*;
+public class Main
+{
+	public static void main(String[] args) {
+	    Scanner sc = new Scanner(System.in);
+	    int n= sc.nextInt();
+	    int sq=0,diff=0,ex=0,rem=0;
+	    int mark=0,mark1=0,ans=0;
+	    if(n==1)
+	    ans=4;
+	    else if(n==2)
+	    ans=6;
+	    else if(n==3)
+	    ans=8;
+	    else if(n>=4)
+	    {
+    	    sq =(int)Math.sqrt(n);
+    	    diff = n-(sq*sq);
+    	    ex=diff/sq;
+    	    rem=diff%sq;
+    	    
+    	    
+    	    if(ex>0)
+    	    mark=((sq+ex)+sq)*2;
+    	    else
+    	    mark=(sq+sq)*2;
+    	    
+    	    if(rem>0)
+    	    mark1=2;
+    	    
+    	    if(diff==0)
+    	    ans=sq*4;
+    	    else 
+    	    {
+    	        ans=mark+mark1;
+    	    }
+	    }
+	    System.out.println(ans);
+	
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+/**
+ * Created by anna on 17.09.16.
+ */
+public class cf3 {
+    private static Scanner is = new Scanner(System.in);
+    public static long isSquare(long n) {
+        double sq = Math.sqrt(n);
+        if ((long)sq*(long)sq == n) return (long)sq;
+        else return -1;
+    }
+
+    public static void main(String[] args) {
+        int n = is.nextInt();
+//        System.out.print(isSquare(n));
+        long[] pluses = new long[n];
+        long onScreen = 2;
+        int k = 2;
+        pluses[0] = 2;
+        long nextsq = 2;
+//
+//        while (k < n + 1) {
+//            long sq = isSquare(onScreen);
+//            if (sq != -1) {
+//                if (sq % (k+1) == 0) {
+//                    onScreen = sq;
+//                    k++;
+//                } else {
+//                    pluses[k - 1]++;
+//                    onScreen += k;
+//                }
+//            } else {
+//                pluses[k - 1]++;
+//                onScreen += k;
+//            }
+//        }
+//        while (k < n + 1) {
+//            pluses[k - 1] = (nextsq * nextsq - onScreen) / k;
+//            k++;
+//            onScreen = nextsq;
+////            System.out.print(k+": " + onScreen+ "\n");
+//            long sq = isSquare(k);
+//            nextsq = k*(k+1);
+//        }
+
+        while (k < n + 1) {
+            pluses[k - 1] = ((long)(k+1))*(k+1)*k - (k-1);
+
+            k++;
+            onScreen = nextsq;// prev nextsq = (k - 1)*k
+//            System.out.print(k+": " + onScreen+ "\n");
+            long sq = isSquare(k);
+            nextsq = k*(k+1);
+
+        }
+
+
+        for (int i = 0; i < n; i++) {
+           System.out.println(Math.abs(pluses[i]));
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn is_square(n: i64) -> i64 {
+    let sq = (n as f64).sqrt();
+    let s = sq as i64;
+    if s * s == n { s } else { -1 }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse::<i32>().unwrap() as usize,
+        None => return,
+    };
+
+    let mut pluses = vec![0i64; n];
+    let mut on_screen: i64 = 2;
+    let mut k: i32 = 2;
+    pluses[0] = 2;
+    let mut nextsq: i64 = 2;
+
+    while k < (n as i32) + 1 {
+        let kk = k as i64;
+        let kp1 = (k + 1) as i64;
+        pluses[(k - 1) as usize] = kp1 * kp1 * kk - (kk - 1);
+
+        k += 1;
+        on_screen = nextsq;
+        let _sq = is_square(k as i64);
+        nextsq = (k as i64) * ((k + 1) as i64);
+    }
+
+    let mut out = String::new();
+    for i in 0..n {
+        out.push_str(&(pluses[i].abs().to_string()));
+        out.push('\n');
+    }
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+/**
+ * Created by anna on 17.09.16.
+ */
+public class cf3 {
+    private static Scanner is = new Scanner(System.in);
+    public static long isSquare(long n) {
+        double sq = Math.sqrt(n);
+        if ((long)sq*(long)sq == n) return (long)sq;
+        else return -1;
+    }
+
+    public static void main(String[] args) {
+        int n = is.nextInt();
+//        System.out.print(isSquare(n));
+        long[] pluses = new long[n];
+        long onScreen = 2;
+        int k = 2;
+        pluses[0] = 2;
+        long nextsq = 6;
+//
+//        while (k < n + 1) {
+//            long sq = isSquare(onScreen);
+//            if (sq != -1) {
+//                if (sq % (k+1) == 0) {
+//                    onScreen = sq;
+//                    k++;
+//                } else {
+//                    pluses[k - 1]++;
+//                    onScreen += k;
+//                }
+//            } else {
+//                pluses[k - 1]++;
+//                onScreen += k;
+//            }
+//        }
+//        while (k < n + 1) {
+//            pluses[k - 1] = (nextsq * nextsq - onScreen) / k;
+//            k++;
+//            onScreen = nextsq;
+////            System.out.print(k+": " + onScreen+ "\n");
+//            long sq = isSquare(k);
+//            nextsq = k*(k+1);
+//        }
+
+        while (k < n + 1) {
+            pluses[k - 1] = nextsq*((long)(k+1)) - (long)(k-1);
+
+            k++;
+            onScreen = nextsq;// prev nextsq = (k - 1)*k
+//            System.out.print(k+": " + onScreen+ "\n");
+            long sq = isSquare(k);
+            nextsq = k*(k+1);
+
+        }
+
+        System.out.println(2);
+        for (long i = 2; i <= n; i++) {
+           System.out.println(i*(i+1)*(i+1) - (i-1));
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn is_square(n: i64) -> i64 {
+    let sq = (n as f64).sqrt();
+    let s = sq as i64;
+    if s * s == n { s } else { -1 }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as i64;
+
+    let mut pluses: Vec<i64> = vec![0; n as usize];
+    let mut on_screen: i64 = 2;
+    let mut k: i32 = 2;
+    if n >= 1 {
+        pluses[0] = 2;
+    }
+    let mut nextsq: i64 = 6;
+
+    while (k as i64) < n + 1 {
+        pluses[(k - 1) as usize] = nextsq * ((k + 1) as i64) - ((k - 1) as i64);
+
+        k += 1;
+        on_screen = nextsq;
+        let _sq = is_square(k as i64);
+        nextsq = (k as i64) * ((k + 1) as i64);
+    }
+
+    let mut out = String::new();
+    out.push_str("2\n");
+    for i in 2..=n {
+        let val = i * (i + 1) * (i + 1) - (i - 1);
+        out.push_str(&val.to_string());
+        out.push('\n');
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

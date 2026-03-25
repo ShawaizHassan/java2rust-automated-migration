@@ -1,0 +1,244 @@
+INDEX: 386 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class PostOffice {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		long d = 0;
+		long a, b, t, k;
+		Scanner sc = new Scanner(System.in);
+		d = sc.nextLong();
+		k = sc.nextLong();
+		a = sc.nextLong();
+		b = sc.nextLong();
+		t = sc.nextLong();
+		
+		long answer = -1;
+		
+		if(d<k){
+			answer = d*a;
+		}
+		
+		else if(k*a+t >= k*b) {
+			answer = k*a + (d-k)*b;
+		}
+		else{
+			long q = d/k;
+			long r = d - q*k;
+			if(t+r*a<r*b){
+				answer = (k*a+t)*q + r*a;
+			}
+			else{
+				answer = (k*a+t)*q+r*b-t;
+			}
+		}
+		System.out.println(answer);
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class C1418A {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int t =sc.nextInt();
+		for(int i = 0 ; i < t ; i++) {
+			long x = sc.nextLong();
+			long y = sc.nextLong();
+			long k = sc.nextLong();
+			long gain = x-1;
+			long neededSticks = k*y-1; 
+			long answer = 0;
+			if((neededSticks+k) % gain == 0) {
+				answer = (neededSticks+k)/gain ;
+			}
+			else {
+				answer = (neededSticks+k)/gain + 1;
+			}
+			System.out.println(answer+k);
+			
+			
+		}
+	}
+
+}
+/* c
+5
+2 1 5
+42 13 24
+12 11 12
+1000000000 1000000000 1000000000
+2 1000000000 1000000000
+
+
+14 
+32  ? add one more
+25
+2000000002 ? add one more
+1000000001999999999
+*/
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let x: i64 = it.next().unwrap().parse().unwrap();
+        let y: i64 = it.next().unwrap().parse().unwrap();
+        let k: i64 = it.next().unwrap().parse().unwrap();
+
+        let gain: i64 = x - 1;
+        let needed_sticks: i64 = k * y - 1;
+        let total_needed: i64 = needed_sticks + k;
+
+        let mut answer: i64 = total_needed / gain;
+        if total_needed % gain != 0 {
+            answer += 1;
+        }
+        answer += k;
+
+        out.push_str(&answer.to_string());
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Yash DIT
+ */
+public class Q_686A_FreeIceCream {
+    public static void main(String args[]){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        long x=sc.nextLong();
+        long s=x;
+        long d=0;
+        for(int i=0;i<n;i++){
+            char c=sc.next().charAt(0);
+            long k=sc.nextLong();
+            if(c=='+'){
+                s+=k;
+            }
+            if(c=='-'){
+                if(s>=k){
+                    s=s-k;
+                }
+                else{
+                    d++;
+                }
+            }
+        }
+        System.out.println(s+" "+d);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_token().parse::<i32>().unwrap()
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.next_token().parse::<i64>().unwrap()
+    }
+    fn next_char(&mut self) -> char {
+        self.next_token().chars().next().unwrap()
+    }
+    fn next_token(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32();
+    let x = sc.next_i64();
+    let mut s: i64 = x;
+    let mut d: i64 = 0;
+
+    for _ in 0..n {
+        let c = sc.next_char();
+        let k = sc.next_i64();
+        if c == '+' {
+            s += k;
+        }
+        if c == '-' {
+            if s >= k {
+                s -= k;
+            } else {
+                d += 1;
+            }
+        }
+    }
+
+    println!("{} {}", s, d);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

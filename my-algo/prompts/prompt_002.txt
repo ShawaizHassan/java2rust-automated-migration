@@ -1,0 +1,108 @@
+### SYSTEM
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+
+### USER
+I will provide Java code and translation rule hints.
+Your job is to translate **only** the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java Code to translate:
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+public class Solution {
+
+	private static int res;
+	private static int[] numberOfPrimeDivisor;
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		
+		int[] plainNumber = new int [n];
+		for(int i=0;i<plainNumber.length;i++){
+			plainNumber[i] = i+1;
+		}
+		plainNumber[0] = -1;
+		getNumbers(plainNumber);
+		numberOfPrimeDivisor = new int [ n ];
+		int count = 0;
+		for(int i=0;i<n;i++){
+			int a = getNumberOfPrimeDivisors(i+1);
+			if(a==2){
+				count++;
+			}
+		}
+		
+		
+	
+		System.out.println(count);
+		
+		
+		
+		
+		
+	}
+
+	private static int getNumberOfPrimeDivisors(int i) {
+		
+			List<Integer> factors = primeFactors(i);
+			int count = 1;
+			for(int j=1;j<factors.size();j++){
+				if(factors.get(j)!=factors.get(j-1)){
+					count++;
+				}
+			}
+			
+			return count;
+		
+	}
+
+	
+	  public static List<Integer> primeFactors(int number) {
+		    int n = number;
+		    List<Integer> factors = new ArrayList<Integer>();
+		    for (int i = 2; i <= n; i++) {
+		      while (n % i == 0) {
+		        factors.add(i);
+		        n /= i;
+		      }
+		    }
+		    return factors;
+		  }
+	  
+	private static void getNumbers(int[] plainNumber) {
+		for(int i =2;i<plainNumber.length+1;i++){
+			int a =2;
+			while(a*i<plainNumber.length){
+				plainNumber[a*i-1] = -1;
+				a++;
+			}
+		}
+		
+		
+	}
+
+	
+
+}
+
+```
+### Translation Rule Hints
+This section contains Translation Rule Hints about the Java and Rust code. Use as guidance.
+- **translation_rules1**
+  - [lines 47, 60, 62] `List<Integer>` → **ArrayList→Vec** — Default dynamic array in Rust.
+- **translation_rules2**
+  - [lines 18] `sc.nextInt()` → **Read+split_whitespace** — Default fast input (Scanner/Tokenizer equivalent).
+### Reminder
+1. Carefully read and understand the Java code, and Translation Rule Hints.
+2. Output **only** the Safe Rust code — no explanations, comments, or additional text.

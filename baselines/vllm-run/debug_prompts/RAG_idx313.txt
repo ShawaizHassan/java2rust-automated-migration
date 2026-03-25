@@ -1,0 +1,385 @@
+INDEX: 313 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+public class codeforce
+{
+    public static void main(String[] args)
+    {
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[] arr=new int[3];
+        int[] brr=new int[3];
+        int i=0;
+        for(i=0;i<3;i++)
+        {
+            arr[i]=sc.nextInt();
+        }
+        for(i=0;i<3;i++)
+        {
+            brr[i]=sc.nextInt();
+        }
+        int max=0,min=0;
+        if(arr[0]>=brr[1])
+        {
+            max+=brr[1];
+        }
+        else
+        {
+            max+=arr[0];
+        }
+
+         if(arr[1]>=brr[2])
+        {
+            max+=brr[2];
+        }
+        else
+        {
+            max+=arr[1];
+        }
+
+         if(arr[2]>=brr[0])
+        {
+            max+=brr[0];
+        }
+        else
+        {
+            max+=arr[2];
+        }
+       
+         if(arr[0]>brr[0]+brr[2])
+         {
+             min+=arr[0]-(brr[0]+brr[2]);
+         }
+         if(arr[1]>brr[1]+brr[0])
+         {
+             min+=arr[1]-(brr[0]+brr[1]);
+         }
+         if(arr[2]>brr[1]+brr[2])
+         {
+             min+=arr[2]-(brr[1]+brr[2]);
+         }
+         System.out.println(min+" "+max);
+    }
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.lang.Object;
+public class TestCases
+{	
+    public static void main(String args[]) throws IOException
+    {
+     try {
+        Scanner s=new Scanner(System.in);
+        int a=s.nextInt();
+        int b=s.nextInt();
+        long max;
+        int str=0;
+        long[] arr=new long[a+1];
+        long[] brr=new long[b+1];
+        long[] nrr=new long[a+1];
+        for(int i=0;i<a;i++) {
+        	arr[i]=s.nextLong();
+        }
+        for(int i=0;i<b;i++) {
+        	brr[i]=s.nextLong();
+        }
+        max=arr[0]*brr[0];
+        for(int i=0;i<a;i++) {
+        	for(int j=0;j<b;j++) {
+        		if(max<(arr[i]*brr[j])) {
+        			max=(arr[i]*brr[j]);
+        			str=i;
+        		}
+        	}
+        }
+        if(str!=0) {
+        max=arr[0]*brr[0];
+        }
+        else {
+        	max=arr[1]*brr[0];
+        }
+  
+        for(int i=0;i<a;i++) {
+        	for(int j=0;j<b;j++) {
+        		if(i==str) {
+        			continue;
+        		}
+        		if(max<(arr[i]*brr[j])) {
+        			max=(arr[i]*brr[j]);
+        		}
+        	}
+        }
+        System.out.println(max);
+        s.close();
+     }catch(Exception e){
+         return;
+     }
+        
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+    fn next_i32(&mut self) -> Option<i32> {
+        self.skip_whitespace();
+        if self.idx >= self.input.len() {
+            return None;
+        }
+        let mut sign = 1i32;
+        if self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            let d = (self.input[self.idx] - b'0') as i32;
+            num = num.saturating_mul(10).saturating_add(d);
+            self.idx += 1;
+        }
+        Some(num * sign)
+    }
+    fn next_i64(&mut self) -> Option<i64> {
+        self.skip_whitespace();
+        if self.idx >= self.input.len() {
+            return None;
+        }
+        let mut sign = 1i64;
+        if self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i64 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            let d = (self.input[self.idx] - b'0') as i64;
+            num = num.saturating_mul(10).saturating_add(d);
+            self.idx += 1;
+        }
+        Some(num * sign)
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let a = match sc.next_i32() {
+        Some(v) => v,
+        None => return,
+    };
+    let b = match sc.next_i32() {
+        Some(v) => v,
+        None => return,
+    };
+
+    let a_usize = a as usize;
+    let b_usize = b as usize;
+
+    let mut arr = vec![0i64; a_usize + 1];
+    let mut brr = vec![0i64; b_usize + 1];
+    let _nrr = vec![0i64; a_usize + 1];
+
+    for i in 0..a_usize {
+        match sc.next_i64() {
+            Some(v) => arr[i] = v,
+            None => return,
+        }
+    }
+    for i in 0..b_usize {
+        match sc.next_i64() {
+            Some(v) => brr[i] = v,
+            None => return,
+        }
+    }
+
+    let mut max = arr[0] * brr[0];
+    let mut str_idx: usize = 0;
+
+    for i in 0..a_usize {
+        for j in 0..b_usize {
+            let prod = arr[i] * brr[j];
+            if max < prod {
+                max = prod;
+                str_idx = i;
+            }
+        }
+    }
+
+    if str_idx != 0 {
+        max = arr[0] * brr[0];
+    } else {
+        max = arr[1] * brr[0];
+    }
+
+    for i in 0..a_usize {
+        for j in 0..b_usize {
+            if i == str_idx {
+                continue;
+            }
+            let prod = arr[i] * brr[j];
+            if max < prod {
+                max = prod;
+            }
+        }
+    }
+
+    print!("{}", max);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+public class Solution {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner s=new Scanner(System.in);
+		long k=s.nextLong();
+		int n=s.nextInt();
+		boolean f=false;
+		
+		long arr[]=new long[n];
+		long brr[]=new long[n];
+		long min;
+		int pos;
+		brr[0]=s.nextLong();
+		
+		arr[0]=(k%brr[0]);
+		min=arr[0];
+		pos=0;
+		for (int i=1;i<n;i++)
+		{
+			brr[i]=s.nextLong();
+			arr[i]=(k%brr[i]);
+			if(arr[i]<min)
+				{
+				min=arr[i];
+				pos=i;
+				}
+		}
+		if(pos==-1)
+			System.out.println("1 0");
+		else
+		System.out.println((pos+1)+" "+(k-min)/brr[pos]);
+		
+		
+	
+	}
+	
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let k: i64 = sc.next_i64();
+    let n: i32 = sc.next_i32();
+    let n_usize: usize = n as usize;
+
+    let mut arr: Vec<i64> = vec![0; n_usize];
+    let mut brr: Vec<i64> = vec![0; n_usize];
+
+    brr[0] = sc.next_i64();
+    arr[0] = k % brr[0];
+    let mut min: i64 = arr[0];
+    let mut pos: i32 = 0;
+
+    for i in 1..n_usize {
+        brr[i] = sc.next_i64();
+        arr[i] = k % brr[i];
+        if arr[i] < min {
+            min = arr[i];
+            pos = i as i32;
+        }
+    }
+
+    if pos == -1 {
+        println!("1 0");
+    } else {
+        let p = pos as usize;
+        let ans = (k - min) / brr[p];
+        println!("{} {}", pos + 1, ans);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

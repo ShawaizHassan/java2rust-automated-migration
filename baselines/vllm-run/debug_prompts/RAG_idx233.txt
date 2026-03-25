@@ -1,0 +1,273 @@
+INDEX: 233 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class mohammad
+{
+  public static void main (String[]args)
+  {
+    Scanner U = new Scanner (System.in);
+    int n = U.nextInt();
+    int[] a = new int[n];
+    int[] b = new int[n];
+    for( int i=0 ; i<n ; i++)
+        a[i] = U.nextInt();
+    for( int j=0 ; j<n ; j++)
+    for( int i=0 ; i<n ; i++)
+        if(a[i]==a[j])
+            b[j]++;
+    Arrays.sort(b);
+    if(b[n-1]==0||b[n-1]==1)
+    System.out.println(1);
+    else
+        System.out.println(b[n-1]);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+public class B {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int t = in.nextInt();
+        for (int u = 0; u < t; u++) {
+            int n = in.nextInt();
+            int a[] = new int[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = in.nextInt() + 1;
+            }
+
+            int leftMax = -1;
+            int rightMax = n;
+            for (int i = 0; i < n && a[i] > i; i++) {
+                leftMax = i;
+            }
+            for (int i = n - 1; i >= 0 && a[i] > n - 1 - i; i--) {
+                rightMax = i;
+            }
+            if (rightMax <= leftMax)
+                System.out.println("Yes");
+            else
+                System.out.println("No");
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n_i32 = sc.next_i32();
+        let n = n_i32 as usize;
+        let mut a: Vec<i32> = vec![0; n];
+        for i in 0..n {
+            a[i] = sc.next_i32() + 1;
+        }
+
+        let mut left_max: i32 = -1;
+        let mut right_max: i32 = n_i32;
+
+        let mut i: usize = 0;
+        while i < n && a[i] > i as i32 {
+            left_max = i as i32;
+            i += 1;
+        }
+
+        let mut j: i32 = n_i32 - 1;
+        while j >= 0 {
+            let idx = j as usize;
+            if a[idx] > (n_i32 - 1 - j) {
+                right_max = j;
+                j -= 1;
+            } else {
+                break;
+            }
+        }
+
+        if right_max <= left_max {
+            out.push_str("Yes\n");
+        } else {
+            out.push_str("No\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int[] a = new int[n];
+        int[] b = new int[n];
+        for (int i=0; i<n; i++) {
+            a[i] = scanner.nextInt();
+        }
+        Arrays.sort(a);
+        int j = 0;
+        for (int i=1; i<n; i+=2, j++) {
+            b[i] = a[j];
+        }
+        for (int i=0; i<n; i+=2, j++) {
+            b[i] = a[j];
+        }
+        int count = 0;
+        for (int i=1;i<n-1;i++) {
+            if (b[i] < b[i-1] && b[i] < b[i+1]) {
+                count++;
+            }
+        }
+        System.out.println(count);
+        for (int i=0; i<n; i++) {
+            System.out.print(b[i] + " ");
+        }
+        System.out.println();
+    }
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n_i32 = sc.next_i32();
+    let n: usize = n_i32 as usize;
+
+    let mut a = vec![0i32; n];
+    let mut b = vec![0i32; n];
+
+    for i in 0..n {
+        a[i] = sc.next_i32();
+    }
+
+    a.sort();
+
+    let mut j: usize = 0;
+    let mut i: usize = 1;
+    while i < n {
+        b[i] = a[j];
+        i += 2;
+        j += 1;
+    }
+
+    i = 0;
+    while i < n {
+        b[i] = a[j];
+        i += 2;
+        j += 1;
+    }
+
+    let mut count: i32 = 0;
+    if n >= 3 {
+        for i in 1..(n - 1) {
+            if b[i] < b[i - 1] && b[i] < b[i + 1] {
+                count += 1;
+            }
+        }
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!("{}\n", count));
+    for i in 0..n {
+        out.push_str(&format!("{} ", b[i]));
+    }
+    out.push('\n');
+
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

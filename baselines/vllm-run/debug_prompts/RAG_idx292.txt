@@ -1,0 +1,537 @@
+INDEX: 292 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+
+
+public class COVID {
+
+	static ArrayList<Integer>[] adjList;
+
+
+
+
+
+
+	static int[] fac;
+	static int mod=998244353;
+
+	static int pow(int b,long e, int mod) {
+		int ans=1;
+		b%=mod;
+		while(e>0) {
+			if((e&1)==1)
+				ans=(int)((ans*1l*b)%mod);
+			e>>=1;
+			b=(int)((b*1l*b)%mod);
+		}
+		return ans;
+	}
+	static long ncr(int n , int r ) {
+		long ans=fac[n];
+		long de=((fac[n-r]*1l*fac[r])%mod);
+		de=pow((int)de, mod-2, mod);
+		return (ans*de)%mod;
+	}
+
+	public static void main(String[] args) throws Exception {
+		Scanner sc = new Scanner(System.in);
+		PrintWriter pw =new PrintWriter(System.out);
+		int n=sc.nextInt();
+		long k=sc.nextLong();
+		if(k>n-1) {
+			pw.println(0);
+			pw.flush();
+			return;
+		}
+		fac=new int[n+1];
+		fac[0]=1;
+		for(int i=1;i<fac.length;i++)
+			fac[i]=(int)((fac[i-1]*1l*(i%mod))%mod);
+		
+		int pop=n-(int)k;
+		long ans=0;
+		for(int i=0;i<=pop;i++) {
+			long notPop= (ncr(pop,i)*pow(pop-i,n,mod))%mod;
+			if(notPop<0) {
+				System.out.println("here");
+				
+			}
+			if(i%2==1)notPop*=-1;
+			ans+=(notPop+mod);
+			ans%=mod;
+		}
+		ans*=ncr(n,pop);
+		ans%=mod;
+		if(k!=0)
+			ans=ans*2%mod;
+		pw.println(ans);
+		pw.flush();
+		pw.close();
+	}
+	static long gcd(long a, long b) {
+		return (b==0)?a:gcd(b,a%b);
+	}
+	static long lcm(long a, long b) {
+		return a/gcd(a,b)*b;
+	}
+	public static int log(int n , int base) {
+		int ans=0;
+		while(n+1>base) {
+			ans++;
+			n/=base;
+		}
+		return ans;
+	}
+	static long square(long l) {
+		return l*l;
+	}
+
+
+
+
+
+	static class Pair implements Comparable<Pair>{
+		int  x;int y;
+
+		public Pair(int a,int b) {
+			this.x=a;y=b;
+		}
+
+
+
+		public int compareTo(Pair o) {
+			return (x==o.x)?((y>o.y)?1:(y==o.y)?0:-1):((x>o.x)?1:-1);
+		}
+
+
+		@Override
+
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + x;
+			result = prime * result + y;
+			return result;
+		}
+
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Pair other = (Pair) obj;
+			if (x != other.x)
+				return false;
+			if (y != other.y)
+				return false;
+			return true;
+		}
+
+	}
+
+
+
+
+
+	static class Scanner {
+		StringTokenizer st;
+		BufferedReader br;
+
+		public Scanner(InputStream s) {
+			br = new BufferedReader(new InputStreamReader(s));
+		}
+		public Scanner(String s) throws FileNotFoundException{	br = new BufferedReader(new FileReader(s));}
+
+		public long[] nextLongArr(int n) throws IOException {
+			long[] arr=new long[n];
+			for(int i=0;i<n;i++)
+				arr[i]=nextLong();
+			return arr;
+		}
+		public int[] nextIntArr(int n) throws IOException {
+			int[] arr=new int[n];
+			for(int i=0;i<n;i++)
+				arr[i]=nextInt();
+			return arr;
+		}
+		public String next() throws IOException {
+			while (st == null || !st.hasMoreTokens())
+				st = new StringTokenizer(br.readLine()," ,");
+			return st.nextToken();
+		}
+
+		public int nextInt() throws IOException {
+			return Integer.parseInt(next());
+		}
+
+		public long nextLong() throws IOException {
+			return Long.parseLong(next());
+		}
+
+		public String nextLine() throws IOException {
+			return br.readLine();
+		}
+
+
+		public double nextDouble() throws IOException {
+			String x = next();
+			StringBuilder sb = new StringBuilder("0");
+			double res = 0, f = 1;
+			boolean dec = false, neg = false;
+			int start = 0;
+			if (x.charAt(0) == '-') {
+				neg = true;
+				start++;
+			}
+			for (int i = start; i < x.length(); i++) {
+				if (x.charAt(i) == '.') {
+					res = Long.parseLong(sb.toString());
+					sb = new StringBuilder("0");
+					dec = true;
+				} else {
+					sb.append(x.charAt(i));
+					if (dec)
+						f *= 10;
+				}
+				if (sb.length() == 18) {
+					res += Long.parseLong(sb.toString()) / f;
+					sb = new StringBuilder("0");
+				}
+			}
+			res += Long.parseLong(sb.toString()) / f;
+			return res * (neg ? -1 : 1);
+		}
+
+		public boolean ready() throws IOException {
+			return br.ready();
+		}
+
+	}
+
+	public static void shuffle(int[] a) {
+		int n = a.length;
+		for (int i = 0; i < n; i++) {
+			int r = i + (int) (Math.random() * (n - i));
+			int tmp = a[i];
+			a[i] = a[r];
+			a[r] = tmp;
+		}
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class CF996B {
+	static int labs[];static int n;
+	public static void main(String[]args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		n =sc.nextInt() ;
+		labs = new int[n];
+		int best =Integer.MAX_VALUE;int pos=0,mins=0;
+		for(int i =0 ;  i<n ; i++) {
+			labs[i]=sc.nextInt();
+			mins=(labs[i]/n)*n;
+			if(labs[i]%n>i) mins+=n;
+			mins+=(i+1);
+			labs[i]=mins;
+			if(best>mins) {best=mins;pos=i;}
+		}
+		System.out.println(pos+1);
+		
+	}
+	static class Scanner 
+	{
+		StringTokenizer st;
+		BufferedReader br;
+
+		public Scanner(InputStream s){	br = new BufferedReader(new InputStreamReader(s));}
+
+		public String next() throws IOException 
+		{
+			while (st == null || !st.hasMoreTokens()) 
+				st = new StringTokenizer(br.readLine());
+			return st.nextToken();
+		}
+
+		public int nextInt() throws IOException {return Integer.parseInt(next());}
+
+		public long nextLong() throws IOException {return Long.parseLong(next());}
+
+		public String nextLine() throws IOException {return br.readLine();}
+
+		public double nextDouble() throws IOException
+		{
+			String x = next();
+			StringBuilder sb = new StringBuilder("0");
+			double res = 0, f = 1;
+			boolean dec = false, neg = false;
+			int start = 0;
+			if(x.charAt(0) == '-')
+			{
+				neg = true;
+				start++;
+			}
+			for(int i = start; i < x.length(); i++)
+				if(x.charAt(i) == '.')
+				{
+					res = Long.parseLong(sb.toString());
+					sb = new StringBuilder("0");
+					dec = true;
+				}
+				else
+				{
+					sb.append(x.charAt(i));
+					if(dec)
+						f *= 10;
+				}
+			res += Long.parseLong(sb.toString()) / f;
+			return res * (neg?-1:1);
+		}
+
+		public boolean ready() throws IOException {return br.ready();}
+
+
+	}
+
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32();
+    let n_usize = n as usize;
+
+    let mut best = i32::MAX;
+    let mut pos: usize = 0;
+
+    for i in 0..n_usize {
+        let x = sc.next_i32();
+        let mut mins = (x / n) * n;
+        if x % n > i as i32 {
+            mins += n;
+        }
+        mins += (i as i32) + 1;
+        if best > mins {
+            best = mins;
+            pos = i;
+        }
+    }
+
+    println!("{}", pos + 1);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.StringTokenizer;
+
+public class temp {
+
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		PrintWriter out = new PrintWriter(System.out);
+		int n = sc.nextInt();
+		HashSet<Integer> obj = new HashSet<Integer>();
+		while (n-- > 0) {
+			String current = sc.next();
+			int mask = 0;
+			for (int i = 0; i < current.length(); i++) {
+				int c = current.charAt(i);
+				int idx = c - 'a';
+				mask |= (1 << idx);
+			}
+			obj.add(mask);
+		}
+		out.println(obj.size());
+		out.flush();
+		out.close();
+
+	}
+
+	static class Scanner {
+		StringTokenizer st;
+		BufferedReader br;
+
+		public Scanner(InputStream s) {
+			br = new BufferedReader(new InputStreamReader(s));
+		}
+
+		public String next() throws IOException {
+			while (st == null || !st.hasMoreTokens())
+				st = new StringTokenizer(br.readLine());
+			return st.nextToken();
+		}
+
+		public int nextInt() throws IOException {
+			return Integer.parseInt(next());
+		}
+
+		public long nextLong() throws IOException {
+			return Long.parseLong(next());
+		}
+
+		public String nextLine() throws IOException {
+			return br.readLine();
+		}
+
+		public double nextDouble() throws IOException {
+			String x = next();
+			StringBuilder sb = new StringBuilder("0");
+			double res = 0, f = 1;
+			boolean dec = false, neg = false;
+			int start = 0;
+			if (x.charAt(0) == '-') {
+				neg = true;
+				start++;
+			}
+			for (int i = start; i < x.length(); i++)
+				if (x.charAt(i) == '.') {
+					res = Long.parseLong(sb.toString());
+					sb = new StringBuilder("0");
+					dec = true;
+				} else {
+					sb.append(x.charAt(i));
+					if (dec)
+						f *= 10;
+				}
+			res += Long.parseLong(sb.toString()) / f;
+			return res * (neg ? -1 : 1);
+		}
+
+		public boolean ready() throws IOException {
+			return br.ready();
+		}
+
+	}
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashSet;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut n = sc.next_i32();
+    let mut set: HashSet<i32> = HashSet::new();
+
+    while n > 0 {
+        let current = sc.next();
+        let mut mask: i32 = 0;
+        for b in current.bytes() {
+            let idx = (b - b'a') as i32;
+            mask |= 1i32 << idx;
+        }
+        set.insert(mask);
+        n -= 1;
+    }
+
+    print!("{}", set.len());
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

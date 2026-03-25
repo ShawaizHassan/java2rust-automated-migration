@@ -1,0 +1,326 @@
+INDEX: 505 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+        import java.io.IOException;
+        import java.io.InputStreamReader;
+        import java.util.StringTokenizer;
+
+public class bubblestrike {
+    public static void main(String[] args) throws IOException {
+        BufferedReader f = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(f.readLine());
+        int x = Integer.parseInt(st.nextToken());
+        double prob = Double.parseDouble(st.nextToken());
+        int pos = x;
+        for (int a=x; a>0; a/=2){
+            while (pos-a>=0&&check(pos-a,x-(pos-a),prob)){
+                pos-=a;
+            }
+        }
+        System.out.println(pos);
+
+    }
+    public static boolean check (int good, int bad, double proba){
+        double g=good+0.0;
+        double b=bad+0.0;
+        double ans = (0.25*b*Math.max(0,b-1.0)*g+(g*(Math.max(0,g-1)*Math.max(0,g-2)/6.0)+b*0.5*(g)*Math.max(0,g-1)))/((g+b)*Math.max(0,g+b-1)*Math.max(0,g+b-2)/6.0);
+        return ans >=proba;
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class C324C
+{
+
+private static StringTokenizer st;
+    
+    public static void nextLine(BufferedReader br) throws IOException
+    {
+        st = new StringTokenizer(br.readLine());
+    }
+    
+    public static int nextInt()
+    {
+        return Integer.parseInt(st.nextToken());
+    }
+    
+    public static String next()
+    {
+        return st.nextToken();
+    }
+    
+    public static long nextLong()
+    {
+        return Long.parseLong(st.nextToken());
+    }
+
+    public static double nextDouble()
+    {
+        return Double.parseDouble(st.nextToken());
+    }
+    
+    public static void main(String[] args) throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        nextLine(br);
+        int t=nextInt();
+        while(t!=0){
+        	nextLine(br);
+        	int r=nextInt();
+        	int g=nextInt();
+        	int b=nextInt();
+        	int max=Math.max(r,Math.max(g,b));
+        	int min=Math.min(r,Math.min(g,b));
+        	int mid=r+g+b-max-min;
+        	int ans=0;
+        	if(min>=max-mid)
+        	System.out.println((r+g+b)/2);
+        	else{
+        		ans+=min;
+        	ans+=Math.min(max-min,mid);
+        	System.out.println(ans);
+        	}
+        	
+        	t--;
+        }
+    
+         
+    
+    }
+
+}
+    
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut t = sc.next_i32();
+    let mut out = String::new();
+
+    while t != 0 {
+        let r = sc.next_i32();
+        let g = sc.next_i32();
+        let b = sc.next_i32();
+
+        let maxv = r.max(g.max(b));
+        let minv = r.min(g.min(b));
+        let mid = r + g + b - maxv - minv;
+
+        if minv >= maxv - mid {
+            out.push_str(&format!("{}\n", (r + g + b) / 2));
+        } else {
+            let mut ans = 0i32;
+            ans += minv;
+            ans += (maxv - minv).min(mid);
+            out.push_str(&format!("{}\n", ans));
+        }
+
+        t -= 1;
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+public class A559 {
+    public static void main(String[] args) {
+        MyScanner sc = new MyScanner();
+        PrintWriter out = new PrintWriter(new BufferedOutputStream(System.out));
+        int n = sc.nextInt(); int m = sc.nextInt();
+        long [] b = new long[n];
+        long [] g = new long[m];
+        for (int i = 0; i < n; i++) b[i] = sc.nextLong();
+        for (int i = 0; i < m; i++) g[i] = sc.nextLong();
+        Arrays.sort(b); Arrays.sort(g);
+        if (g[0] < b[n - 1]) {
+            out.println(-1);
+        } else {
+            long base = 0; long max = 0;
+            for (int i = 0; i < n; i++) {
+                base = base + m * b[i];
+                max = Math.max(max, b[i]);
+            }
+            for (int i = 1; i < m; i++) base += (g[i] - max);
+            if (max != g[0]) base += (g[0] - b[n - 2]);
+            out.println(base);
+        }
+        out.close();
+    }
+
+
+    //-----------MyScanner class for faster input----------
+    public static class MyScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public MyScanner() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+
+
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_token().parse::<i32>().unwrap()
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.next_token().parse::<i64>().unwrap()
+    }
+    fn next_token(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32() as usize;
+
+    let mut b: Vec<i64> = vec![0; n];
+    let mut g: Vec<i64> = vec![0; m];
+
+    for i in 0..n {
+        b[i] = sc.next_i64();
+    }
+    for i in 0..m {
+        g[i] = sc.next_i64();
+    }
+
+    b.sort();
+    g.sort();
+
+    if g[0] < b[n - 1] {
+        print!("-1\n");
+    } else {
+        let mut base: i64 = 0;
+        let mut maxv: i64 = 0;
+        for i in 0..n {
+            base += (m as i64) * b[i];
+            if b[i] > maxv {
+                maxv = b[i];
+            }
+        }
+        for i in 1..m {
+            base += g[i] - maxv;
+        }
+        if maxv != g[0] {
+            base += g[0] - b[n - 2];
+        }
+        print!("{}\n", base);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

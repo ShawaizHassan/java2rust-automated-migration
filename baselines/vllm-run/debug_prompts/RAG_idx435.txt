@@ -1,0 +1,381 @@
+INDEX: 435 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Cutting {
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+
+		int n = input.nextInt();
+		int b = input.nextInt();
+
+		int[] a = new int[n + 1];
+		int[] even = new int[n + 1];
+		int[] odd = new int[n + 1];
+
+		for (int i = 1; i <= n; i++) {
+			a[i] = input.nextInt();
+			if (a[i] % 2 == 0) {
+				even[i] = even[i - 1] + 1;
+				odd[i] = odd[i - 1];
+			} else {
+				odd[i] = odd[i - 1] + 1;
+				even[i] = even[i - 1];
+			}
+		}
+
+		input.close();
+
+		List<Integer> l = new ArrayList<>();
+		for (int j = 2; j < n; j++) {
+			int diff = Math.abs(a[j] - a[j + 1]);
+			if (even[j] == odd[j]) {
+				l.add(diff);
+			}
+		}
+
+		Collections.sort(l);
+
+		int count = 0;
+		for (int i = 0; i < l.size(); i++) {
+			if (b >= l.get(i)) {
+				b -= l.get(i);
+				count++;
+			}
+		}
+
+		System.out.println(count);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+
+
+public class B {
+
+
+    public static void main(String[] args) {
+    
+    	FastScanner scan = new FastScanner();
+    	int t = scan.nextInt();
+    		for(int tt=0; tt<t; tt++) {
+    			int n = scan.nextInt();
+    			ArrayList<Integer> even = new ArrayList<>(), odd = new ArrayList<>();
+    			for(int i=0; i<2*n; i++) {
+    				int num = scan.nextInt();
+    				if(num % 2 == 0) even.add(i+1);
+    				else odd.add(i+1);
+    			}
+    			int count = 0;
+    			for(int i=0; i+1<even.size() && count<n-1; i+=2) {
+    				System.out.println(even.get(i) + " "+ even.get(i+1));
+    				count++;
+    			} 
+    			for(int i=0; i+1<odd.size() && count<n-1; i+=2) {
+    				System.out.println(odd.get(i) +" " + odd.get(i+1));
+    				count++;
+    			}
+    		}
+    }	
+
+    public static void sort(int [] a) {
+    	ArrayList<Integer> b = new ArrayList<>();
+    	for(int i: a) b.add(i);
+    	Collections.sort(b);
+    	for(int i=0; i<a.length; i++) a[i]= b.get(i);
+    }
+     
+    static class FastScanner{
+    	
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    	StringTokenizer st = new StringTokenizer("");
+    	String next() {
+    		while(!st.hasMoreTokens())
+    			try {
+    				st = new StringTokenizer(br.readLine());
+    			} catch (IOException e){
+    				e.printStackTrace();
+    			}
+    		return st.nextToken();
+    	}
+    	
+    	int nextInt() {
+    		return Integer.parseInt(next());
+    	}
+    	
+    	int [] readArray(int n) {
+    		int [] a = new int[n];
+    		for(int i=0; i<n ; i++) a[i] = nextInt();
+    		return a;
+    	}
+    	
+    	long nextLong() {
+    		return Long.parseLong(next());
+    	}
+    	
+    	
+    }
+    
+   
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut scan = FastScanner::new();
+    let t = scan.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = scan.next_i32();
+        let mut even: Vec<i32> = Vec::new();
+        let mut odd: Vec<i32> = Vec::new();
+
+        for i in 0..(2 * n) {
+            let num = scan.next_i32();
+            let idx1 = i + 1;
+            if num % 2 == 0 {
+                even.push(idx1);
+            } else {
+                odd.push(idx1);
+            }
+        }
+
+        let mut count = 0i32;
+
+        let mut i = 0usize;
+        while i + 1 < even.len() && count < n - 1 {
+            out.push_str(&format!("{} {}\n", even[i], even[i + 1]));
+            count += 1;
+            i += 2;
+        }
+
+        let mut j = 0usize;
+        while j + 1 < odd.len() && count < n - 1 {
+            out.push_str(&format!("{} {}\n", odd[j], odd[j + 1]));
+            count += 1;
+            j += 2;
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        while(t>0) {
+        int n = sc.nextInt();
+        Map<Integer,Integer> even = new HashMap<Integer,Integer>();
+        Map<Integer,Integer> odd = new HashMap<Integer,Integer>();
+        int a[] = new int[2*n];
+        int size = n-1;
+        for(int i=0;i<2*n;i++) {
+            a[i] = sc.nextInt();
+        }
+        for(int i=0;i<2*n;i++) {
+             if(a[i]%2==0) even.put(i+1,a[i]);
+            else odd.put(i+1,a[i]);
+        }
+        ArrayList<Integer> evenIndex = new ArrayList<>(even.keySet());
+        ArrayList<Integer> oddIndex = new ArrayList<>(odd.keySet());
+        int evenSize = 0;
+        int oddSize = 0;
+        int count=0;
+        if(even.size()>=2) {
+              for(int i=0;i<evenIndex.size();i+=2) {
+                if((i+1)==evenIndex.size()) break;
+                System.out.println(evenIndex.get(i)+" "+evenIndex.get(i+1));
+                count++;
+                if(count==size) break;
+            }
+        }
+        if(count<size) {
+             if(odd.size()>=2) {
+                 for(int i=0;i<oddIndex.size();i+=2) {
+                    if((i+1)==oddIndex.size()) break;
+                    System.out.println(oddIndex.get(i)+" "+oddIndex.get(i+1));
+                   count++;
+                    if(count==size || (i+1)==oddIndex.size()) break;
+            }
+          }
+        }
+        t--;
+      }
+    }
+}
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32();
+        let mut even: HashMap<i32, i32> = HashMap::new();
+        let mut odd: HashMap<i32, i32> = HashMap::new();
+
+        let len = (2 * n) as usize;
+        let mut a: Vec<i32> = vec![0; len];
+        for i in 0..len {
+            a[i] = sc.next_i32();
+        }
+
+        for i in 0..len {
+            let idx1 = (i as i32) + 1;
+            if a[i] % 2 == 0 {
+                even.insert(idx1, a[i]);
+            } else {
+                odd.insert(idx1, a[i]);
+            }
+        }
+
+        let even_index: Vec<i32> = even.keys().cloned().collect();
+        let odd_index: Vec<i32> = odd.keys().cloned().collect();
+
+        let size = n - 1;
+        let mut count: i32 = 0;
+
+        if even.len() >= 2 {
+            let mut i: usize = 0;
+            while i < even_index.len() {
+                if i + 1 == even_index.len() {
+                    break;
+                }
+                out.push_str(&format!("{} {}\n", even_index[i], even_index[i + 1]));
+                count += 1;
+                if count == size {
+                    break;
+                }
+                i += 2;
+            }
+        }
+
+        if count < size {
+            if odd.len() >= 2 {
+                let mut i: usize = 0;
+                while i < odd_index.len() {
+                    if i + 1 == odd_index.len() {
+                        break;
+                    }
+                    out.push_str(&format!("{} {}\n", odd_index[i], odd_index[i + 1]));
+                    count += 1;
+                    if count == size || i + 1 == odd_index.len() {
+                        break;
+                    }
+                    i += 2;
+                }
+            }
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

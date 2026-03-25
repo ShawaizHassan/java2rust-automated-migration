@@ -1,0 +1,355 @@
+INDEX: 112 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class cheaptravel {
+public static void main (String[]args)
+{
+	Scanner sc = new Scanner (System.in);
+	int annplan = sc.nextInt();//a
+	int mtickplan = sc.nextInt();//b
+	int onetickp = sc.nextInt();//c
+	int mtickp = sc.nextInt();//d
+	int a1=annplan/mtickplan;
+	int a2=a1*mtickplan;
+	int a3=annplan-a2;
+	int price=0;
+	if(mtickp==(onetickp*mtickplan))//
+		price=onetickp*annplan;
+	if((onetickp*(a1+a3))<((a1*mtickp)))
+	{
+price=onetickp*annplan;
+	}
+	if(mtickp<(onetickp*mtickplan) && mtickp<onetickp)
+	{
+		price=(a1+a3)*mtickp;
+	}
+		if(mtickp<(onetickp*mtickplan) && onetickp<mtickp)
+		{
+			price=a1*mtickp;
+			price+=a3*onetickp;
+		}
+			if(mtickp>(onetickp*mtickplan) && onetickp<mtickp)
+			{
+				price=(a2+a3)*onetickp;
+			}
+				if((mtickplan>annplan)&&(mtickp<(onetickp*annplan)))
+						{
+					price=mtickp;
+						}
+					
+						if(mtickp<onetickp)
+						{
+							price=a1*mtickp;
+				            if(a3>0&&a3<mtickplan)
+				            	price+=mtickp;
+				            		if (a3>0&&a3>mtickplan)
+				            		{
+				            			while(a3 >mtickplan)
+				            			{
+				            				price+=mtickp;
+				            				a3-=mtickplan;
+				            			}
+				            			price+=mtickp;
+				            		}
+				            			
+						}
+					//else
+						if(mtickp==onetickp)
+						{
+							price=a1*mtickp;
+							if(a3>0&&a3<mtickplan)
+				            	price+=mtickp;
+							else
+								if (a3>0&&a3>mtickplan)
+		            		{
+		            			while(a3 >mtickplan)
+		            			{
+		            				price+=mtickp;
+		            				a3-=mtickplan;
+		            			}
+		            			price+=mtickp;
+		            		}
+						}
+System.out.print(price);	
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+public class birthday {
+    public static void main(String[] args) throws java.io.IOException {
+        // TODO Auto-generated method stub
+        Scanner input = new Scanner(System.in);
+        int prices = input.nextInt();
+        int[] price = new int[prices];
+        for (int i = 0; i < prices; i++) {
+            price[i] = input.nextInt();
+        }
+        int[] answers = new int[prices];
+        int s1 = (prices / 2) - 1;
+        int s2 = prices - 1;
+        int position = 0;
+        Arrays.sort(price);
+
+        if (prices % 2 == 0) {
+            for (int i = 0; i < prices; i++) {
+                if (position % 2 == 0) {
+                    answers[position] = price[s1];
+                    s1--;
+                    position++;
+                } else {
+                    answers[position] = price[s2];
+                    s2--;
+                    position++;
+                }
+            }
+        } else {
+            for (int i = 0; i < prices; i++) {
+                if (position % 2 == 0) {
+                    answers[position] = price[s2];
+                    s2--;
+                    position++;
+                } else {
+                    answers[position] = price[s1];
+                    s1--;
+                    position++;
+                }
+            }
+        }
+
+        int counter = 0;
+        for (int i = 1; i < prices - 1; i++) {
+            if (answers[i] < answers[i+1] && answers[i] < answers[i-1]) {
+                counter++;
+            }
+        }
+        System.out.println(counter);
+        for (int i = 0; i < prices; i++) {
+            System.out.print(answers[i] + " ");
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let prices = sc.next_i32() as usize;
+
+    let mut price: Vec<i32> = vec![0; prices];
+    for i in 0..prices {
+        price[i] = sc.next_i32();
+    }
+
+    price.sort();
+
+    let mut answers: Vec<i32> = vec![0; prices];
+    let mut s1: i32 = (prices as i32 / 2) - 1;
+    let mut s2: i32 = prices as i32 - 1;
+    let mut position: usize = 0;
+
+    if prices % 2 == 0 {
+        for _ in 0..prices {
+            if position % 2 == 0 {
+                answers[position] = price[s1 as usize];
+                s1 -= 1;
+                position += 1;
+            } else {
+                answers[position] = price[s2 as usize];
+                s2 -= 1;
+                position += 1;
+            }
+        }
+    } else {
+        for _ in 0..prices {
+            if position % 2 == 0 {
+                answers[position] = price[s2 as usize];
+                s2 -= 1;
+                position += 1;
+            } else {
+                answers[position] = price[s1 as usize];
+                s1 -= 1;
+                position += 1;
+            }
+        }
+    }
+
+    let mut counter: i32 = 0;
+    if prices >= 3 {
+        for i in 1..prices - 1 {
+            if answers[i] < answers[i + 1] && answers[i] < answers[i - 1] {
+                counter += 1;
+            }
+        }
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!("{}\n", counter));
+    for i in 0..prices {
+        out.push_str(&format!("{} ", answers[i]));
+    }
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int N=sc.nextInt();
+        int m=sc.nextInt();
+        int[] arr=new int[N+1];
+        for(int i=1;i<=N;i++){
+            arr[i]=sc.nextInt();
+        }
+        Map<Integer,List<Integer>> map=new HashMap<>();
+        for(int i=1;i<=N;i++){
+            map.put(i,new ArrayList<>());
+        }
+        while(m-->0){
+            int x=sc.nextInt();
+            int y=sc.nextInt();
+           
+            map.get(x).add(y);
+            map.get(y).add(x);
+        }
+        boolean[] visited=new boolean[N+1];
+        long ans=0;
+        
+        for(int i=1;i<=N;i++){
+            if(!visited[i]){
+                ans+=dfs(map,i,visited,arr);
+            }
+        }
+        
+        System.out.println(ans);
+        
+        
+    }
+    public static long dfs(Map<Integer,List<Integer>> map,int u,boolean[] visited,int[] price){
+        
+        visited[u]=true;
+        long min=price[u];
+        
+        for(Integer i:map.get(u)){
+            if(!visited[i]){
+                
+                min=Math.min(min,dfs(map,i,visited,price));
+            }
+        }
+        
+        return min;
+        
+    }
+    
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn dfs(u: usize, adj: &Vec<Vec<usize>>, visited: &mut Vec<bool>, price: &Vec<i32>) -> i64 {
+    visited[u] = true;
+    let mut minv: i64 = price[u] as i64;
+    for &v in &adj[u] {
+        if !visited[v] {
+            let child_min = dfs(v, adj, visited, price);
+            if child_min < minv {
+                minv = child_min;
+            }
+        }
+    }
+    minv
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+    let mut m: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut price = vec![0i32; n + 1];
+    for i in 1..=n {
+        price[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut adj: Vec<Vec<usize>> = vec![Vec::new(); n + 1];
+    while m > 0 {
+        let x: usize = it.next().unwrap().parse().unwrap();
+        let y: usize = it.next().unwrap().parse().unwrap();
+        adj[x].push(y);
+        adj[y].push(x);
+        m -= 1;
+    }
+
+    let mut visited = vec![false; n + 1];
+    let mut ans: i64 = 0;
+
+    for i in 1..=n {
+        if !visited[i] {
+            ans += dfs(i, &adj, &mut visited, &price);
+        }
+    }
+
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,238 @@
+INDEX: 227 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class A
+{
+    public static void main(String[] args)
+    {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        if (n % 2 == 1) System.out.println(0);
+        else System.out.println((int) Math.pow(2, n / 2));
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class maxGCD {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner s = new Scanner(System.in);
+		int T = s.nextInt();
+		while(T>0)
+		{
+			int n = s.nextInt();
+			if((n-2)%2==0)
+			{
+				if(((n-2)/2)%2 !=0 )
+					System.out.println("YES");
+				else
+					System.out.println("NO");
+			}
+				
+			else
+				System.out.println("NO");
+			T--;
+		}
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut t = sc.next_i32();
+    let mut out = String::new();
+
+    while t > 0 {
+        let n = sc.next_i32();
+        if (n - 2) % 2 == 0 {
+            if ((n - 2) / 2) % 2 != 0 {
+                out.push_str("YES\n");
+            } else {
+                out.push_str("NO\n");
+            }
+        } else {
+            out.push_str("NO\n");
+        }
+        t -= 1;
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+/**
+ * Accomplished using the EduTools plugin by JetBrains https://plugins.jetbrains.com/plugin/10081-edutools
+ */
+
+public class Main {
+
+   public void Solver(int n) {
+      long sum = 0;
+
+      long x = 1;
+      long pow = 2;
+      while (n != sum)
+      {
+         sum = (long) (Math.pow(2,pow) - 1);
+         x = n / sum;
+         sum *= x;
+
+         if(sum == n)
+            System.out.println(x);
+         else{
+            pow++;
+         }
+
+      }
+   }
+
+
+
+   public static void main(String[] args) {
+      // Write your solution here
+      Main m = new Main();
+      Scanner input = new Scanner(System.in);
+      int testCases = input.nextInt();
+      for (int i = 0; i < testCases; i++) {
+         m.Solver(input.nextInt());
+      }
+
+   }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut s = String::new();
+        io::stdin().read_to_string(&mut s).unwrap();
+        Self { input: s.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn pow2(exp: i64) -> i64 {
+    // matches Math.pow(2, pow) cast to long for typical contest ranges
+    1i64 << (exp as u32)
+}
+
+fn solver(n: i32) -> String {
+    let mut sum: i64 = 0;
+    let n64 = n as i64;
+
+    let mut x: i64 = 1;
+    let mut pow: i64 = 2;
+
+    loop {
+        if n64 == sum {
+            break;
+        }
+
+        sum = pow2(pow) - 1;
+        x = n64 / sum;
+        sum *= x;
+
+        if sum == n64 {
+            return format!("{}\n", x);
+        } else {
+            pow += 1;
+        }
+    }
+    String::new()
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let test_cases = sc.next_i32();
+    let mut out = String::new();
+    for _ in 0..test_cases {
+        let n = sc.next_i32();
+        out.push_str(&solver(n));
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

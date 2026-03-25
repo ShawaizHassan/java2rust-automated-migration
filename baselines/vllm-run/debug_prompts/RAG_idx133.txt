@@ -1,0 +1,393 @@
+INDEX: 133 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+
+    static Reader x;
+
+    public Main(){
+        x=new Reader();
+        x.init(System.in);
+    }
+
+    public static void main(String[] args) throws IOException {
+        Main o = new Main();
+	    // write your code here
+        long n = x.nextInt();
+        long k = x.nextInt();
+        long A = x.nextInt();
+        long B = x.nextInt();
+        long count = dontcry(n,k,A,B,0);
+        System.out.println(count);
+    }
+
+    public static long dontcry(long n, long k, long A, long B, long count){
+        if(n==1)
+            return count;
+        else{
+            if(k==1 || n<k){
+                count+=(n-1)*A;
+                n=1;
+            }
+            else if(n>k && n%k!=0){
+                count+=(n%k)*A;
+                n=n-(n%k);
+            }
+            else if(n%k==0){
+                if(B<(n-(n/k))*A){
+                    count+=B;
+                    n=n/k;
+                }
+                else{
+                    count+=(n-1)*A;
+                    n=1;
+                }
+            }
+            return dontcry(n, k, A, B, count);
+        }
+    }
+}
+
+/** Class for buffered reading int and double values */
+class Reader {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+
+    /** call this method to initialize reader for InputStream */
+    static void init(InputStream input) {
+        reader = new BufferedReader(
+                new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+    /** get next word */
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            //TODO add check for eof if necessary
+            tokenizer = new StringTokenizer(
+                    reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.util.StringTokenizer;
+
+public class problem3 {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+
+    static void init(InputStream input) {
+        reader = new BufferedReader(new InputStreamReader(input));
+        tokenizer = new StringTokenizer("");
+    }
+
+    static String next() throws IOException {
+        while (!tokenizer.hasMoreTokens()) {
+            tokenizer = new StringTokenizer(reader.readLine());
+        }
+        return tokenizer.nextToken();
+    }
+
+    static String nextLine() throws IOException {
+        return next();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt(next());
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble(next());
+    }
+
+    static long nextLong() throws IOException {
+        return Long.parseLong(next());
+    }
+
+    static BigInteger nextBigInteger() throws IOException {
+        return new BigInteger(next());
+    }
+
+
+    public static void main(String args[]) throws IOException {
+        init(System.in);
+
+        int t = nextInt();
+        while (t-->0){
+            int n=nextInt(),k=nextInt();
+
+            int arr[]=new int[n*k];
+            for(int i=0;i<n*k;i++){
+                arr[i]=nextInt();
+            }
+            int mid= n/2;
+
+            long sum  =0 ;
+            int count=0;
+            int sub =mid+1;
+            for(int i=n*k-sub;i>=0;i-=sub){
+                if(count<k)
+                 sum+=arr[i];
+                else
+                    break;
+                count++;
+             // System.out.println("sum"+sum);
+            }
+
+            System.out.println(sum);
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..(t as usize) {
+        let n = sc.next_i32();
+        let k = sc.next_i32();
+
+        let nk = (n as i64) * (k as i64);
+        let nk_usize = nk as usize;
+
+        let mut arr: Vec<i32> = vec![0; nk_usize];
+        for i in 0..nk_usize {
+            arr[i] = sc.next_i32();
+        }
+
+        let mid = n / 2;
+        let sub = mid + 1;
+
+        let mut sum: i64 = 0;
+        let mut count: i32 = 0;
+
+        let mut i: i64 = (n as i64) * (k as i64) - (sub as i64);
+        while i >= 0 {
+            if count < k {
+                sum += arr[i as usize] as i64;
+            } else {
+                break;
+            }
+            count += 1;
+            i -= sub as i64;
+        }
+
+        out.push_str(&format!("{}\n", sum));
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+
+
+public class S {
+    
+   static class x implements Comparable<x>{
+	int s;
+	int d;
+	@Override
+	public int compareTo(x o) {
+		if(o.s > this.s) {
+			return 1;
+		}else if(o.s == this.s){
+			if(o.d < this.d) {
+				return 1;
+			}else {
+				return -1;
+			}
+		}else {
+			return -1;
+		}
+	}
+}
+
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+
+    /** call this method to initialize reader for InputStream */
+    static void init(InputStream input) {
+        reader = new BufferedReader(
+                     new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+    /** get next word */
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            //TODO add check for eof if necessary
+            tokenizer = new StringTokenizer(
+                   reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+    
+    static long nextLong() throws IOException{
+    	return Long.parseLong( next() );
+    }
+    
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+    
+    public static long gcd(long a, long b) 
+    { 
+      if (b == 0) 
+        return a; 
+      return gcd(b, a % b);  
+    } 
+    
+	public static void main(String args[]) throws IOException{
+		S.init(System.in);
+		int n = S.nextInt();
+		int k = S.nextInt();
+		x arr[] = new x[n];
+		for(int i = 0 ; i < n ; i++) {
+			x temp = new x();
+			temp.s = S.nextInt();
+			temp.d = S.nextInt();
+			arr[i] = temp;
+		}
+		Arrays.parallelSort(arr);
+		int a1 = arr[k - 1].s;
+		int a2 = arr[k - 1].d;
+		int ans = 0;
+		for(int i = 0 ; i < n ; i++) {
+			if(arr[i].s == a1 && arr[i].d == a2) {
+				ans++;
+			}
+		}
+		System.out.println(ans);
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+#[derive(Clone)]
+struct X {
+    s: i32,
+    d: i32,
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let k: usize = it.next().unwrap().parse().unwrap();
+
+    let mut arr: Vec<X> = Vec::with_capacity(n);
+    for _ in 0..n {
+        let s: i32 = it.next().unwrap().parse().unwrap();
+        let d: i32 = it.next().unwrap().parse().unwrap();
+        arr.push(X { s, d });
+    }
+
+    arr.sort_by(|a, b| {
+        match b.s.cmp(&a.s) {
+            std::cmp::Ordering::Equal => a.d.cmp(&b.d),
+            other => other,
+        }
+    });
+
+    let a1 = arr[k - 1].s;
+    let a2 = arr[k - 1].d;
+
+    let mut ans: i32 = 0;
+    for x in &arr {
+        if x.s == a1 && x.d == a2 {
+            ans += 1;
+        }
+    }
+
+    print!("{ans}\n");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

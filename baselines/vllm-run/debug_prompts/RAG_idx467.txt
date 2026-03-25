@@ -1,0 +1,359 @@
+INDEX: 467 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+public class Codeforces
+{
+    public static void main(String args[])throws Exception
+    {
+        BufferedReader bu=new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb=new StringBuilder();
+
+        char s[]=bu.readLine().toCharArray();
+        boolean x=false;
+        int n=s.length,i;
+        for(i=0;i<n;i++) x|=s[i]=='X';
+
+        int ans=0;
+        char s2[]=new char[n];
+        for(i=0;i<10;i++)
+        {
+            int j;
+            for(j=0;j<n;j++)
+            if(s[j]=='X') s2[j]=(char)('0'+i);
+            else s2[j]=s[j];
+            if(s2[0]=='0') continue;    //not possible
+
+            int dp[][]=new int[2][25],cur=1,l,k;
+            dp[0][0]=1;
+            for(j=0;j<n;j++)
+            {
+                for(k=0;k<25;k++) dp[cur][k]=0;
+                int lo=0,hi=9,nxt;
+                if(s2[j]!='_') lo=hi=(s2[j]-'0');
+                else if(s2[j]=='_' && j==0) lo++;
+
+                for(k=0;k<25;k++)
+                for(l=lo;l<=hi;l++)
+                {
+                    nxt=(k*10+l)%25;
+                    dp[cur][nxt]+=dp[cur^1][k];
+                }
+                cur^=1;
+            }
+
+            ans+=dp[cur^1][0];
+            if(!x) break;
+        }
+
+        if(n==1 && (s[0]=='_' || s[0]=='X' || s[0]=='0')) ans++;
+        System.out.println(ans);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+//package B;
+
+import java.util.Scanner;
+
+public class Solution {
+    Scanner in = new Scanner(System.in);
+    void run() throws Exception {
+        int n = in.nextInt();
+        int[] a = new int[n];
+        for (int i = 0; i < n; ++i)
+            a[i] = in.nextInt();
+        int p = in.nextInt();
+        
+        double[] f = new double[n + 1];
+        f[0] = 1.0;
+        for (int i = 1; i <= n; ++i)
+            f[i] = f[i - 1] * i;
+        
+        double res = 0.0;
+        for (int i = 0; i < n; ++i) {
+            double[][] dp = new double[p + 1][n];
+            dp[0][0] = 1.0;
+            for (int j = 0; j < n; ++j) if (i != j) {
+                for (int s = p - a[j]; s >= 0; --s) {
+                    for (int k = n - 2; k >= 0; --k) {
+                        dp[s + a[j]][k + 1] += dp[s][k];
+                    }
+                }
+            }
+            for (int s = 0; s <= p - a[i]; ++s) {
+                for (int k = 0; k <= n - 1; ++k) {
+                    double cur = dp[s][k];
+                    cur *= f[k];
+                    cur *= f[n - 1 - k];
+                    res += cur;
+                }
+            }
+        }
+        res /= f[n];
+        System.out.println(res);
+    }
+    public static void main(String args[]) throws Exception {
+        new Solution().run();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n_i32 = sc.next_i32();
+    let n: usize = n_i32 as usize;
+
+    let mut a: Vec<i32> = vec![0; n];
+    for i in 0..n {
+        a[i] = sc.next_i32();
+    }
+    let p_i32 = sc.next_i32();
+    let p: usize = p_i32 as usize;
+
+    let mut f: Vec<f64> = vec![0.0; n + 1];
+    f[0] = 1.0;
+    for i in 1..=n {
+        f[i] = f[i - 1] * (i as f64);
+    }
+
+    let mut res: f64 = 0.0;
+
+    for i in 0..n {
+        let mut dp: Vec<Vec<f64>> = vec![vec![0.0; n]; p + 1];
+        dp[0][0] = 1.0;
+
+        for j in 0..n {
+            if i == j {
+                continue;
+            }
+            let aj = a[j] as usize;
+            if aj > p {
+                continue;
+            }
+            let mut s: i32 = (p - aj) as i32;
+            while s >= 0 {
+                let su = s as usize;
+                let mut k: i32 = (n as i32) - 2;
+                while k >= 0 {
+                    let ku = k as usize;
+                    dp[su + aj][ku + 1] += dp[su][ku];
+                    k -= 1;
+                }
+                s -= 1;
+            }
+        }
+
+        let ai = a[i] as usize;
+        if ai <= p {
+            for s in 0..=(p - ai) {
+                for k in 0..=n - 1 {
+                    let mut cur = dp[s][k];
+                    cur *= f[k];
+                    cur *= f[n - 1 - k];
+                    res += cur;
+                }
+            }
+        }
+    }
+
+    res /= f[n];
+    println!("{}", res);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class Codeforces
+{
+    public static void main(String args[])throws Exception
+    {
+        BufferedReader bu=new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb=new StringBuilder();
+        int t=Integer.parseInt(bu.readLine());
+        while(t-->0)
+        {
+            int n=Integer.parseInt(bu.readLine());
+            char s[]=bu.readLine().toCharArray();
+            int st=0,en=0,i,lf=1,rt=1; boolean flag=false;
+            for(i=1;i<n;i++)
+            if(s[i]!=s[0])
+            {
+                flag=true;
+                st=i;
+                break;
+            }
+            else lf++;
+            if(!flag)
+            {
+                sb.append((int)Math.ceil(1.0*n/3)+"\n");
+                continue;
+            }
+
+            for(i=n-2;i>=0;i--)
+            if(s[i]!=s[n-1])
+            {
+                en=i;
+                break;
+            }
+            else rt++;
+
+            int l=0,ans=0; char cur=s[st];
+            for(i=st;i<=en;i++)
+            if(s[i]==cur) l++;
+            else
+            {
+                if(l>2) ans+=l/3;
+                l=1;
+                if(cur=='L') cur='R';
+                else cur='L';
+            }
+            ans+=l/3;
+
+            if(s[0]==s[n-1]) ans+=(lf+rt)/3;
+            else ans+=lf/3+rt/3;
+            sb.append(ans+"\n");
+        }
+        System.out.print(sb);
+    }
+
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+        let s_str = it.next().unwrap();
+        let s: Vec<char> = s_str.chars().collect();
+
+        let mut st: usize = 0;
+        let mut en: usize = 0;
+        let mut lf: i32 = 1;
+        let mut rt: i32 = 1;
+        let mut flag = false;
+
+        for i in 1..n {
+            if s[i] != s[0] {
+                flag = true;
+                st = i;
+                break;
+            } else {
+                lf += 1;
+            }
+        }
+
+        if !flag {
+            let ans = ((n as i32) + 2) / 3;
+            out.push_str(&format!("{}\n", ans));
+            continue;
+        }
+
+        for i in (0..=n - 2).rev() {
+            if s[i] != s[n - 1] {
+                en = i;
+                break;
+            } else {
+                rt += 1;
+            }
+        }
+
+        let mut l: i32 = 0;
+        let mut ans: i32 = 0;
+        let mut cur = s[st];
+
+        for i in st..=en {
+            if s[i] == cur {
+                l += 1;
+            } else {
+                if l > 2 {
+                    ans += l / 3;
+                }
+                l = 1;
+                cur = if cur == 'L' { 'R' } else { 'L' };
+            }
+        }
+        ans += l / 3;
+
+        if s[0] == s[n - 1] {
+            ans += (lf + rt) / 3;
+        } else {
+            ans += lf / 3 + rt / 3;
+        }
+
+        out.push_str(&format!("{}\n", ans));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

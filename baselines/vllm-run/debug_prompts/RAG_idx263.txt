@@ -1,0 +1,256 @@
+INDEX: 263 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class A336 {
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		long x = in.nextLong();
+		long y = in.nextLong();
+		if (x * y > 0) {
+			long sum = x + y;
+			if (x > 0) {
+				System.out.println("0 " + sum + " " + sum + " 0");
+			} else {
+				System.out.println(sum + " 0 0 " + sum);
+			}
+		} else {
+			long sum = x - y;
+			if (x > 0) {
+				System.out.println("0 " + (-sum) + " " + (sum) + " 0");
+			} else {
+				System.out.println(sum + " 0 0 " + (-sum) + " ");
+			}
+		}
+
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class Japanese_crossword {
+	public static void main(String a[]){
+		Scanner s = new Scanner(System.in);
+		int n = s.nextInt();
+		long x = s.nextLong();
+		int[] arr = new int[n];
+		for(int i=0;i<n;i++){
+			arr[i] = s.nextInt();
+		}
+		
+		if(arr.length==1 && arr[0]==x){
+			System.out.println("YES");
+		}
+		else if(arr.length==0){
+			System.out.println("YES");
+		}
+		else if(arr.length>0){
+			int sum = 0;
+			for(int i=0;i<n;i++){
+				sum = sum + arr[i];
+			}
+			if(sum+n-1 == x){
+				System.out.println("YES");
+			}else{
+				System.out.println("NO");
+			}
+		}
+		else{
+			System.out.println("YES");
+		}
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32();
+    let x = sc.next_i64();
+
+    let mut arr: Vec<i32> = Vec::with_capacity(n as usize);
+    for _ in 0..(n as usize) {
+        arr.push(sc.next_i32());
+    }
+
+    if arr.len() == 1 && arr[0] as i64 == x {
+        println!("YES");
+    } else if arr.len() == 0 {
+        println!("YES");
+    } else if arr.len() > 0 {
+        let mut sum: i32 = 0;
+        for &v in &arr {
+            sum += v;
+        }
+        let expr = (sum as i64) + (n as i64) - 1;
+        if expr == x {
+            println!("YES");
+        } else {
+            println!("NO");
+        }
+    } else {
+        println!("YES");
+    }
+}
+```
+
+Java:
+```
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+public class Ideone
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		// your code goes here
+		Scanner sc=new Scanner(System.in);
+		int n=sc.nextInt();
+		long x=sc.nextInt();
+		
+		long sum=0;
+		for(int i=0;i<n;i++)
+		{
+			int a=sc.nextInt();
+			sum+=a;
+		}
+		
+		long zeroes=x-sum;
+		if(zeroes<0)
+		System.out.println("NO");
+		else if(zeroes==(n-1))
+		System.out.println("YES");
+		else
+		System.out.println("NO");
+		
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n: i32 = sc.next_i32();
+    let x: i64 = sc.next_i32() as i64;
+
+    let mut sum: i64 = 0;
+    for _ in 0..n {
+        let a: i32 = sc.next_i32();
+        sum += a as i64;
+    }
+
+    let zeroes: i64 = x - sum;
+    if zeroes < 0 {
+        print!("NO");
+    } else if zeroes == (n - 1) as i64 {
+        print!("YES");
+    } else {
+        print!("NO");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

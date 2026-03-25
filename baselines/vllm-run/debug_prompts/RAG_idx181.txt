@@ -1,0 +1,170 @@
+INDEX: 181 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// https://codeforces.com/problemset/problem/893/A
+
+import java.util.Scanner;
+
+public class Solution {
+	
+	public static void main(String[] args) {
+		Scanner read = new Scanner(System.in);
+		
+		int n = read.nextInt();
+		
+		int[] a = new int[n];
+		for (int i = 0; i < n; ++i) {
+			a[i] = read.nextInt();
+		}
+		
+		if (a[0] == 3) {
+			System.out.println("NO");
+		}
+		else if (n == 1) {
+			System.out.println("YES");
+		}
+		else {
+			int playerOne = a[0];
+			int playerTwo = 3;
+			int spectator = (a[0] == 1) ? 2 : 1;
+
+			String result = "YES";
+			for (int i = 1; i < n; ++i) {
+				if (spectator == a[i]) {
+					result = "NO";
+					break;
+				}
+				
+				playerOne = a[i];
+				playerTwo = spectator;
+				spectator = 6 - playerOne - playerTwo;
+			}
+			
+			System.out.println(result);
+		}
+		
+		// Close scanner
+		read.close();
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+
+
+public class Ssss {
+
+	 static Scanner read=new Scanner(System.in);
+	public static void main(String[] args) {	
+int n=read.nextInt();
+int x=read.nextInt();
+int[] t=new int[n];
+int a=0;
+for(int i=0;i<n;i++){
+	t[i]=read.nextInt();
+	a=a+t[i];
+}
+if (x==a+n-1) System.out.println("YES");
+else System.out.println("NO");
+}
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let x: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut a: i32 = 0;
+    for _ in 0..n {
+        let v: i32 = it.next().unwrap().parse().unwrap();
+        a += v;
+    }
+
+    if x == a + n as i32 - 1 {
+        println!("YES");
+    } else {
+        println!("NO");
+    }
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+
+
+public class Ssss {
+
+	 static Scanner read=new Scanner(System.in);
+	public static void main(String[] args) {	
+int n=read.nextInt();
+int x=read.nextInt();
+int a=0;
+for(int i=0;i<n;i++){
+a=a+read.nextInt();
+}
+if (x==a+n-1) System.out.println("YES");
+else System.out.println("NO");
+}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let x: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut a: i32 = 0;
+    for _ in 0..n {
+        a += it.next().unwrap().parse::<i32>().unwrap();
+    }
+
+    if x == a + n - 1 {
+        println!("YES");
+    } else {
+        println!("NO");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

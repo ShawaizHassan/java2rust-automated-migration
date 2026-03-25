@@ -1,0 +1,477 @@
+INDEX: 210 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class Main {
+	public static void main(String args[]) {new Main().run();}
+
+	FastReader in = new FastReader();
+	PrintWriter out = new PrintWriter(System.out);
+	void run(){
+		work();
+		out.flush();
+	}
+	long mod=1000000007;
+	long gcd(long a,long b) {
+		return b==0?a:gcd(b,a%b);
+	}
+	void work() {
+		int n=in.nextInt();
+		int m=in.nextInt();
+		long r1=2,r0=2;
+		for(int i=1;i<n;i++) {
+			long t=r1+r0;
+			r0=r1;
+			r1=t%mod;
+		}
+		long c1=2,c0=2;
+		for(int i=1;i<m;i++) {
+			long t=c1+c0;
+			c0=c1;
+			c1=t%mod;
+		}
+		long ret=(c1+r1-2)%mod;
+		if(ret<0) {
+			ret+=mod;
+		}
+		out.println(ret);
+	}
+	
+	private int find(int v,Node node,int l,int r) {
+		if(l==r)return l;
+		int m=(l+r)/2;
+		if(node.lNode.cnt>=v) {
+			return find(v,node.lNode,l,m);
+		}else {
+			return find(v-node.lNode.cnt,node.rNode,m+1,r);
+		}
+	}
+	private void insert(int v, Node node, int l, int r) {
+		node.cnt++;
+		if(l==r)return;
+		if(node.lNode==null)node.lNode=new Node(0);
+		if(node.rNode==null)node.rNode=new Node(0);
+		int m=(l+r)/2;
+		if(v<=m) {
+			insert(v,node.lNode,l,m);
+		}else {
+			insert(v,node.rNode,m+1,r);
+		}
+	}
+
+	class Node{
+		Node lNode;
+		Node rNode;
+		int cnt;
+		Node(int c){
+			cnt=c;
+		}
+	}
+}
+
+
+
+class FastReader
+{
+	BufferedReader br;
+	StringTokenizer st;
+
+	public FastReader()
+	{
+		br=new BufferedReader(new InputStreamReader(System.in));
+	}
+
+	public String next() 
+	{
+		if(st==null || !st.hasMoreElements())
+		{
+			try {
+				st = new StringTokenizer(br.readLine());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return st.nextToken();
+	}
+
+	public int nextInt() 
+	{
+		return Integer.parseInt(next());
+	}
+
+	public long nextLong()
+	{
+		return Long.parseLong(next());
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+public class N3 {
+    static int n;
+    static int dist[][];
+    static int node[];
+    static boolean isok[];
+    static boolean used[];
+    static int V, E;
+    static int VI[];
+    static int EI[];
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        Scanner sca = new Scanner(System.in);
+        // System.out.println((double) (98 + 73) / (63));
+        n = sca.nextInt();
+        int m = sca.nextInt();
+        node = new int[n + 1];
+        isok = new boolean[n + 1];
+        VI = new int[n + 1];
+        EI = new int[n + 1];
+        dist = new int[n + 1][n + 1];
+        V = 0;
+        E = 0;
+        for (int i = 1; i <= n; i++) {
+            node[i] = sca.nextInt();
+            V = V + node[i];
+        }
+        double sum=0;
+        for (int j = 1; j <= m; j++) {
+            int l = sca.nextInt();
+            int r = sca.nextInt();
+            int c = sca.nextInt();
+            sum=Math.max(sum, (double)(node[l]+node[r])/(double)c);
+        }
+        System.out.println(sum);
+    
+    }
+
+    static void change(int t, int v, int e) {
+        for (int i = 1; i <= n; i++) {
+            if (dist[i][t] != 0 && !isok[i]) {
+                VI[i] = v;
+                EI[i] = e;
+                change(i,v,e);
+            }
+        }
+    }
+
+    static void DFS(int t, boolean ju) {
+        for (int i = 1; i <= n; i++) {
+            if (dist[i][t] != 0 && !isok[i]) {
+                isok[t] = true;
+                // used[t] = true;
+                if (ju) {
+                    V = V + node[i];
+                    E = E + dist[i][t];
+                }
+
+                DFS(i,ju);
+            }
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+static mut N: i32 = 0;
+static mut DIST: Vec<Vec<i32>> = Vec::new();
+static mut NODE: Vec<i32> = Vec::new();
+static mut ISOK: Vec<bool> = Vec::new();
+static mut USED: Vec<bool> = Vec::new();
+static mut V: i32 = 0;
+static mut E: i32 = 0;
+static mut VI: Vec<i32> = Vec::new();
+static mut EI: Vec<i32> = Vec::new();
+
+fn change(t: usize, v: i32, e: i32) {
+    unsafe {
+        let n = N as usize;
+        for i in 1..=n {
+            if DIST[i][t] != 0 && !ISOK[i] {
+                VI[i] = v;
+                EI[i] = e;
+                change(i, v, e);
+            }
+        }
+    }
+}
+
+fn dfs(t: usize, ju: bool) {
+    unsafe {
+        let n = N as usize;
+        for i in 1..=n {
+            if DIST[i][t] != 0 && !ISOK[i] {
+                ISOK[t] = true;
+                if ju {
+                    V += NODE[i];
+                    E += DIST[i][t];
+                }
+                dfs(i, ju);
+            }
+        }
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n = sc.next_i32();
+    let m = sc.next_i32();
+
+    unsafe {
+        N = n;
+        let nn = (n as usize) + 1;
+
+        NODE = vec![0; nn];
+        ISOK = vec![false; nn];
+        VI = vec![0; nn];
+        EI = vec![0; nn];
+        USED = vec![false; nn];
+        DIST = vec![vec![0; nn]; nn];
+
+        V = 0;
+        E = 0;
+
+        for i in 1..=n as usize {
+            NODE[i] = sc.next_i32();
+            V += NODE[i];
+        }
+
+        let mut sum: f64 = 0.0;
+        for _ in 1..=m {
+            let l = sc.next_i32() as usize;
+            let r = sc.next_i32() as usize;
+            let c = sc.next_i32();
+            let val = (NODE[l] + NODE[r]) as f64 / (c as f64);
+            if val > sum {
+                sum = val;
+            }
+        }
+
+        println!("{}", sum);
+    }
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class R312Div2B {
+	static final int MAXN=1000000;
+	static class Node implements Comparable<Node>{
+		int s=-1;
+		int e=-1;
+		int c=0;
+		@Override
+		public int compareTo(Node a) {
+			if(this.c>a.c)
+				return 1;
+			else if(this.c<a.c)
+				return -1;
+			else{
+				if(this.e-this.s>a.e-a.s)
+					return -1;
+				else if(this.e-this.s<a.e-a.s)
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+	public static void main(String[] args) {
+		FastScanner in=new FastScanner();
+		int n=in.nextInt();
+		int[] a=new int[n];
+		for(int i=0;i<n;i++){
+			a[i]=in.nextInt();
+		}
+		Node[] list=new Node[MAXN+1];
+		for(int i=0;i<=MAXN;i++)
+			list[i]=new Node();
+		for(int i=0;i<n;i++){
+			list[a[i]].c++;
+			if(list[a[i]].s==-1)
+				list[a[i]].s=i+1;
+			list[a[i]].e=i+1;
+		}
+		Arrays.sort(list);
+		System.out.println(list[MAXN].s+" "+list[MAXN].e);
+	}
+	static class FastScanner{
+		BufferedReader br;
+		StringTokenizer st;
+		public FastScanner(){br=new BufferedReader(new InputStreamReader(System.in));}
+		String nextToken(){
+			while(st==null||!st.hasMoreElements())
+				try{st=new StringTokenizer(br.readLine());}catch(Exception e){}
+			return st.nextToken();
+		}
+		int nextInt(){return Integer.parseInt(nextToken());}
+		long nextLong(){return Long.parseLong(nextToken());}
+		double nextDouble(){return Double.parseDouble(nextToken());}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+const MAXN: usize = 1_000_000;
+
+#[derive(Clone, Copy)]
+struct Node {
+    s: i32,
+    e: i32,
+    c: i32,
+}
+
+impl Default for Node {
+    fn default() -> Self {
+        Node { s: -1, e: -1, c: 0 }
+    }
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        // Java Arrays.sort uses compareTo ascending; we emulate that.
+        if self.c > other.c {
+            Ordering::Greater
+        } else if self.c < other.c {
+            Ordering::Less
+        } else {
+            let self_len = self.e - self.s;
+            let other_len = other.e - other.s;
+            if self_len > other_len {
+                Ordering::Less
+            } else if self_len < other_len {
+                Ordering::Greater
+            } else {
+                Ordering::Equal
+            }
+        }
+    }
+}
+impl PartialOrd for Node {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl PartialEq for Node {
+    fn eq(&self, other: &Self) -> bool {
+        self.s == other.s && self.e == other.e && self.c == other.c
+    }
+}
+impl Eq for Node {}
+
+struct FastScanner {
+    data: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { data: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.data[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as usize;
+    let mut a = vec![0i32; n];
+    for i in 0..n {
+        a[i] = fs.next_i32();
+    }
+
+    let mut list = vec![Node::default(); MAXN + 1];
+
+    for i in 0..n {
+        let v = a[i] as usize;
+        let node = &mut list[v];
+        node.c += 1;
+        if node.s == -1 {
+            node.s = (i + 1) as i32;
+        }
+        node.e = (i + 1) as i32;
+    }
+
+    list.sort();
+
+    let ans = list[MAXN];
+    print!("{} {}", ans.s, ans.e);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

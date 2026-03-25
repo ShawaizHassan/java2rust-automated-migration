@@ -1,0 +1,318 @@
+INDEX: 323 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class A {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        long n = sc.nextLong();
+        solve(n,n);
+    }
+
+    public static void solve(long n, long sum) {
+        if (n == 1) {
+            System.out.println(sum);
+            System.exit(0);
+        }
+        if (n % 2 == 0)
+            solve(n / 2, sum + n / 2);
+        else {
+            for (int i = 3; i < Math.sqrt(n)+1; i += 2) {
+                if (n % i == 0)
+                    solve(n / i, sum + n / i);
+            }
+            solve(1, sum+1);
+        }
+    }
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+public class B {
+    static Scanner sc = new Scanner(System.in);
+    static PrintWriter pw = new PrintWriter(System.out);
+
+    static void solve() {
+        long n = sc.nextLong();
+        long r = sc.nextLong();
+        long sum = 0;
+        if (n <= r){
+            sum += 1;
+            long x = n * (n - 1);
+            x /= 2;
+            sum += x;
+        } else {
+            long x = r * (r + 1);
+            x /= 2;
+            sum += x;
+        }
+        pw.println(sum);
+    }
+
+    public static void main(String[] args){
+        int t = sc.nextInt();
+        for (int i = 0; i < t; i ++){
+            solve();
+        }
+        pw.close();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i64();
+        let r = sc.next_i64();
+        let mut sum: i64 = 0;
+
+        if n <= r {
+            sum += 1;
+            let mut x = n * (n - 1);
+            x /= 2;
+            sum += x;
+        } else {
+            let mut x = r * (r + 1);
+            x /= 2;
+            sum += x;
+        }
+
+        out.push_str(&format!("{}\n", sum));
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author https://codeforces.com/
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskB solver = new TaskB();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskB {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            int t = in.nextInt();
+            while (t-- != 0) {
+                int n = in.nextInt();
+                int k = in.nextInt();
+                long[] arr = new long[n * k];
+                for (int i = 0; i < arr.length; i++) {
+                    arr[i] = in.nextLong();
+                }
+                long sum = 0;
+                Arrays.sort(arr);
+                if (n == 1) {
+                    for (int i = 0; i < arr.length; i++) {
+                        sum += arr[i];
+                    }
+                } else if (n == 2) {
+                    for (int i = 0; i < arr.length; i += 2) {
+                        sum += arr[i];
+                    }
+                } else {
+                    int j = arr.length;
+                    int step;
+                    if (n % 2 == 0) {
+                        step = n - n / 2 + 1;
+                    } else {
+                        step = n - n / 2;
+                    }
+                    j -= step;
+                    for (int i = 0; i < k; i++) {
+                        sum += arr[j];
+                        j -= step;
+                    }
+                }
+                out.println(sum);
+            }
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i32;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.skip_whitespace();
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i64 = 0;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i64;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32() as usize;
+        let k = sc.next_i32() as usize;
+        let mut arr: Vec<i64> = vec![0; n * k];
+        for i in 0..arr.len() {
+            arr[i] = sc.next_i64();
+        }
+        arr.sort();
+
+        let mut sum: i64 = 0;
+        if n == 1 {
+            for &v in &arr {
+                sum += v;
+            }
+        } else if n == 2 {
+            let mut i = 0usize;
+            while i < arr.len() {
+                sum += arr[i];
+                i += 2;
+            }
+        } else {
+            let mut j = arr.len();
+            let step: usize = if n % 2 == 0 { n - n / 2 + 1 } else { n - n / 2 };
+            j -= step;
+            for _ in 0..k {
+                sum += arr[j];
+                j -= step;
+            }
+        }
+
+        out.push_str(&format!("{}\n", sum));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

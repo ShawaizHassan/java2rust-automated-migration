@@ -1,0 +1,79 @@
+### SYSTEM
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+
+### USER
+I will provide Java code and translation rule hints.
+Your job is to translate **only** the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java Code to translate:
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+public class main {
+    
+    public static int [] mem;
+    public static int a,b,c;
+    
+    public static void main(String[] args) {
+        
+        Scanner s= new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+        //BufferedReader n = new BufferedReader(new InputStreamReader(System.in));
+        
+        int valor=s.nextInt();
+         a=s.nextInt();
+         b=s.nextInt();
+         c=s.nextInt();
+        
+        
+        mem=new int [4001];
+        for(int i=0;i<mem.length;i++){
+            mem[i]=-10000;
+        }
+        mem[0]=0;
+        for(int i = 1;i<mem.length;i++){
+            if(i>=a && i>=b && i>=c){
+                mem[i]= Math.max(1+mem[i-a], Math.max(1+mem[i-b],1+mem[i-c]));
+            }
+            else
+                if(i>=a && i>=b)
+                    mem[i]= Math.max(1+mem[i-a],1+mem[i-b]);
+                else
+                    if(i>=c && i>=b)
+                        mem[i]= Math.max(1+mem[i-c],1+mem[i-b]);
+                    else
+                        if(i>=a && i>=c)
+                            mem[i]= Math.max(1+mem[i-a],1+mem[i-c]);
+                        else
+                            if(i>=a)
+                                mem[i]= 1+mem[i-a];
+                            else
+                                if(i>=b)
+                                    mem[i]= 1+mem[i-b];
+                                else
+                                    if(i>=c)
+                                        mem[i]= 1+mem[i-c];
+        }
+        System.out.println(mem[valor]);
+        
+    }
+    
+}
+```
+### Translation Rule Hints
+This section contains Translation Rule Hints about the Java and Rust code. Use as guidance.
+- **translation_rules1**
+  - [lines 20] `new int [4001]` → **usize index** — Rust arrays/Vec require usize indices; Java uses int freely.
+  - [lines 22, 27, 31, 34, 37, 40, 43, 46] `mem[i]` → **usize index** — Rust arrays/Vec require usize indices; Java uses int freely.
+  - [lines 24] `mem[0]` → **usize index** — Rust arrays/Vec require usize indices; Java uses int freely.
+  - [lines 27, 31, 37, 40] `mem[i-a]` → **bounds/offsets** — i-1 / i+1 patterns must be guarded and casted safely.
+  - [lines 34, 46] `mem[i-c]` → **bounds/offsets** — i-1 / i+1 patterns must be guarded and casted safely.
+  - [lines 43] `mem[i-b]` → **bounds/offsets** — i-1 / i+1 patterns must be guarded and casted safely.
+  - [lines 48] `mem[valor]` → **usize index** — Rust arrays/Vec require usize indices; Java uses int freely.
+- **translation_rules2**
+  - [lines 14, 15, 16, 17] `s.nextInt()` → **Read+split_whitespace** — Default fast input (Scanner/Tokenizer equivalent).
+### Reminder
+1. Carefully read and understand the Java code, and Translation Rule Hints.
+2. Output **only** the Safe Rust code — no explanations, comments, or additional text.

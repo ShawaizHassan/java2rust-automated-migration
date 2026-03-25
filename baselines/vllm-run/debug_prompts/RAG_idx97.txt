@@ -1,0 +1,311 @@
+INDEX: 97 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+import java.math.*;
+ 
+public class Main {
+ 
+    public static void main(String[] args) throws IOException{
+        Scanner sc = new Scanner(System.in);//new File("input.txt"));
+        PrintWriter pw = new PrintWriter(System.out);//new File("output.txt"));
+        int n = sc.nextInt();
+        int x = n;
+        int m = 0;
+        while (x > 0)
+        {
+            x /= 10;
+            m++;
+        }
+        long ans = (long)n*m + m - 1;
+        long k = 1;
+        for (int i = 0; i < m-1; i++)
+        {
+            k *= 10;
+            ans -=k;
+        }
+        pw.println(ans);
+       pw.close();
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class CF22C {
+	static int swap(int x, int a, int b) {
+		if (x == a)
+			return b;
+		if (x == b)
+			return a;
+		return x;
+	}
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int m = sc.nextInt();
+		int v = sc.nextInt();
+		long max = (long) (n - 1) * (n - 2) / 2 + 1;
+		if (m < n - 1 || m > max) {
+			System.out.println("-1");
+			return;
+		}
+		PrintWriter pw = new PrintWriter(System.out);
+		for (int i = 1; i < n; i++)
+			pw.format("%d %d\n", swap(i, v, 2), swap(i + 1, v, 2));
+		m -= n - 1;
+		if (m == 0) {
+			pw.close();
+			return;
+		}
+		for (int i = 2; i <= n; i++)
+			for (int j = i + 2; j <= n; j++) {
+				pw.format("%d %d\n", swap(i, v, 2), swap(j, v, 2));
+				m--;
+				if (m == 0) {
+					pw.close();
+					return;
+				}
+			}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn swap(x: i32, a: i32, b: i32) -> i32 {
+    if x == a {
+        b
+    } else if x == b {
+        a
+    } else {
+        x
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let mut m: i64 = it.next().unwrap().parse::<i32>().unwrap() as i64;
+    let v: i32 = it.next().unwrap().parse().unwrap();
+
+    let max: i64 = (n as i64 - 1) * (n as i64 - 2) / 2 + 1;
+    if m < (n as i64 - 1) || m > max {
+        print!("-1");
+        return;
+    }
+
+    let mut out = String::new();
+
+    for i in 1..n {
+        let a = swap(i, v, 2);
+        let b = swap(i + 1, v, 2);
+        out.push_str(&format!("{} {}\n", a, b));
+    }
+    m -= (n as i64 - 1);
+    if m == 0 {
+        print!("{}", out);
+        return;
+    }
+
+    for i in 2..=n {
+        for j in (i + 2)..=n {
+            let a = swap(i, v, 2);
+            let b = swap(j, v, 2);
+            out.push_str(&format!("{} {}\n", a, b));
+            m -= 1;
+            if m == 0 {
+                print!("{}", out);
+                return;
+            }
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+public class SystemAdminstrator {
+
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int m = sc.nextInt();
+		int v = sc.nextInt();
+		long reqMin = n - 1 + nCr(n-2, 2);
+		if(m > reqMin || m < n-1)
+			System.out.println(-1);
+		else
+		{
+			PrintWriter pw = new PrintWriter(System.out);
+			for(int i = 1;i<=n;i++)
+				if(i != v)
+					pw.println(v+" " + i);
+			m = m- (n-1);
+			int target = (v == n)?n-1 : n;
+			outer :for(int i=1;i<=n;i++)
+			{
+				if(i == target || i == v)
+					continue;
+				for(int j=i+1;j<=n;j++)
+				{
+					if(m <= 0)
+						break outer;
+					if(j == target || j == v)
+						continue;
+					pw.println(i + " " + j);
+					m--;
+				}
+			}
+			pw.flush();
+		}
+	}
+
+
+	static long nCr(int n , int k)
+	{
+		long res = 1;
+		for(int i=1;i<=k;i++)
+			res = 1l*res *(n-k+i)/i;
+		return res;
+	}
+
+	static class Scanner{
+		StringTokenizer st;BufferedReader br;
+		public Scanner(InputStream s){	br = new BufferedReader(new InputStreamReader(s));}
+		public String next() throws IOException 
+		{while (st == null || !st.hasMoreTokens()) st = new StringTokenizer(br.readLine());return st.nextToken();}
+		public int nextInt() throws IOException {return Integer.parseInt(next());}
+		public long nextLong() throws IOException {return Long.parseLong(next());}
+		public String nextLine() throws IOException {return br.readLine();}
+		public double nextDouble() throws IOException {return Double.parseDouble(next());}
+		public boolean ready() throws IOException {return br.ready();}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn ncr(n: i32, k: i32) -> i64 {
+    let mut res: i64 = 1;
+    for i in 1..=k {
+        let numerator = (n - k + i) as i64;
+        res = res * numerator / (i as i64);
+    }
+    res
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32();
+    let m_in = sc.next_i32();
+    let v = sc.next_i32();
+
+    let req_min: i64 = (n as i64) - 1 + ncr(n - 2, 2);
+    let mut m: i64 = m_in as i64;
+
+    if m > req_min || m < (n as i64) - 1 {
+        print!("-1");
+        return;
+    }
+
+    let mut out = String::new();
+
+    for i in 1..=n {
+        if i != v {
+            out.push_str(&format!("{} {}\n", v, i));
+        }
+    }
+
+    m -= (n as i64) - 1;
+
+    let target: i32 = if v == n { n - 1 } else { n };
+
+    'outer: for i in 1..=n {
+        if i == target || i == v {
+            continue;
+        }
+        for j in (i + 1)..=n {
+            if m <= 0 {
+                break 'outer;
+            }
+            if j == target || j == v {
+                continue;
+            }
+            out.push_str(&format!("{} {}\n", i, j));
+            m -= 1;
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

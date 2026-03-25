@@ -1,0 +1,194 @@
+INDEX: 56 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Contest {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		long n = sc.nextLong();
+		long k = sc.nextLong();
+		if (n+(n-1)<k) {
+			System.out.println(0);
+		}else if(n-1>=k) {
+			System.out.println((k-1)/2);
+		}else {
+			long min = Math.max(k-n, 1);
+			long max = k-min+1;
+			System.out.println((max-min)/2);
+		}
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.*;
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+		
+		long n = sc.nextLong();
+		
+		if (n==2 || n==1)
+			System.out.println(-1);
+		else if (n%2==0)
+		{
+			long k = n*n/4+1;
+			long m = k-2;
+			System.out.println(m+" "+k);
+		}
+		else
+		{
+			long k = (n*n+1)/2;
+			long m = k-1;
+			System.out.println(m+" "+k);
+		}
+		
+		sc.close();
+
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let n: i64 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    if n == 1 || n == 2 {
+        println!("-1");
+    } else if n % 2 == 0 {
+        let k: i64 = n * n / 4 + 1;
+        let m: i64 = k - 2;
+        println!("{} {}", m, k);
+    } else {
+        let k: i64 = (n * n + 1) / 2;
+        let m: i64 = k - 1;
+        println!("{} {}", m, k);
+    }
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class C {
+	public static void main(String[] args) {
+		try (Scanner s = new Scanner(System.in)) {
+			final long n = s.nextLong();
+	  		final long k = s.nextLong();
+	  		long max = -1;
+	  		if (k <= Math.sqrt(2*n)) {
+				for (long u = 1; u*u <= n; ++u) {
+					if (n%u != 0) {
+						continue;
+					}
+					final long l = k*(k + 1)/2;
+					if (n/u >= l) {
+						max = Math.max(max, u);
+					}
+					if (u >= l) {
+						max = Math.max(max, n/u);
+					}
+				}	  			
+	  		}
+			if (max == -1) {
+				System.out.println(-1);
+			} else {
+				for (int i = 1; i <= k - 1; ++i) {
+					System.out.print(max*i + " ");
+				}
+				System.out.println(max*(n/max - (k*(k - 1)/2)));
+				System.out.println();
+			}
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let n: i64 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let k: i64 = it.next().unwrap().parse().unwrap();
+
+    let mut max_val: i64 = -1;
+
+    let two_n = 2.0_f64 * (n as f64);
+    if (k as f64) <= two_n.sqrt() {
+        let l = k * (k + 1) / 2;
+        let mut u: i64 = 1;
+        while u * u <= n {
+            if n % u == 0 {
+                if n / u >= l {
+                    if u > max_val {
+                        max_val = u;
+                    }
+                }
+                if u >= l {
+                    let cand = n / u;
+                    if cand > max_val {
+                        max_val = cand;
+                    }
+                }
+            }
+            u += 1;
+        }
+    }
+
+    if max_val == -1 {
+        print!("-1\n");
+    } else {
+        let mut out = String::new();
+        for i in 1..=k - 1 {
+            out.push_str(&(max_val * i).to_string());
+            out.push(' ');
+        }
+        let last = max_val * (n / max_val - (k * (k - 1) / 2));
+        out.push_str(&last.to_string());
+        out.push('\n');
+        out.push('\n');
+        print!("{}", out);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,159 @@
+INDEX: 244 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+public class a {
+
+	
+	
+	  public static  void main(String [] args){
+
+		 
+	  Scanner sc=new Scanner(System.in);
+		  int x=sc.nextInt();
+	int a=0;
+		 while(x>0){
+			a+=x%2;
+			x/=2;
+		 }
+		 System.out.println(a);
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.lang.*;
+public class Main
+{
+	public static void main(String[] args)
+	{
+	    Scanner sc=new Scanner(System.in);
+	    int t=sc.nextInt();
+	    while(t--!=0)
+	    {
+	        int x=sc.nextInt();
+	        int y=sc.nextInt();
+	        if(x>=y)
+	            System.out.println("YES");
+	        else if((x==1 && y>1) || (x==3 && y>3) ||(x==2 && y>3))
+	            System.out.println("NO");
+	        else
+	            System.out.println("YES");
+	    }
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..t {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        let y: i32 = it.next().unwrap().parse().unwrap();
+
+        if x >= y {
+            out.push_str("YES\n");
+        } else if (x == 1 && y > 1) || (x == 3 && y > 3) || (x == 2 && y > 3) {
+            out.push_str("NO\n");
+        } else {
+            out.push_str("YES\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+
+import java.util.*;
+
+public class Main {
+
+	
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+
+		int n = sc.nextInt();
+		
+		for(int i = 0; i < n; i++){
+			int a = sc.nextInt();
+			
+			int x = 360 / (180 - a);
+			
+			if(x * (180 - a) == 360){
+				System.out.println("YES");
+			}
+			else{
+				System.out.println("NO");
+			}
+			
+		}
+		
+		sc.close();
+		
+	}
+	
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..n {
+        let a: i32 = it.next().unwrap().parse().unwrap();
+        let denom = 180 - a;
+        let x = 360 / denom;
+        if x * denom == 360 {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

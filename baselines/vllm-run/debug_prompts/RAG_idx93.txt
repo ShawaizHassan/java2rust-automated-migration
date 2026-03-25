@@ -1,0 +1,262 @@
+INDEX: 93 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class kFactorization_797A {
+	public static boolean prime(int n) {
+		if(n==1)
+			return false;
+		if(n==2)
+			return true;
+		for(int i=2;i<n;i++)
+			if(n%i==0)
+				return false;
+		return true;
+	}
+public static void main(String[]   args) {
+	Scanner sc=new Scanner(System.in);
+	int n=sc.nextInt();
+	int k=sc.nextInt();
+	int []res=new int[k];
+	int c=0;
+	int p=1;
+      
+		while(p<n) {
+			if(prime(p) && n%p==0) {
+				res[c++]=p;
+			    n=n/p;
+		     }
+			else
+		       p+=1;
+			if(c==k-1) {
+				res[c++]=n;
+				break;
+			}
+			if(prime(n)) {
+				res[c++]=n;
+			     break;
+		}
+		 
+		}
+		if(c==k) {
+			for(int i=0;i<c;i++)
+				System.out.print(res[i]+" ");
+				System.out.println();
+			
+		}
+		else
+			System.out.println(-1);
+		
+		
+	
+		
+	
+		
+		
+	
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class p472c {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        String[][] name = new String[n][2];
+        int[] p = new int[n];
+        for (int i = 0; i < n; i++) {
+            name[i][0] = sc.next();
+            name[i][1] = sc.next();
+            Arrays.sort(name[i]);
+        }
+        p[0] = sc.nextInt();
+        String res = name[p[0] - 1][0];
+        for (int i = 1; i < n; i++) {
+            p[i] = sc.nextInt();
+            String[] str = name[p[i] - 1];
+            if (res.compareTo(str[0]) < 0) {
+                res = str[0];
+            } else if (res.compareTo(str[1]) < 0) {
+                res = str[1];
+            } else {
+                System.out.println("NO");
+                return;
+            }
+        }
+        System.out.println("YES");
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut name: Vec<[String; 2]> = vec![["".to_string(), "".to_string()]; n];
+    let mut p: Vec<i32> = vec![0; n];
+
+    for i in 0..n {
+        let a = sc.next();
+        let b = sc.next();
+        if a <= b {
+            name[i] = [a, b];
+        } else {
+            name[i] = [b, a];
+        }
+    }
+
+    p[0] = sc.next_i32();
+    let first_idx = (p[0] - 1) as usize;
+    let mut res = name[first_idx][0].clone();
+
+    for i in 1..n {
+        p[i] = sc.next_i32();
+        let idx = (p[i] - 1) as usize;
+        let str_pair = &name[idx];
+
+        if res < str_pair[0] {
+            res = str_pair[0].clone();
+        } else if res < str_pair[1] {
+            res = str_pair[1].clone();
+        } else {
+            print!("NO");
+            return;
+        }
+    }
+
+    print!("YES");
+}
+```
+
+Java:
+```
+//  21/07/20  11:52 AM  Jul  2020
+import java.util.Scanner;
+public class _1370C {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            if (n == 1) {
+                System.out.println("FastestFinger");
+            } else if (n == 2 || (n&1)==1) {
+                System.out.println("Ashishgup");
+            } else {
+                if (Integer.bitCount(n) == 1) {
+                    System.out.println("FastestFinger");
+                } else {
+                    if (prime(n / 2)) {
+                        System.out.println("FastestFinger");
+                    } else {
+                        System.out.println("Ashishgup");
+                    }
+                }
+            }
+        }
+    }
+
+    static boolean prime(int n) {
+        for (int i = 2; i * i <= n; i++)
+            if (n % i == 0) return false;
+        return true;
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn prime(n: i32) -> bool {
+    let mut i: i32 = 2;
+    while (i as i64) * (i as i64) <= n as i64 {
+        if n % i == 0 {
+            return false;
+        }
+        i += 1;
+    }
+    true
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = it.next().unwrap().parse().unwrap();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n: i32 = it.next().unwrap().parse().unwrap();
+
+        if n == 1 {
+            out.push_str("FastestFinger\n");
+        } else if n == 2 || (n & 1) == 1 {
+            out.push_str("Ashishgup\n");
+        } else {
+            if n.count_ones() == 1 {
+                out.push_str("FastestFinger\n");
+            } else {
+                if prime(n / 2) {
+                    out.push_str("FastestFinger\n");
+                } else {
+                    out.push_str("Ashishgup\n");
+                }
+            }
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

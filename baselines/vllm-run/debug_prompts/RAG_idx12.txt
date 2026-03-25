@@ -1,0 +1,238 @@
+INDEX: 12 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// package CF1076;
+
+import java.util.Scanner;
+
+public class CF1076B {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        long m = s.nextLong();
+        long ans;
+        if (m % 2 == 0) {
+            ans = m / 2;
+        } else {
+            long p = primeFactors(m);
+            ans = (m - p) / 2 + 1;
+        }
+        System.out.println(ans);
+    }
+
+    public static long primeFactors(long n) {
+        // Print the number of 2s that divide n
+
+        while (n % 2 == 0) {
+            return 2;
+        }
+
+        // n must be odd at this point.  So we can
+        // skip one element (Note i = i +2)
+        for (long i = 3; i <= Math.sqrt(n); i += 2) {
+            // While i divides n, print i and divide n
+            while (n % i == 0) {
+                return i;
+            }
+        }
+
+        // This condition is to handle the case whien
+        // n is a prime number greater than 2
+        if (n > 2)
+            return n;
+
+        return -1;
+    }
+
+
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+//package Contest508;
+
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class M508D {
+    public static Scanner enter = new Scanner(System.in);
+    public static PrintWriter out = new PrintWriter(System.out);
+    public static void main(String[] args) {
+        int n=enter.nextInt();
+        long[] mass=new long[n];
+        for (int i = 0; i < n; i++) {
+            mass[i]=enter.nextLong();
+        }
+        if(n==1){
+            out.println(mass[0]);
+            out.close();
+            return;
+        }
+        Arrays.sort(mass);
+        long ans=0;
+        long min=0,pl=0;
+        for (int i = 0; i <n ; i++) {
+                if(mass[i]<0){
+                    ans-=mass[i];
+                    min=1;
+                }
+                else{
+                    ans+=mass[i];
+                    pl=1;
+                }
+        }
+        if(min==0){
+            ans-=mass[0]*2;
+        }
+        else if(pl==0){
+            ans+=mass[n-1]*2;
+        }
+        out.println(ans);
+        out.close();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut mass: Vec<i64> = Vec::with_capacity(n);
+    for _ in 0..n {
+        let x: i64 = it.next().unwrap().parse().unwrap();
+        mass.push(x);
+    }
+
+    if n == 1 {
+        println!("{}", mass[0]);
+        return;
+    }
+
+    mass.sort();
+
+    let mut ans: i64 = 0;
+    let mut min_flag: i64 = 0;
+    let mut pl_flag: i64 = 0;
+
+    for &v in &mass {
+        if v < 0 {
+            ans -= v;
+            min_flag = 1;
+        } else {
+            ans += v;
+            pl_flag = 1;
+        }
+    }
+
+    if min_flag == 0 {
+        ans -= mass[0] * 2;
+    } else if pl_flag == 0 {
+        ans += mass[n - 1] * 2;
+    }
+
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+import java.beans.beancontext.BeanContext;
+import java.util.Scanner;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        int k = scanner.nextInt();
+        int a[] = new int[n];
+        for (int i = 0; i < n; i ++) a[i] = scanner.nextInt();
+        long ans = 0;
+        if (n %2 == 1) {
+            if (n /2 + 1 <= m ) {
+                ans = a[0];
+                for (int i = 0; i <n; i += 2) {
+                    ans = Math.min(ans, a[i]);
+                }
+                ans = Math.min(((long)k)*((long)(m/(n/2+1))), ans);
+            }
+            if (n == 1) ans = Math.min(((long)k) * ((long)m), a[0]);
+        }
+        System.out.println(ans);
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: i32 = it.next().unwrap().parse().unwrap();
+    let k: i32 = it.next().unwrap().parse().unwrap();
+
+    let n_usize = n as usize;
+    let mut a: Vec<i32> = vec![0; n_usize];
+    for i in 0..n_usize {
+        a[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut ans: i64 = 0;
+
+    if n % 2 == 1 {
+        let half = n / 2;
+        if half + 1 <= m {
+            ans = a[0] as i64;
+            let mut i: usize = 0;
+            while i < n_usize {
+                ans = ans.min(a[i] as i64);
+                i += 2;
+            }
+            ans = ans.min((k as i64) * ((m / (half + 1)) as i64));
+        }
+        if n == 1 {
+            ans = ans.min((k as i64) * (m as i64)).min(a[0] as i64);
+        }
+    }
+
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

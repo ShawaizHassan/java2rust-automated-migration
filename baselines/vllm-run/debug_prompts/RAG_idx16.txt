@@ -1,0 +1,216 @@
+INDEX: 16 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+public class KeyRaces {
+    public static void main(String[]args) {
+        Scanner s = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+        int n=s.nextInt(),v1=s.nextInt(),v2=s.nextInt(),t1=s.nextInt(),t2=s.nextInt();
+        int scoreOne=(n*v1)+2*t1;
+        int scoreTwo=(n*v2)+2*t2;
+        if(scoreOne<scoreTwo)
+            System.out.println("First");
+        else if(scoreTwo<scoreOne)
+            System.out.println("Second");
+        else
+            System.out.println("Friendship");
+
+    }
+    }
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.Scanner;
+
+public class BachgoldProblem {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner s=new Scanner(System.in);
+		int n=s.nextInt();
+		if(n%2==0){
+			int v=n/2;
+			System.out.println(n/2);
+			while(v--!=0){
+				System.out.print("2 ");
+			}
+		}else{
+			int v=n/2-1;
+			System.out.println(n/2);
+			while(v--!=0){
+				System.out.print("2 ");
+			}
+			System.out.print("3 ");
+		}
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let n: i32 = input.split_whitespace().next().unwrap().parse().unwrap();
+
+    if n % 2 == 0 {
+        let mut v: i32 = n / 2;
+        println!("{}", n / 2);
+        while v != 0 {
+            print!("2 ");
+            v -= 1;
+        }
+    } else {
+        let mut v: i32 = n / 2 - 1;
+        println!("{}", n / 2);
+        while v != 0 {
+            print!("2 ");
+            v -= 1;
+        }
+        print!("3 ");
+    }
+}
+```
+
+Java:
+```
+
+import java.util.*;
+
+import java.io.*;
+public class CodeForces {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner s=new Scanner(System.in);
+// int t=s.nextInt();
+//  while(t-->0){
+int n=s.nextInt();
+int[] p=new int[n];
+int[] c=new int[n];
+boolean v[]=new boolean[n];
+for(int i=0;i<n;i++){
+    int a=s.nextInt();
+    int b=s.nextInt();
+    if(a!=-1){
+        if(b==0){
+            v[a-1]=true;
+            v[i]=true;
+        }
+    }
+    else{
+        if(b==0)
+        v[i]=true;
+    }
+}
+int flag=0;
+for(int i=0;i<n;i++){
+    if(!v[i]){flag=1;
+    System.out.print((i+1)+" ");}
+}
+if(flag==1)
+System.out.println();
+else
+System.out.println(-1);
+
+	}
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    buf: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && self.buf[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.buf.len() && !self.buf[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.buf[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as usize;
+
+    let mut v = vec![false; n];
+
+    for i in 0..n {
+        let a = fs.next_i32();
+        let b = fs.next_i32();
+        if a != -1 {
+            if b == 0 {
+                let ai = (a - 1) as usize;
+                v[ai] = true;
+                v[i] = true;
+            }
+        } else {
+            if b == 0 {
+                v[i] = true;
+            }
+        }
+    }
+
+    let mut out = String::new();
+    let mut flag = 0;
+    for i in 0..n {
+        if !v[i] {
+            flag = 1;
+            out.push_str(&(i + 1).to_string());
+            out.push(' ');
+        }
+    }
+    if flag == 1 {
+        out.push('\n');
+    } else {
+        out.push_str("-1\n");
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

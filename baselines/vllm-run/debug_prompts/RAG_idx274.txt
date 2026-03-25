@@ -1,0 +1,225 @@
+INDEX: 274 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Codeforces{
+public static void main(String args[]){
+	Scanner sc = new Scanner(System.in);
+	int l = sc.nextInt();
+	int r = sc.nextInt();
+	int a = sc.nextInt();
+	int minval = Math.min(l,r);
+	int maxval = Math.max(l, r);
+	while(minval < maxval && a>0){
+		minval ++ ;
+	//	System.out.println("sldfjsd");
+		a--;
+	}
+	while((minval == maxval) && a>1){
+		minval++;
+		//System.out.println("minval"+minval);
+		//System.out.println("a"+a);
+		maxval++;
+		//System.out.println("maxval"+maxval);
+		a = a - 2;
+
+	}
+	System.out.println(minval*2);
+		
+}
+
+
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
+public class JamieAndBinSequence {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		long n = sc.nextLong();
+		long k = sc.nextLong();
+		sc.close();
+		List<Integer> a = new ArrayList<>();
+		String binaryString = Long.toBinaryString(n);
+		for (int i = 1; i <= binaryString.length(); i++) {
+			if (binaryString.charAt(i - 1) == '1') {
+				a.add(binaryString.length() - i);
+				k--;
+			}
+		}
+		if (k < 0) {
+			System.out.println("No");
+		} else {
+			while (k != 0) {
+				int highest = a.get(0);
+				int numHighest = 1;
+				while (numHighest<a.size() && a.get(numHighest) == highest) {
+					numHighest++;
+				}
+				if (numHighest <= k) {
+					a = a.subList(numHighest, a.size());
+					List<Integer> toAdd = new ArrayList<Integer>();
+					for (int i = 0; i < numHighest; i++) {
+						toAdd.add(highest-1);
+						toAdd.add(highest-1);
+					}
+					toAdd.addAll(a);
+					a = toAdd;
+					k -= numHighest;
+				} else {
+					while (k != 0) {
+						int minVal = a.remove(a.size()-1);
+						a.add(minVal - 1);
+						a.add(minVal - 1);
+						k--;
+					}
+				}
+			}
+			System.out.println("Yes");
+			for (int i = 0; i < a.size(); i++) {
+				System.out.print(a.get(i) + " ");
+			}
+			k = 1+1;
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let n: i64 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let mut k: i64 = it.next().unwrap().parse().unwrap();
+
+    let mut a: Vec<i32> = Vec::new();
+    let binary_string = format!("{:b}", n);
+    let len = binary_string.len() as i32;
+
+    for (idx, ch) in binary_string.chars().enumerate() {
+        if ch == '1' {
+            a.push(len - 1 - idx as i32);
+            k -= 1;
+        }
+    }
+
+    if k < 0 {
+        print!("No");
+    } else {
+        while k != 0 {
+            let highest = a[0];
+            let mut num_highest: usize = 1;
+            while num_highest < a.len() && a[num_highest] == highest {
+                num_highest += 1;
+            }
+
+            if (num_highest as i64) <= k {
+                let rest: Vec<i32> = a[num_highest..].to_vec();
+                let mut to_add: Vec<i32> = Vec::with_capacity(num_highest * 2 + rest.len());
+                for _ in 0..num_highest {
+                    to_add.push(highest - 1);
+                    to_add.push(highest - 1);
+                }
+                to_add.extend_from_slice(&rest);
+                a = to_add;
+                k -= num_highest as i64;
+            } else {
+                while k != 0 {
+                    let min_val = a.pop().unwrap();
+                    a.push(min_val - 1);
+                    a.push(min_val - 1);
+                    k -= 1;
+                }
+            }
+        }
+
+        println!("Yes");
+        for v in &a {
+            print!("{} ", v);
+        }
+        k = 1 + 1;
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+
+public class Cards {
+  public static void main(String[] args) {
+    Scanner input = new Scanner(System.in);
+    int numCards = input.nextInt();
+    int maxVal = input.nextInt();
+
+    int startVal = 0;
+    for (int i = 0; i < numCards; i++) {
+      startVal += input.nextInt();
+    }
+
+    int cardsNeeded = (int)Math.ceil(Math.abs(startVal) / (double)maxVal);
+
+    System.out.println(cardsNeeded);
+  }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let num_cards: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let max_val: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut start_val: i32 = 0;
+    for _ in 0..num_cards {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        start_val += x;
+    }
+
+    let abs_val = (start_val as f64).abs();
+    let cards_needed = (abs_val / (max_val as f64)).ceil() as i32;
+
+    println!("{}", cards_needed);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

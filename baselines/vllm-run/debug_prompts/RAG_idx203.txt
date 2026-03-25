@@ -1,0 +1,329 @@
+INDEX: 203 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class SampleA497
+{
+
+	public static void main(String[] args)
+	{	Scanner s = new Scanner(System.in);
+             //   int n = s.nextInt();
+             //   int m = s.nextInt();
+                
+                int i=0,sum=0,j=0,temp=0,h=0,r=0,t=0;
+                String s1 = s.next();
+              //  System.out.println(s1.length());
+                int len = s1.length();
+                if(s1.charAt(len-1)!='a' && s1.charAt(len-1)!='e' && s1.charAt(len-1)!='i' && s1.charAt(len-1)!='o' && s1.charAt(len-1)!='u' && s1.charAt(len-1)!='n'){
+                   h=1;
+                }
+                else{
+                 for(i=0;i<len-1;i++){
+                 char l = s1.charAt(i);
+                 char y = s1.charAt(i+1);
+                 t=0;
+                   if(l !='a' && l !='e' && l !='i' && l !='o' && l !='u' ){
+                     t=1;
+                     h++;
+                   //  System.out.println(l);
+                   }
+                   if(t==1){
+                     if(y =='a' || y =='e' || y =='i' || y =='o' || y =='u' || l =='n'){
+                         r++; 
+                     }else{
+
+                     }
+                   }
+              //  System.out.println(l);
+                }
+               }
+              //  System.out.println(h);
+              //  System.out.println(r);
+                if(h==r ){
+                   System.out.println("YES");
+                }else{
+                   System.out.println("NO");
+                }
+                
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class Main_113b
+{
+    static String s,st,ed;
+    public static void main(String[] args)
+    {
+        HashSet<Long> hash = new HashSet<Long>();
+        Scanner cin = new Scanner(new BufferedInputStream(System.in));
+        s = cin.nextLine();
+        st = cin.nextLine();
+        ed = cin.nextLine();
+        int len = s.length(), l1 = st.length(), l2 = ed.length();
+        boolean a[] = new boolean[len];
+        boolean b[] = new boolean[len];
+        for(int i = 0; i <= len - l1; i++)
+            if(s.substring(i, i+l1).equals(st))
+                a[i]=true;
+        for(int i = 0; i <= len - l2; i++)
+            if(s.substring(i, i+l2).equals(ed))
+                b[i+l2-1]=true;
+        int tmp = Math.max(l1, l2);
+        for(int i = 0; i < len; i++)
+        {
+            if(a[i] == false)   continue;
+            long h = 0;
+            for(int j = i; j < len; j++)
+            {
+                h = h * 31 + s.charAt(j) - 'a' + 1;
+                if(b[j] == false)   continue;
+                if(j-i+1 >= tmp)    hash.add(h);
+            }
+        }
+        System.out.println(hash.size());
+    }
+}
+```
+Translated Rust:
+```
+use std::collections::HashSet;
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut lines = input.lines();
+
+    let s = match lines.next() {
+        Some(v) => v.to_string(),
+        None => return,
+    };
+    let st = match lines.next() {
+        Some(v) => v.to_string(),
+        None => return,
+    };
+    let ed = match lines.next() {
+        Some(v) => v.to_string(),
+        None => return,
+    };
+
+    let sb = s.as_bytes();
+    let stb = st.as_bytes();
+    let edb = ed.as_bytes();
+
+    let len = sb.len();
+    let l1 = stb.len();
+    let l2 = edb.len();
+
+    let mut a = vec![false; len];
+    let mut b = vec![false; len];
+
+    if l1 <= len {
+        for i in 0..=len - l1 {
+            if &sb[i..i + l1] == stb {
+                a[i] = true;
+            }
+        }
+    }
+    if l2 <= len {
+        for i in 0..=len - l2 {
+            if &sb[i..i + l2] == edb {
+                b[i + l2 - 1] = true;
+            }
+        }
+    }
+
+    let tmp = if l1 > l2 { l1 } else { l2 };
+
+    let mut hash: HashSet<i64> = HashSet::new();
+    for i in 0..len {
+        if !a[i] {
+            continue;
+        }
+        let mut h: i64 = 0;
+        for j in i..len {
+            let val = (sb[j] - b'a' + 1) as i64;
+            h = h * 31 + val;
+            if !b[j] {
+                continue;
+            }
+            if j - i + 1 >= tmp {
+                hash.insert(h);
+            }
+        }
+    }
+
+    println!("{}", hash.len());
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class tmp {
+    public static void main(String [] args) throws Exception{
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+ //       StringTokenizer st = new StringTokenizer(in.readLine());
+        StringBuilder sb = new StringBuilder();
+        
+
+        String  s = in.readLine();
+        String  t = in.readLine();
+        
+        int len1 = s.length(), len2 = t.length();
+        
+        String sh = len1 < len2 ? s : t;
+        String lo = len1 >= len2 ? s : t;
+        if(len1 < len2){
+            for(int i=0; i<len2-len1; i++){
+                sb.append("0");
+            }
+            s = (sb.append(s)).toString();
+        }else if(len1 > len2){
+            for(int i=0; i<len1-len2; i++){
+                sb.append("0");
+            }
+            t = (sb.append(t)).toString();
+        }
+        
+        
+        for(int i=0; i< Math.max(len1, len2); i++){
+            if(s.charAt(i) < t.charAt(i)){
+                System.out.println("<");
+                return;
+            }else if(s.charAt(i) > t.charAt(i)){
+                System.out.println(">");
+                return;
+            }
+        }
+        System.out.println("=");
+        
+        
+        
+        
+     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    
+    
+    
+    
+}
+
+    
+class P implements Comparable<P>{
+    int val, idx;
+    public P(int val, int idx){
+        this.val = val;
+        this.idx = idx;
+    }
+
+    public int compareTo(P other){
+        if (this.val != other.val) return -this.val + other.val;
+        return this.idx - other.idx;
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.lines();
+
+    let mut s = it.next().unwrap_or("").to_string();
+    let mut t = it.next().unwrap_or("").to_string();
+
+    let len1 = s.len();
+    let len2 = t.len();
+
+    if len1 < len2 {
+        let mut sb = String::new();
+        for _ in 0..(len2 - len1) {
+            sb.push('0');
+        }
+        sb.push_str(&s);
+        s = sb;
+    } else if len1 > len2 {
+        let mut sb = String::new();
+        for _ in 0..(len1 - len2) {
+            sb.push('0');
+        }
+        sb.push_str(&t);
+        t = sb;
+    }
+
+    let max_len = if len1 > len2 { len1 } else { len2 };
+    let sb = s.as_bytes();
+    let tb = t.as_bytes();
+    for i in 0..max_len {
+        if sb[i] < tb[i] {
+            print!("<");
+            return;
+        } else if sb[i] > tb[i] {
+            print!(">");
+            return;
+        }
+    }
+    print!("=");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

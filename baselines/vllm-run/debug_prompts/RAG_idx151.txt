@@ -1,0 +1,381 @@
+INDEX: 151 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+ 
+ 
+ 
+ 
+public class Main {
+	  int 	getint(BufferedReader sc) throws java.lang.Exception
+			{
+		//	  String ss=sc.readLine();
+		    	int a= Integer.parseInt(sc.readLine());
+		    	return a;
+			}
+		  ArrayList<Integer> getlistint(BufferedReader sc) throws java.lang.Exception
+		  {
+			  ArrayList<Integer> res=new ArrayList<>();
+			  
+			  String s=sc.readLine();
+			  String[] ss=s.split(" ");
+			
+			  for(int i=0;i<ss.length;i++)
+			  {
+				//  String ss=sc.readLine();
+			    	int a=Integer.valueOf(ss[i]);
+			    	res.add(a);
+			  }
+		  
+			  return res;
+		  }
+		  ArrayList<Float> getlistfl(BufferedReader sc) throws java.lang.Exception
+		  {
+			  ArrayList<Float> res=new ArrayList<>();
+			  
+			  String s=sc.readLine();
+			  String[] ss=s.split(" ");
+			
+			  for(int i=0;i<ss.length;i++)
+			  {
+				//  String ss=sc.readLine();
+			    	float a=Float.valueOf(ss[i]);
+			    	res.add(a);
+			  }
+		  
+			  return res;
+		  }
+		  ArrayList<Long> getlist(BufferedReader sc) throws java.lang.Exception
+		  {
+			  ArrayList<Long> res=new ArrayList<>();
+			  
+			  String s=sc.readLine();
+			  String[] ss=s.split(" ");
+			
+			  for(int i=0;i<ss.length;i++)
+			  {
+				//  String ss=sc.readLine();
+			    	long a=Long.valueOf(ss[i]);
+			    	res.add(a);
+			  }
+		  
+			  return res;
+		  }
+		  ArrayList<Character> getlistchar(BufferedReader sc) throws java.lang.Exception
+		  {
+			  ArrayList<Character> res=new ArrayList<>();
+			  
+			  String s=sc.readLine();
+			//  String[] ss=s.split(" ");
+			
+			  for(int i=0;i<s.length();i++)
+			  {
+				//  String ss=sc.readLine();
+			    	//char[] a=ss[i].toCharArray();
+			    	res.add(s.charAt(i));
+			  }
+		  
+			  return res;
+		  }
+
+		  static int n;
+		  static int b[];
+		  static StringBuffer ans = new StringBuffer("");
+		  static BufferedReader bf;
+		  static class pair{
+		        int a,b;
+		        pair(int a,int b){
+		            this.a =a;
+		            this.b =b;
+		        }
+		    }private static StringBuilder result = new StringBuilder();
+
+		 
+		    public static void main(String[] args) throws Exception 
+		    {
+		    	Main pra=new Main();
+		    	//Scanner sc = new Scanner(System.in);
+		      //  int tc;
+		    	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		    //	Scanner in=new Scanner(System.in);
+			 //   long t=Long.parseLong(br.readLine());
+		    	int max=Integer.MAX_VALUE;
+		    	int res=0;
+			  int t=1;
+			  while(t-->0){
+			    //	int num=Integer.parseInt(br.readLine());
+			    	ArrayList<Integer> p=pra.getlistint(br);
+			    	ArrayList<Integer> p1=pra.getlistint(br);
+			    	
+			    	int sum=0;
+			    	
+			    	for(int i=0;i<p1.size();i++)
+			    	{
+			    		sum+=p1.get(i);
+			    	}
+			    	int res1=p.get(1)-sum;
+			    	if(sum+10*(p.get(0)-1)>p.get(1))
+			    	{
+			    		System.out.println("-1");
+			    	}else
+			    	{
+			    		System.out.println(res1/5);
+			    	}
+			    	
+			    
+		//	 System.out.println(ress);
+			 }
+		        
+		        }
+ 
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.math.*;
+public class Main{
+    public static void main(String[] args)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        if(n==1) {
+            String s = br.readLine();
+            System.out.println("0");
+        }else{
+            StringBuilder[] sb = new StringBuilder[n];
+            for(int i=0;i<n;i++){
+                sb[i] = new StringBuilder("");
+            }
+            int[] c = new int[26];
+            String s;
+            for(int i=0;i<n;i++){
+                s = br.readLine();
+                //if(s.equals("")) break;
+                Arrays.fill(c,0);
+                for(int j=0;j<s.length();j++) c[s.charAt(j)-'a']++;
+                for(int j=0;j<26;j++) if(c[j]%2==1) sb[i].append((char)(j+'a'));
+                
+            }
+            HashMap<String,Integer> hm = new HashMap<String,Integer>();
+            for(int i=0;i<n;i++){
+                s = sb[i].toString();
+                if(hm.containsKey(s)) hm.put(s,hm.get(s)+1);
+                else hm.put(s,1);
+            }
+            long res = 0;
+            for(int x:hm.values()){
+                //System.out.println(x);
+                if(x>1) res += (long)(((long)x*(long)(x-1))/2);
+            }
+            for(String x:hm.keySet()){
+                StringBuilder ss;
+                int l = x.length();
+                for(int i=0;i<l;i++){
+                    ss = new StringBuilder(x);
+                    ss.deleteCharAt(i);
+                    if(hm.containsKey(ss.toString())){
+                        res += (long)((long)hm.get(ss.toString())*(long)hm.get(x));
+                    }
+                }
+            }
+            System.out.println(res);
+            
+        }
+        
+    }
+    
+}
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+fn main() {
+    // Read all input
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.lines();
+
+    let n: i32 = it.next().unwrap().trim().parse().unwrap();
+
+    if n == 1 {
+        // Read and ignore the single string
+        let _s = it.next().unwrap_or("");
+        println!("0");
+        return;
+    }
+
+    let n_usize = n as usize;
+
+    let mut parity_strings: Vec<String> = vec![String::new(); n_usize];
+
+    for i in 0..n_usize {
+        let s = it.next().unwrap_or("");
+        let mut c = [0i32; 26];
+        for b in s.as_bytes() {
+            let idx = (b - b'a') as usize;
+            c[idx] += 1;
+        }
+        let mut out = String::new();
+        for j in 0..26 {
+            if (c[j] & 1) == 1 {
+                out.push((b'a' + j as u8) as char);
+            }
+        }
+        parity_strings[i] = out;
+    }
+
+    let mut hm: HashMap<String, i32> = HashMap::new();
+    for s in &parity_strings {
+        if let Some(v) = hm.get_mut(s) {
+            *v += 1;
+        } else {
+            hm.insert(s.clone(), 1);
+        }
+    }
+
+    let mut res: i64 = 0;
+
+    for &x in hm.values() {
+        if x > 1 {
+            let xi = x as i64;
+            res += (xi * (xi - 1)) / 2;
+        }
+    }
+
+    // Iterate over keys snapshot to avoid borrow issues (matches Java semantics)
+    let keys: Vec<String> = hm.keys().cloned().collect();
+    for x in keys {
+        let l = x.len();
+        for i in 0..l {
+            // build string with char at position i removed (ASCII letters only)
+            let mut ss = String::with_capacity(l.saturating_sub(1));
+            ss.push_str(&x[..i]);
+            ss.push_str(&x[i + 1..]);
+            if let Some(&cnt_ss) = hm.get(&ss) {
+                let cnt_x = *hm.get(&x).unwrap();
+                res += (cnt_ss as i64) * (cnt_x as i64);
+            }
+        }
+    }
+
+    println!("{res}");
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author igor_kz
+ */
+public class C46 {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int number = in.nextInt();
+        String s = in.next();
+        int cH = 0;
+        int n = s.length();
+        for (int i = 0 ; i < n ; i++)
+            if (s.charAt(i) == 'H') cH++;
+        String ss = "";
+        for (int i = 0 ; i < cH ; i++)
+            ss += "H";
+        for (int i = 0 ; i < n - cH ; i++)
+            ss += "T";
+        int res = Integer.MAX_VALUE;
+        for (int i = 0 ; i < n ; i++) {
+            int cur = countDifference(ss , s);
+            res = Math.min(res , cur);
+            ss = ss.substring(1) + ss.charAt(0);
+        }
+        System.out.println(res);
+    }
+
+    public static int countDifference(String ss, String s) {
+        int cnt = 0;
+        for (int i = 0 ; i < ss.length() ; i++)
+            if (ss.charAt(i) != s.charAt(i)) cnt++;
+        return cnt / 2;
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn count_difference(ss: &[u8], s: &[u8]) -> i32 {
+    let mut cnt: i32 = 0;
+    for i in 0..ss.len() {
+        if ss[i] != s[i] {
+            cnt += 1;
+        }
+    }
+    cnt / 2
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let _number: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let s_str = it.next().unwrap_or("");
+    let s = s_str.as_bytes();
+    let n = s.len();
+
+    let mut c_h: usize = 0;
+    for &ch in s {
+        if ch == b'H' {
+            c_h += 1;
+        }
+    }
+
+    let mut ss: Vec<u8> = Vec::with_capacity(n);
+    ss.extend(std::iter::repeat(b'H').take(c_h));
+    ss.extend(std::iter::repeat(b'T').take(n - c_h));
+
+    let mut res: i32 = i32::MAX;
+    for _ in 0..n {
+        let cur = count_difference(&ss, s);
+        if cur < res {
+            res = cur;
+        }
+        if n > 0 {
+            let first = ss[0];
+            ss.rotate_left(1);
+            ss[n - 1] = first;
+        }
+    }
+
+    println!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,230 @@
+INDEX: 205 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class Solution
+{
+	static Scanner sc = new Scanner(System.in);
+	public static int solve()
+	{
+		int n = sc.nextInt(), pos = 0;
+
+		for(int i=0;i<n;i++)
+			pos += Math.abs(sc.nextInt());
+
+		return pos;
+	}
+
+	public static void main(String args[])
+	{
+		System.out.println(solve());
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int dest = sc.nextInt();
+		int cells[] = new int[n-1];
+		
+		for(int i = 0; i < n - 1; i++) {
+			cells[i] = sc.nextInt();
+		}
+		sc.close();
+		
+		// Starting position
+		int pos = 1;
+		
+		// Transport until reach the destination
+		while(pos < dest) {
+			pos = pos + cells[pos-1];
+		}
+		
+		if(pos == dest) 
+			System.out.println("YES");
+		else 
+			System.out.println("NO");
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let dest: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut cells: Vec<i32> = Vec::with_capacity((n - 1) as usize);
+    for _ in 0..(n - 1) {
+        cells.push(it.next().unwrap().parse().unwrap());
+    }
+
+    let mut pos: i32 = 1;
+    while pos < dest {
+        let idx = (pos - 1) as usize;
+        pos += cells[idx];
+    }
+
+    if pos == dest {
+        println!("YES");
+    } else {
+        println!("NO");
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.awt.geom.*;
+import java.math.*;
+
+public class CF605A {
+
+	static final Scanner in = new Scanner(System.in);
+	static final PrintWriter out = new PrintWriter(System.out,false);
+
+	static void solve() {
+		int n = in.nextInt();
+		int[] p = new int[n];
+		int[] pos = new int[n];
+		for (int i=0; i<n; i++) {
+			p[i] = in.nextInt() - 1;
+			pos[p[i]] = i;
+		}
+
+		int[] dp = new int[n];
+		for (int i=0; i<n; i++) {
+			dp[i] = i;
+		}
+
+		for (int i=n-2; i>=0; i--) {
+			if (pos[i] < pos[i+1]) dp[i] = dp[i+1];
+		}
+
+		int ans = n;
+		for (int i=0; i<n; i++) {
+			ans = Math.min(ans, n-(dp[i]-i+1));
+		}
+
+		out.println(ans);
+	}
+
+	public static void main(String[] args) {
+		long start = System.currentTimeMillis();
+
+		solve();
+		out.flush();
+
+		long end = System.currentTimeMillis();
+		//trace(end-start + "ms");
+		in.close();
+		out.close();
+	}
+
+	static void trace(Object... o) { System.out.println(Arrays.deepToString(o));}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    buf: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && self.buf[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.buf.len() && !self.buf[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.buf[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as usize;
+
+    let mut p = vec![0usize; n];
+    let mut pos = vec![0usize; n];
+    for i in 0..n {
+        let v = (fs.next_i32() - 1) as usize;
+        p[i] = v;
+        pos[v] = i;
+    }
+
+    let mut dp = vec![0usize; n];
+    for i in 0..n {
+        dp[i] = i;
+    }
+
+    if n >= 2 {
+        for i in (0..=n - 2).rev() {
+            if pos[i] < pos[i + 1] {
+                dp[i] = dp[i + 1];
+            }
+        }
+    }
+
+    let mut ans = n as i32;
+    for i in 0..n {
+        let len = (dp[i] - i + 1) as i32;
+        let cand = n as i32 - len;
+        if cand < ans {
+            ans = cand;
+        }
+    }
+
+    print!("{}", ans);
+    println!();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,191 @@
+INDEX: 37 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner s = new Scanner(System.in);
+    int a = s.nextInt();
+    int b = s.nextInt();
+    int t = a;
+    while (a >= b) { int r = a % b; a = a / b; t += a; a += r; }
+    System.out.println(t);
+  }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+public class Main
+{
+    public static int total(BigInteger a){
+        BigInteger temp = a;
+        int b = 0;
+        int r = 10;
+        do{
+        temp = temp.divide(BigInteger.valueOf(r));
+        b ++;
+        }while (temp != BigInteger.ZERO);
+        
+        return b;
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        BigInteger in [] = new BigInteger [t];
+        
+        for (int i = 0; i < t; i ++){
+            in[i] = sc.nextBigInteger();    
+        }
+        
+        for(int i = 0; i < t; i ++){
+            int s = total(in[i]);
+            
+            System.out.println(s);
+        }
+            
+    }
+        
+}
+
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_token(&mut self) -> Option<String> {
+        while self.idx < self.buf.len() && self.buf[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        if self.idx >= self.buf.len() {
+            return None;
+        }
+        let start = self.idx;
+        while self.idx < self.buf.len() && !self.buf[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        Some(String::from_utf8_lossy(&self.buf[start..self.idx]).into_owned())
+    }
+
+    fn next_usize(&mut self) -> usize {
+        self.next_token().unwrap().parse::<usize>().unwrap()
+    }
+}
+
+fn total_str(s: &str) -> i32 {
+    let mut t = s.trim();
+    if let Some(rest) = t.strip_prefix('+') {
+        t = rest;
+    } else if let Some(rest) = t.strip_prefix('-') {
+        t = rest;
+    }
+    let trimmed = t.trim_start_matches('0');
+    if trimmed.is_empty() {
+        1
+    } else {
+        trimmed.len() as i32
+    }
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+    let t = sc.next_usize();
+    let mut out = String::new();
+
+    for i in 0..t {
+        let tok = sc.next_token().unwrap_or_else(|| "0".to_string());
+        let s = total_str(&tok);
+        out.push_str(&s.to_string());
+        if i + 1 < t {
+            out.push('\n');
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class Divisibility {
+
+	public static void main(String[] args) {
+		
+		Scanner s = new Scanner(System.in);
+		int t = s.nextInt();
+		for(int i = 0; i < t; i++) {
+			 int a = s.nextInt();
+			 int b = s.nextInt();
+			 if(a % b == 0) System.out.println("0"); else
+				 System.out.println(b - a % b);
+		}
+
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..t {
+        let a: i32 = it.next().unwrap().parse().unwrap();
+        let b: i32 = it.next().unwrap().parse().unwrap();
+        let ans = if a % b == 0 { 0 } else { b - a % b };
+        out.push_str(&ans.to_string());
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

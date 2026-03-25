@@ -1,0 +1,468 @@
+INDEX: 115 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.*;
+
+public class cod {
+
+    static int INFINITY = 2000000000;
+
+    public static void main(String[] args) throws IOException {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        out = new PrintWriter(System.out);
+        sc = new StringTokenizer("");
+
+        int array[] = new int[10];
+
+        String line = br.readLine();
+        String str[] = line.split(" ");
+
+        int num[] = new int[str.length];
+
+        for (int i = 0; i < num.length; i++) {
+            num[i] = Integer.parseInt(str[i]);
+        }
+
+        for (int i = 0; i < num.length; i++) {
+            array[num[i]]++;
+        }
+
+        boolean legs = false;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] >= 4) {
+                legs = true;
+                array[i] -=4;
+                break;
+            }
+        }
+
+        if (!legs) {
+            System.out.println("Alien");
+        } else {
+            boolean elep=false;
+            for (int i = 1; i < array.length; i++) {
+                if (array[i] == 2) {
+                    System.out.println("Elephant");
+                    elep=true;
+                }
+            }
+            if(!elep){
+                System.out.println("Bear");
+            }
+        }
+
+    }// end Main.
+
+    static BufferedReader br;
+    static StringTokenizer sc;
+    static PrintWriter out;
+
+    static String nxtTok() throws IOException {
+        while (!sc.hasMoreTokens()) {
+            String s = br.readLine();
+            if (s == null)
+                return null;
+            sc = new StringTokenizer(s.trim());
+        }
+        return sc.nextToken();
+    }
+
+    static int nxtInt() throws IOException {
+        return Integer.parseInt(nxtTok());
+    }
+
+    static long nxtLng() throws IOException {
+        return Long.parseLong(nxtTok());
+    }
+
+    static double nxtDbl() throws IOException {
+        return Double.parseDouble(nxtTok());
+    }
+
+    static int[] nxtIntArr(int n) throws IOException {
+        int[] a = new int[n];
+        for (int i = 0; i < n; i++)
+            a[i] = nxtInt();
+        return a;
+    }
+
+    static long[] nxtLngArr(int n) throws IOException {
+        long[] a = new long[n];
+        for (int i = 0; i < n; i++)
+            a[i] = nxtLng();
+        return a;
+    }
+
+    static char[] nxtCharArr() throws IOException {
+        return nxtTok().toCharArray();
+    }
+
+}// end class
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+public class B {
+
+	public static void main(String[] args) throws IOException {
+		PrintWriter out = new PrintWriter(System.out);
+		sc = new StringTokenizer(br.readLine());
+		int n = nxtInt();
+		int m = nxtInt();
+		int[] a = nxtIntArr(n);
+		long[] b = new long[n];
+		long toadd = 0;
+		while (m-- > 0) {
+			int t = nxtInt();
+			if (t == 1) {
+				int i = nxtInt() - 1;
+				a[i] = nxtInt();
+				b[i] = toadd;
+			} else if (t == 2) {
+				toadd += nxtLng();
+			} else if (t == 3) {
+				int i = nxtInt() - 1;
+				out.println(a[i] + toadd - b[i]);
+			}
+		}
+		br.close();
+		out.close();
+	}
+
+	static BufferedReader br = new BufferedReader(new InputStreamReader(
+			System.in));
+
+	static StringTokenizer sc;
+
+	static String nxtTok() throws IOException {
+		while (!sc.hasMoreTokens()) {
+			String s = br.readLine();
+			if (s == null)
+				return null;
+			sc = new StringTokenizer(s.trim());
+		}
+		return sc.nextToken();
+	}
+
+	static int nxtInt() throws IOException {
+		return Integer.parseInt(nxtTok());
+	}
+
+	static long nxtLng() throws IOException {
+		return Long.parseLong(nxtTok());
+	}
+
+	static double nxtDbl() throws IOException {
+		return Double.parseDouble(nxtTok());
+	}
+
+	static int[] nxtIntArr(int n) throws IOException {
+		int[] a = new int[n];
+		for (int i = 0; i < n; i++)
+			a[i] = nxtInt();
+		return a;
+	}
+
+	static long[] nxtLngArr(int n) throws IOException {
+		long[] a = new long[n];
+		for (int i = 0; i < n; i++)
+			a[i] = nxtLng();
+		return a;
+	}
+
+	static char[] nxtCharArr() throws IOException {
+		return nxtTok().toCharArray();
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let mut m = sc.next_i32();
+
+    let mut a: Vec<i64> = vec![0; n];
+    for i in 0..n {
+        a[i] = sc.next_i32() as i64;
+    }
+
+    let mut b: Vec<i64> = vec![0; n];
+    let mut toadd: i64 = 0;
+
+    let mut out = String::new();
+
+    while m > 0 {
+        m -= 1;
+        let t = sc.next_i32();
+        if t == 1 {
+            let i = (sc.next_i32() - 1) as usize;
+            a[i] = sc.next_i32() as i64;
+            b[i] = toadd;
+        } else if t == 2 {
+            toadd += sc.next_i64();
+        } else if t == 3 {
+            let i = (sc.next_i32() - 1) as usize;
+            let ans = a[i] + toadd - b[i];
+            out.push_str(&format!("{}\n", ans));
+        }
+    }
+
+    let mut w = io::BufWriter::new(io::stdout());
+    w.write_all(out.as_bytes()).unwrap();
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+public class Main
+{
+	public static void main(String[] args)
+	{
+		FastReader reader = new FastReader();
+		PrintWriter writer = new PrintWriter(System.out);
+
+		long a = reader.nextLong();
+		long b = reader.nextLong();
+
+		int n = 0;
+
+		while ((n*(n+1L))/2 <= a+b)
+			n++;
+
+		n--;
+		boolean[] array = new boolean[n];
+
+		int p=0, q=0;
+
+		for (int i=n-1; i>=0; i--)
+			if (a >= i+1)
+			{
+				a -= i+1;
+				array[i] = true;
+				p++;
+			}
+
+		q = n-p;
+
+		writer.println(p);
+		for (int i=0; i<n; i++)
+			if (array[i])
+				writer.print((i+1) + " ");
+		writer.println();
+
+		writer.println(q);
+		for (int i=0; i<n; i++)
+			if (!array[i])
+				writer.print((i+1) + " ");
+
+		writer.close();
+	}
+
+	static class FastReader
+	{
+		BufferedReader br;
+		StringTokenizer st;
+
+		public FastReader()
+		{
+			br = new BufferedReader(new InputStreamReader(System.in));
+		}
+
+		String next()
+		{
+			while (st == null || !st.hasMoreElements())
+			{
+				try
+				{
+					st = new StringTokenizer(br.readLine());
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			return st.nextToken();
+		}
+
+		int nextInt()
+		{
+			return Integer.parseInt(next());
+		}
+
+		long nextLong()
+		{
+			return Long.parseLong(next());
+		}
+
+		double nextDouble()
+		{
+			return Double.parseDouble(next());
+		}
+
+		String nextLine()
+		{
+			String str = "";
+			try
+			{
+				str = br.readLine();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			return str;
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastReader {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next_token(&mut self) -> Option<String> {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        if self.idx >= self.input.len() {
+            return None;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        Some(String::from_utf8_lossy(&self.input[start..self.idx]).to_string())
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        self.next_token().unwrap().parse::<i64>().unwrap()
+    }
+}
+
+fn main() {
+    let mut reader = FastReader::new();
+
+    let mut a: i64 = reader.next_i64();
+    let b: i64 = reader.next_i64();
+
+    let mut n: i32 = 0;
+    while ((n as i64) * ((n as i64) + 1)) / 2 <= a + b {
+        n += 1;
+    }
+    n -= 1;
+
+    let nn = n as usize;
+    let mut array = vec![false; nn];
+
+    let mut p: i32 = 0;
+
+    for i in (0..nn).rev() {
+        let val = (i + 1) as i64;
+        if a >= val {
+            a -= val;
+            array[i] = true;
+            p += 1;
+        }
+    }
+
+    let q: i32 = n - p;
+
+    let mut out = String::new();
+
+    out.push_str(&format!("{}\n", p));
+    for i in 0..nn {
+        if array[i] {
+            out.push_str(&(i + 1).to_string());
+            out.push(' ');
+        }
+    }
+    out.push('\n');
+
+    out.push_str(&format!("{}\n", q));
+    for i in 0..nn {
+        if !array[i] {
+            out.push_str(&(i + 1).to_string());
+            out.push(' ');
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

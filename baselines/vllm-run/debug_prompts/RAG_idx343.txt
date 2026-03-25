@@ -1,0 +1,342 @@
+INDEX: 343 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+
+public class C630 {
+
+	
+	/*public static void main(String[] args) throws IOException {
+		BufferedReader in= new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter out= new BufferedWriter(new OutputStreamWriter(System.out));
+		int n;
+		int sum = 0;
+		n = Integer.valueOf(in.readLine());
+		BigInteger i ;
+		for(i= new BigInteger("7");i.toString().length()<=n;i = i.add(new BigInteger("1")))
+		{
+			
+			//System.out.print("1");
+			if(i.toString().contains("0")||i.toString().contains("1")||i.toString().contains("2")||i.toString().contains("3")||i.toString().contains("4")||i.toString().contains("5")||i.toString().contains("6")||i.toString().contains("9"))
+			{
+				continue;
+			}
+			else
+			{
+				sum++;
+			}
+		}
+		out.write(String.valueOf(sum));
+		out.flush();
+		out.close();
+	}*/
+	static long func(int a)
+	{
+		long r=1;
+		for(int i=0;i<a;i++)
+		{
+			r*=2;
+		}
+		return r;
+	}
+	public static void main(String[] args) throws IOException {
+		BufferedReader in= new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter out= new BufferedWriter(new OutputStreamWriter(System.out));
+		int n = Integer.valueOf(in.readLine());
+		BigInteger m = new BigInteger("0");
+		for(int i = 1;i<=n;i++)
+		{
+			m = m.add(new BigInteger(String.valueOf(func(i))));
+		}
+		out.write(m+"\n");
+		out.flush();
+		out.close();
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.StringTokenizer;
+
+public class C628C {
+
+	public static void main(String[] args)throws Exception {
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
+		
+		StringTokenizer st = new StringTokenizer(in.readLine());
+		
+		int n = Integer.valueOf(st.nextToken()) , k = Integer.valueOf(st.nextToken());
+		
+		String s = in.readLine();
+		
+		int max = 0;
+		
+		for(int i = 0;i < n;i ++)
+			max += Math.max(s.charAt(i) - 'a','z' - s.charAt(i));
+		
+		if(max < k){
+			out.write("-1");
+			out.close();
+			return;
+		}
+		
+		
+		for(int i = 0;i < n;i ++)
+			if(s.charAt(i) - 'a'> 'z' - s.charAt(i)){
+				if(s.charAt(i) - 'a' > k){
+					out.write("" + (char)(s.charAt(i) - k));
+					k = 0;
+				}else{
+					out.write("a");
+					k -= s.charAt(i) - 'a';
+				}
+			}else{
+				if('z' - s.charAt(i) > k){
+					out.write("" + (char)(s.charAt(i) + k));
+					k = 0;
+				}else{
+					out.write("z");
+					k -= 'z' - s.charAt(i);
+				}
+			}
+		
+		
+		out.close();
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let mut k: i32 = it.next().unwrap().parse().unwrap();
+    let s = it.next().unwrap().as_bytes();
+
+    let mut max_change: i32 = 0;
+    for &b in s.iter().take(n) {
+        let da = (b - b'a') as i32;
+        let dz = (b'z' - b) as i32;
+        max_change += if da > dz { da } else { dz };
+    }
+
+    if max_change < k {
+        print!("-1");
+        return;
+    }
+
+    let mut out = String::with_capacity(n);
+    for &b in s.iter().take(n) {
+        let da = (b - b'a') as i32;
+        let dz = (b'z' - b) as i32;
+
+        if da > dz {
+            if da > k {
+                let nb = (b as i32 - k) as u8;
+                out.push(nb as char);
+                k = 0;
+            } else {
+                out.push('a');
+                k -= da;
+            }
+        } else {
+            if dz > k {
+                let nb = (b as i32 + k) as u8;
+                out.push(nb as char);
+                k = 0;
+            } else {
+                out.push('z');
+                k -= dz;
+            }
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+
+public class D94 {
+    
+    static StringTokenizer st;
+    static BufferedReader in;
+    static PrintWriter pw;
+    
+    public static void main(String[] args) throws IOException {
+        in = new BufferedReader(new InputStreamReader(System.in));
+        pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+        int n = nextInt();
+        int[]a = new int[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = nextInt();
+        }
+        Arrays.sort(a);
+        int[]cnt = new int[n];
+        int m = a[n-1]-a[0];
+        if (n % 2==1 || m > n/2 || m==0) {
+            System.out.println("NO");
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            cnt[a[i]-a[0]]++;
+        }
+        int L = cnt[0]-1;
+        for (int i = 1; i < m; i++) {
+            if (cnt[i] < L+2) {
+                System.out.println("NO");
+                return;
+            }
+            cnt[i] -= (L+2);
+            L = cnt[i];
+        }
+        if (L != cnt[m]-1)
+            System.out.println("NO");
+        else
+            System.out.println("YES");
+        pw.close();
+    }
+    private static int nextInt() throws IOException{
+        return Integer.parseInt(next());
+    }
+    
+    private static long nextLong() throws IOException{
+        return Long.parseLong(next());
+    }
+    
+    private static double nextDouble() throws IOException{
+        return Double.parseDouble(next());
+    }
+    
+    private static String next() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(in.readLine());
+        }
+        return st.nextToken();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let mut a = vec![0i32; n];
+    for i in 0..n {
+        a[i] = sc.next_i32();
+    }
+    a.sort();
+
+    let mut cnt = vec![0i32; n];
+    let m = (a[n - 1] - a[0]) as i32;
+
+    if n % 2 == 1 || m > (n as i32) / 2 || m == 0 {
+        print!("NO\n");
+        return;
+    }
+
+    let base = a[0];
+    for &v in &a {
+        let idx = (v - base) as usize;
+        cnt[idx] += 1;
+    }
+
+    let mut l = cnt[0] - 1;
+    for i in 1..(m as usize) {
+        if cnt[i] < l + 2 {
+            print!("NO\n");
+            return;
+        }
+        cnt[i] -= l + 2;
+        l = cnt[i];
+    }
+
+    if l != cnt[m as usize] - 1 {
+        print!("NO\n");
+    } else {
+        print!("YES\n");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,231 @@
+INDEX: 259 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class A832 {
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+	
+		System.out.println((s.nextLong()/s.nextLong()%2==0)?"NO":"YES");
+		
+		
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+
+import java.util.*;
+import java.io.*;
+
+import static java.lang.Math.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        //System.out.println("Kickstart baby!!");
+
+
+       int test=s.nextInt();
+       while(test-->0)
+       {
+           long n=s.nextLong();
+           if(n%4==0)
+               System.out.println("YES");
+           else
+               System.out.println("NO");
+
+
+       }
+
+
+
+
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut test = sc.next_i32();
+    let mut out = String::new();
+
+    while test > 0 {
+        test -= 1;
+        let n = sc.next_i64();
+        if n % 4 == 0 {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+public class BadUglyNumbers{
+	public static void main(String args[])
+	{
+		Scanner sc = new Scanner(System.in);
+		int t = sc.nextInt();
+		while(t>0)
+		{
+			long n=sc.nextLong();
+			String s = "";
+			if(n>1)
+			{
+				s=s+"2";
+				for(long i=1;i<n;i++)
+					s=s+"3";
+				
+				System.out.println(s);
+			}
+			else
+				System.out.println("-1");
+			t--;
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i32;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.skip_whitespace();
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i64;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut t = sc.next_i32();
+    let mut out = String::new();
+    while t > 0 {
+        let n = sc.next_i64();
+        if n > 1 {
+            let mut s = String::with_capacity(n as usize);
+            s.push('2');
+            for _ in 1..n {
+                s.push('3');
+            }
+            out.push_str(&s);
+            out.push('\n');
+        } else {
+            out.push_str("-1\n");
+        }
+        t -= 1;
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

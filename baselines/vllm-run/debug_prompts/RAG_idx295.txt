@@ -1,0 +1,319 @@
+INDEX: 295 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class E {
+    public static long MOD = 998244353;
+    public static long[] fact;
+    public static long[] invfact;
+    public static void main(String[] args) throws IOException{
+        BufferedReader f = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(f.readLine());
+        fact = new long[200001];
+        invfact = new long[200001];
+        fact[0] = 1L;
+        invfact[0] = 1L;
+        for(int i = 1; i <= 200000; i++){
+            fact[i] = (fact[i-1]*i);
+            fact[i]%=MOD;
+            invfact[i] = pow(fact[i], MOD-2, MOD)%MOD;
+        }
+        long n = Long.parseLong(st.nextToken());
+        long k = Long.parseLong(st.nextToken());
+        if(k > n){
+            out.println(0);
+            out.close();
+            System.exit(0);
+        }
+        k = n-k;
+        long ans = 0L;
+        for(int i = 0; i <= k; i++){
+            long curr = (ncr((int)k, i)*(pow(k-i, n, MOD)))%MOD;
+            if(i % 2 == 0) ans+=curr;
+            else ans-=curr;
+            ans%=MOD;
+            ans+=MOD;
+            ans%=MOD;
+        }
+        ans*=(ncr((int)n, (int)k));
+        ans%=MOD;
+        if(n-k == 0) out.println(ans);
+        else out.println((2*ans)%MOD);
+
+
+        out.close();
+    }
+    public static long ncr(int n, int r){
+        return (((fact[n]*invfact[r])%MOD)*invfact[n-r])%MOD;
+    }
+
+    public static long pow(long x, long y, long p){
+        long res = 1L;
+
+        while(y > 0){
+            if(y % 2 != 0){
+                res = (res*x)%p;
+            }
+            x = (x*x)%p;
+            y/=2;
+        }
+        return res % p;
+
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.lang.reflect.Field;
+import java.util.*;
+
+public class CodeChef {
+    static int mod = (int)1e9+7;
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        Functions f  = new Functions();
+       int testCase = sc.nextInt();
+       while (testCase-->0){
+           long n = sc.nextLong();
+          long r = sc.nextLong();
+         if(r<n){
+             System.out.println(r*((long)r+1)/2);
+         }
+         else{
+             long ans = (n-1)*(n)/2;
+             System.out.println(ans+1);
+         }
+       }
+    }
+
+
+}
+class Functions extends CodeChef{
+    public int[] setIntegerArray(int n){
+        int [] arr = new int[n];
+        for(int i=0;i<n;i++)
+            arr[i] =sc.nextInt();
+        return arr;
+    }
+    public long[] setLongArray(int n){
+        long [] arr = new long[n];
+        for(int i=0;i<n;i++)
+            arr[i] =sc.nextLong();
+        return arr;
+    }
+    public long factorial(int n){
+        long fact = 1L;
+        for(int i=2;i<=n;i++)fact=  (fact*i)%mod;
+        return fact;
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i64();
+        let r = sc.next_i64();
+        if r < n {
+            let ans = r * (r + 1) / 2;
+            out.push_str(&format!("{}\n", ans));
+        } else {
+            let ans = (n - 1) * n / 2;
+            out.push_str(&format!("{}\n", ans + 1));
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+/*
+If you want to aim high, aim high
+Don't let that studying and grades consume you
+Just live life young
+******************************
+If I'm the sun, you're the moon
+Because when I go up, you go down
+*******************************
+I'm working for the day I will surpass you
+https://www.a2oj.com/Ladder16.html
+*/
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+   public class x1009E
+   {
+      static long MOD = 998244353L;
+      public static void main(String omkar[]) throws Exception
+      {
+         BufferedReader infile = new BufferedReader(new InputStreamReader(System.in));  
+         StringTokenizer st = new StringTokenizer(infile.readLine());
+         int N = Integer.parseInt(st.nextToken());
+         int[] arr = new int[N];
+         st = new StringTokenizer(infile.readLine());
+         for(int i=0; i < N; i++)
+            arr[i] = Integer.parseInt(st.nextToken());
+         long res = 0L;
+         long curr = arr[0];
+         for(int i=0; i < N; i++)
+         {
+            res = (res+curr)%MOD;
+            if(i+1 < N)
+            {
+               long addend = arr[i+1]-arr[i];
+               addend = (addend*power(power(2,i+1,MOD),MOD-2,MOD))%MOD;
+               curr += addend;
+               curr %= MOD;
+            }
+         }
+         res = (res*power(2, N, MOD))%MOD;
+         res = (res*power(2, MOD-2, MOD))%MOD;
+         System.out.println(res);
+      }
+      public static long power(long x, long y, long p) 
+      { 
+          long res = 1L;      
+          x = x % p;  
+          while (y > 0) 
+          { 
+              if((y & 1)==1) 
+                  res = (res * x) % p; 
+              y = y >> 1;  
+              x = (x * x) % p;  
+          } 
+          return res; 
+      }
+   }
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 998_244_353;
+
+fn power(mut x: i64, mut y: i64, p: i64) -> i64 {
+    let mut res: i64 = 1;
+    x %= p;
+    while y > 0 {
+        if (y & 1) == 1 {
+            res = (res * x) % p;
+        }
+        y >>= 1;
+        x = (x * x) % p;
+    }
+    res
+}
+
+fn main() {
+    // Fast token scanner
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+    let mut arr: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        arr.push(it.next().unwrap().parse::<i32>().unwrap());
+    }
+
+    let mut res: i64 = 0;
+    let mut curr: i64 = arr[0] as i64;
+
+    for i in 0..n {
+        res = (res + curr) % MOD;
+
+        if i + 1 < n {
+            let mut addend: i64 = (arr[i + 1] as i64) - (arr[i] as i64);
+            let denom = power(2, (i + 1) as i64, MOD);
+            let inv = power(denom, MOD - 2, MOD);
+            addend = (addend * inv) % MOD;
+            curr += addend;
+            curr %= MOD;
+        }
+    }
+
+    res = (res * power(2, n as i64, MOD)) % MOD;
+    res = (res * power(2, MOD - 2, MOD)) % MOD;
+
+    println!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

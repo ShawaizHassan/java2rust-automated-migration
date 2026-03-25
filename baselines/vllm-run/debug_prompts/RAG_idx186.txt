@@ -1,0 +1,196 @@
+INDEX: 186 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+
+
+
+public class Main {
+
+    
+    public static void main(String[] args) {
+     Scanner sc = new Scanner(System.in);
+     String s = sc.next();
+     int ans = 0;
+     int a = 1;
+     for(int i=0;i<s.length();i++){
+         if(s.charAt(i)=='A'||s.charAt(i)=='E'||s.charAt(i)=='I'||s.charAt(i)=='O'||s.charAt(i)=='U'||s.charAt(i)=='Y'){
+             ans = Math.max(a, ans);
+             a=1;
+         }else{
+             a++;
+         }
+     }
+     ans  = Math.max(a, ans);
+     System.out.println(ans);
+    }
+
+    
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class Main{
+    public static void go(Scanner in, PrintWriter out) {
+        String s = in.nextLine();
+        String u = in.nextLine();
+
+        int ans = u.length();
+
+        for (int start = -u.length()+1; start < s.length(); start++) {
+            // start..start+u.length()-1
+            int count = 0;
+            for (int i = start; i < start+u.length(); i++) {
+                if (i < 0 || i >= s.length()) {
+                    count++;
+                } else {
+                    if (s.charAt(i) != u.charAt(i-start)) {
+                        count++;
+                    }
+                }
+            }
+
+            ans = Math.min(ans, count);
+        }
+
+        out.println(ans);
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        PrintWriter out = new PrintWriter(System.out);
+        go(in, out);
+        out.flush();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+
+    let mut parts: Vec<&str> = input.split('\n').collect();
+    if parts.len() == 1 {
+        parts.push("");
+    }
+    let s_line = parts.get(0).copied().unwrap_or("").trim_end_matches('\r');
+    let u_line = parts.get(1).copied().unwrap_or("").trim_end_matches('\r');
+
+    let s: Vec<u16> = s_line.encode_utf16().collect();
+    let u: Vec<u16> = u_line.encode_utf16().collect();
+
+    let s_len = s.len() as i32;
+    let u_len = u.len() as i32;
+
+    let mut ans: i32 = u_len;
+
+    for start in (-u_len + 1)..s_len {
+        let mut count: i32 = 0;
+        for i in start..(start + u_len) {
+            if i < 0 || i >= s_len {
+                count += 1;
+            } else {
+                let si = s[i as usize];
+                let ui = u[(i - start) as usize];
+                if si != ui {
+                    count += 1;
+                }
+            }
+        }
+        if count < ans {
+            ans = count;
+        }
+    }
+
+    print!("{}", ans);
+    if !ans.to_string().ends_with('\n') {
+        println!();
+    }
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+
+public class B_169 {
+public static void main(String[] args) {
+	Scanner sc = new Scanner(System.in);
+  String s=sc.next();
+  int a[]=new int[1000];
+  for (int i = 0; i <s.length(); i++) {
+	  a[(int)s.charAt(i)-97]++;
+  }
+  int ans=0;
+  for (int i =0; i <=26; i++) {
+	  if(a[i]%2==1 && a[i]!=0)
+    	 ans++;
+   }
+   if(ans%2==1 || ans==0)
+	   System.out.println("First");
+   else
+   System.out.println("Second");
+ }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let s = match input.split_whitespace().next() {
+        Some(v) => v,
+        None => return,
+    };
+
+    let mut a = vec![0i32; 1000];
+    for b in s.bytes() {
+        let idx = (b as usize).wrapping_sub(97);
+        if idx < a.len() {
+            a[idx] += 1;
+        }
+    }
+
+    let mut ans: i32 = 0;
+    for i in 0..=26usize {
+        if a[i] % 2 == 1 && a[i] != 0 {
+            ans += 1;
+        }
+    }
+
+    if ans % 2 == 1 || ans == 0 {
+        println!("First");
+    } else {
+        println!("Second");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

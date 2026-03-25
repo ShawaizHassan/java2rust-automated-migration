@@ -1,0 +1,507 @@
+INDEX: 472 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedOutputStream;
+import java.io.Closeable;
+import java.io.DataInputStream;
+import java.io.Flushable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.InputMismatchException;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+	static class TaskAdapter implements Runnable {
+		@Override
+		public void run() {
+			long startTime = System.currentTimeMillis();
+			InputStream inputStream = System.in;
+			OutputStream outputStream = System.out;
+			FastReader in = new FastReader(inputStream);
+			Output out = new Output(outputStream);
+			EHeightAllTheSame solver = new EHeightAllTheSame();
+			solver.solve(1, in, out);
+			out.close();
+			System.err.println(System.currentTimeMillis()-startTime+"ms");
+		}
+
+	}
+
+	public static void main(String[] args) throws Exception {
+		Thread thread = new Thread(null, new TaskAdapter(), "", 1<<28);
+		thread.start();
+		thread.join();
+	}
+
+	static class EHeightAllTheSame {
+		private final int mod = 998244353;
+
+		public EHeightAllTheSame() {
+		}
+
+		public void solve(int kase, InputReader in, Output pw) {
+			long nn = in.nextInt(), nm = in.nextInt(), l = in.nextInt(), r = in.nextInt();
+			long n = nn*nm;
+			if((n&1)==1) {
+				pw.println(Utilities.math.pow(r-l+1, n, mod));
+			}else {
+				long x = Utilities.math.pow(r-l+1, n, mod);
+				if(((r-l+1)&1)==1) {
+					x++;
+				}
+				pw.println((x*499122177L)%mod);
+			}
+		}
+
+	}
+
+	static interface InputReader {
+		int nextInt();
+
+	}
+
+	static class Output implements Closeable, Flushable {
+		public StringBuilder sb;
+		public OutputStream os;
+		public int BUFFER_SIZE;
+		public boolean autoFlush;
+		public String lineSeparator;
+
+		public Output(OutputStream os) {
+			this(os, 1<<16);
+		}
+
+		public Output(OutputStream os, int bs) {
+			BUFFER_SIZE = bs;
+			sb = new StringBuilder(BUFFER_SIZE);
+			this.os = new BufferedOutputStream(os, 1<<17);
+			autoFlush = false;
+			lineSeparator = System.lineSeparator();
+		}
+
+		public void println(long l) {
+			println(String.valueOf(l));
+		}
+
+		public void println(String s) {
+			sb.append(s);
+			println();
+			if(autoFlush) {
+				flush();
+			}else if(sb.length()>BUFFER_SIZE >> 1) {
+				flushToBuffer();
+			}
+		}
+
+		public void println() {
+			sb.append(lineSeparator);
+		}
+
+		private void flushToBuffer() {
+			try {
+				os.write(sb.toString().getBytes());
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			sb = new StringBuilder(BUFFER_SIZE);
+		}
+
+		public void flush() {
+			try {
+				flushToBuffer();
+				os.flush();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public void close() {
+			flush();
+			try {
+				os.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	static class FastReader implements InputReader {
+		final private int BUFFER_SIZE = 1<<16;
+		private DataInputStream din;
+		private byte[] buffer;
+		private int bufferPointer;
+		private int bytesRead;
+
+		public FastReader(InputStream is) {
+			din = new DataInputStream(is);
+			buffer = new byte[BUFFER_SIZE];
+			bufferPointer = bytesRead = 0;
+		}
+
+		public int nextInt() {
+			int ret = 0;
+			byte c = skipToDigit();
+			boolean neg = (c=='-');
+			if(neg) {
+				c = read();
+			}
+			do {
+				ret = ret*10+c-'0';
+			} while((c = read())>='0'&&c<='9');
+			if(neg) {
+				return -ret;
+			}
+			return ret;
+		}
+
+		private boolean isDigit(byte b) {
+			return b>='0'&&b<='9';
+		}
+
+		private byte skipToDigit() {
+			byte ret;
+			while(!isDigit(ret = read())&&ret!='-') ;
+			return ret;
+		}
+
+		private void fillBuffer() {
+			try {
+				bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+			}catch(IOException e) {
+				e.printStackTrace();
+				throw new InputMismatchException();
+			}
+			if(bytesRead==-1) {
+				buffer[0] = -1;
+			}
+		}
+
+		private byte read() {
+			if(bytesRead==-1) {
+				throw new InputMismatchException();
+			}else if(bufferPointer==bytesRead) {
+				fillBuffer();
+			}
+			return buffer[bufferPointer++];
+		}
+
+	}
+
+	static class Utilities {
+		public static class math {
+			public static long pow(long base, long exp, long mod) {
+				long ans = 1, cur = base;
+				while(exp>0) {
+					if((exp&1)>0) {
+						ans = (ans*cur)%mod;
+					}
+					cur = (cur*cur)%mod;
+					exp >>= 1;
+				}
+				return ans;
+			}
+
+		}
+
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+/* Mighty Cohadar */
+public class Bravo {
+
+	public static void main(String[] args) {
+		FastScanner scanner = new FastScanner(System.in);
+		int n = scanner.nextInt();
+		PriorityQueue<Integer> Q = new PriorityQueue<>();
+		for (int i = 0; i < n; i++) {
+			Q.add(scanner.nextInt());
+		}
+		int j = 1;
+		for (int i = 0; i < n; i++) {
+			int a = Q.remove();
+			if (a >= j) {
+				j++;
+			}
+		}
+		System.out.println(j);
+	}
+
+	static void debug(Object...os) {
+		System.err.printf("%.65536s\n", Arrays.deepToString(os));
+	}
+	
+}
+
+class FastScanner {
+	private final BufferedReader in;
+	private final StringBuilder sb;
+	private StringTokenizer strtok;
+	public FastScanner(InputStream is) {
+		this.in = new BufferedReader(new InputStreamReader(is));
+		this.sb = new StringBuilder();
+		this.strtok = null;
+	}
+	public String next() {
+		try {
+			if (strtok == null || strtok.hasMoreTokens() == false) {
+				strtok = new StringTokenizer(in.readLine());
+			}
+			return strtok.nextToken();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public int nextInt() {
+		return Integer.parseInt(next());
+	}
+	public long nextLong() {
+		return Long.parseLong(next());
+	}
+	public String nextLine() {
+		try {
+			if (strtok == null) {
+				return in.readLine();
+			} else {
+				String ret = (strtok.hasMoreTokens()) ? strtok.nextToken("\n") : "";
+				strtok = null;
+				return ret;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+}
+
+
+
+```
+Translated Rust:
+```
+use std::cmp::Reverse;
+use std::collections::BinaryHeap;
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let n = fs.next_i32() as usize;
+
+    let mut heap: BinaryHeap<Reverse<i32>> = BinaryHeap::new();
+    for _ in 0..n {
+        heap.push(Reverse(fs.next_i32()));
+    }
+
+    let mut j: i32 = 1;
+    for _ in 0..n {
+        let a = heap.pop().unwrap().0;
+        if a >= j {
+            j += 1;
+        }
+    }
+
+    println!("{}", j);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

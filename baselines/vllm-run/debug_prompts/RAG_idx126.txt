@@ -1,0 +1,195 @@
+INDEX: 126 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class A104 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		n = n - 10;
+		if (n == 10) {
+			System.out.println("15");
+		} else {
+			if ((n <= 11) && (n >= 1)) {
+				System.out.println("4");
+			} else {
+				System.out.println("0");
+			}
+		}
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+//  21/07/20  11:52 AM  Jul  2020
+import java.util.Scanner;
+public class _1370C {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            if (n == 1) {
+                System.out.println("FastestFinger");
+            } else if (n == 2 || (n&1)==1) {
+                System.out.println("Ashishgup");
+            } else {
+                if (Integer.bitCount(n) == 1) {
+                    System.out.println("FastestFinger");
+                } else {
+                    if (prime(n / 2)) {
+                        System.out.println("FastestFinger");
+                    } else {
+                        System.out.println("Ashishgup");
+                    }
+                }
+            }
+        }
+    }
+
+    static boolean prime(int n) {
+        for (int i = 2; i * i <= n; i++)
+            if (n % i == 0) return false;
+        return true;
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn prime(n: i32) -> bool {
+    let mut i: i32 = 2;
+    while (i as i64) * (i as i64) <= n as i64 {
+        if n % i == 0 {
+            return false;
+        }
+        i += 1;
+    }
+    true
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = it.next().unwrap().parse().unwrap();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n: i32 = it.next().unwrap().parse().unwrap();
+
+        if n == 1 {
+            out.push_str("FastestFinger\n");
+        } else if n == 2 || (n & 1) == 1 {
+            out.push_str("Ashishgup\n");
+        } else {
+            if n.count_ones() == 1 {
+                out.push_str("FastestFinger\n");
+            } else {
+                if prime(n / 2) {
+                    out.push_str("FastestFinger\n");
+                } else {
+                    out.push_str("Ashishgup\n");
+                }
+            }
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+
+public class Solution{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        
+        int n = sc.nextInt();
+        
+        if(n == 2){
+            System.out.println("1");
+            System.out.println("2");
+        }
+        else if(n == 3){
+            System.out.println("1");
+            System.out.println("3");
+        }
+        else{
+            if(n%2 == 0){
+                System.out.println(n/2);
+                for(int i=0; i < n/2 - 1; i++){
+                    System.out.print("2 ");    
+                }
+                System.out.println("2");
+            }
+            else{
+                System.out.println(n/2);
+                for(int i=0; i<n/2-1; i++){
+                    System.out.print("2 ");        
+                }
+                
+                System.out.println("3");
+            }
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    if n == 2 {
+        println!("1");
+        println!("2");
+    } else if n == 3 {
+        println!("1");
+        println!("3");
+    } else {
+        if n % 2 == 0 {
+            println!("{}", n / 2);
+            for _ in 0..(n / 2 - 1) {
+                print!("2 ");
+            }
+            println!("2");
+        } else {
+            println!("{}", n / 2);
+            for _ in 0..(n / 2 - 1) {
+                print!("2 ");
+            }
+            println!("3");
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

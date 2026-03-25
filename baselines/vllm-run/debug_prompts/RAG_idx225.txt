@@ -1,0 +1,264 @@
+INDEX: 225 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+//package GeneralProblems;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class PIERULES {
+	static int [] elm;
+	static int memo[][][];
+	public static void dp(int idx, int turn) {
+		if(idx==elm.length) {
+			memo[idx][turn][turn]=0;
+			memo[idx][turn][1-turn]=0;
+			return; 
+		}
+		if(memo[idx][turn][0]!=-1)
+			return;
+		dp(idx+1,turn);
+		dp(idx+1,1-turn);
+		//first case i leave it and give it to the other player
+		int sc1 = memo[idx+1][turn][turn], sc2 = memo[idx+1][turn][1-turn]+elm[idx];
+		int sc11 = memo[idx+1][1-turn][turn]+elm[idx], sc21 = memo[idx+1][1-turn][1-turn];
+		if(sc1>sc11) {
+			memo[idx][turn][turn]= sc1;
+			memo[idx][turn][1-turn]=sc2;
+		}else {
+			memo[idx][turn][turn]= sc11;
+			memo[idx][turn][1-turn]=sc21;
+		}	
+		
+		}
+public static void main(String[] args) throws IOException{
+	BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+	int n = Integer.parseInt(in.readLine());
+	elm = new int[n];
+	StringTokenizer st= new StringTokenizer(in.readLine());
+	for (int i = 0; i < elm.length; i++) {
+		elm[i]=Integer.parseInt(st.nextToken());
+	}
+	memo =new int[n+1][2][2];
+	for (int i = 0; i < memo.length; i++) {
+		for (int j = 0; j < memo[0].length; j++) {
+			Arrays.fill(memo[i][j],-1);
+		}
+	}
+	dp(0,0);
+	System.out.println(memo[0][0][1]+" "+memo[0][0][0]);
+	
+}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+
+public class Main {
+	
+	static int n;
+	static int minToWin;
+	static double p [];
+	static int capacity [];
+	static double memo [][][];
+	static double dp (int idx , int wonSoFar , int remCap) {
+		if (idx == n)
+			if (wonSoFar < minToWin || remCap < wonSoFar) return 0.0;
+			else return 1.0;
+		
+		if (memo[idx][wonSoFar][remCap] != -1.0) return memo[idx][wonSoFar][remCap];
+		
+		int remC = remCap + capacity[idx] + 1;
+		double take = p[idx] * dp(idx + 1, wonSoFar + 1 , 
+				remC >= 200 ? 200 : remC);
+		
+		double leave = (1.0 - p[idx]) * dp(idx + 1, wonSoFar, remCap);
+		
+		return memo[idx][wonSoFar][remCap] = take + leave;
+	}
+	public static void main(String[] args) throws Exception {
+		Scanner sc = new Scanner(System.in);
+		n = sc.nextInt();
+		minToWin = sc.nextInt();
+		int k = sc.nextInt();
+		p = new double [n];
+		capacity = new int[n];
+		memo = new double [n][201][201];
+		for (int i = 0 ; i < n ; ++ i) for (int j = 0 ; j < 201 ; ++ j)
+				Arrays.fill(memo[i][j], -1.0);
+		for (int i = 0 ; i < n ; ++ i) {
+			p[i] = sc.nextInt() / 100.0;
+		}
+		for (int i = 0 ; i < n ; ++ i) {
+			capacity[i] = sc.nextInt();
+		}
+		System.out.println(dp (0,0,k));
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+static mut N: usize = 0;
+static mut MIN_TO_WIN: usize = 0;
+static mut P: Vec<f64> = Vec::new();
+static mut CAPACITY: Vec<i32> = Vec::new();
+static mut MEMO: Vec<Vec<Vec<f64>>> = Vec::new();
+
+fn dp(idx: usize, won_so_far: usize, rem_cap: usize) -> f64 {
+    unsafe {
+        if idx == N {
+            if won_so_far < MIN_TO_WIN || rem_cap < won_so_far {
+                return 0.0;
+            } else {
+                return 1.0;
+            }
+        }
+
+        let v = MEMO[idx][won_so_far][rem_cap];
+        if v != -1.0 {
+            return v;
+        }
+
+        let mut rem_c = rem_cap as i32 + CAPACITY[idx] + 1;
+        if rem_c > 200 {
+            rem_c = 200;
+        }
+        if rem_c < 0 {
+            rem_c = 0;
+        }
+
+        let take = P[idx] * dp(idx + 1, won_so_far + 1, rem_c as usize);
+        let leave = (1.0 - P[idx]) * dp(idx + 1, won_so_far, rem_cap);
+
+        let ans = take + leave;
+        MEMO[idx][won_so_far][rem_cap] = ans;
+        ans
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+    let min_to_win: usize = it.next().unwrap().parse().unwrap();
+    let k: usize = it.next().unwrap().parse().unwrap();
+
+    let mut p = vec![0f64; n];
+    let mut cap = vec![0i32; n];
+
+    for i in 0..n {
+        let pi: i32 = it.next().unwrap().parse().unwrap();
+        p[i] = (pi as f64) / 100.0;
+    }
+    for i in 0..n {
+        cap[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut memo = vec![vec![vec![-1.0f64; 201]; 201]; n];
+
+    unsafe {
+        N = n;
+        MIN_TO_WIN = min_to_win;
+        P = p;
+        CAPACITY = cap;
+        MEMO = memo;
+    }
+
+    let ans = dp(0, 0, k);
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.math.*;
+ 
+public class Solution{
+      static int tc;
+      static String[] s;
+  public static void main(String[] args)throws IOException{
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    int n=Integer.parseInt(br.readLine());
+    int[] ar=new int[n];
+    int answer=0,turn=Integer.MAX_VALUE;
+    s=br.readLine().split(" ");
+    for(int i=0;i<n;i++){
+        int current=(Integer.parseInt(s[i])+(n-i-1))/n;
+        if(current<turn){
+            turn=current;
+            answer=(i+1);
+        }
+    }
+    System.out.println(answer);
+    }
+  }
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut answer: i32 = 0;
+    let mut turn: i32 = i32::MAX;
+
+    for i in 0..(n as usize) {
+        let val: i32 = it.next().unwrap().parse().unwrap();
+        let current = (val + (n - i as i32 - 1)) / n;
+        if current < turn {
+            turn = current;
+            answer = i as i32 + 1;
+        }
+    }
+
+    print!("{}", answer);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

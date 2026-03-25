@@ -1,0 +1,314 @@
+INDEX: 64 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Queue;
+import java.util.PriorityQueue;
+import java.util.InputMismatchException;
+import java.io.OutputStream;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+//https://codeforces.com/problemset/problem/385/A
+//A. Bear and Raspberry
+public class Problem385A
+{
+    public static void main(String[] args) throws IOException
+    {
+        BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+        
+        StringTokenizer dates=new StringTokenizer(in.readLine());
+        int n=Integer.parseInt(dates.nextToken());
+        int c=Integer.parseInt(dates.nextToken());
+        dates=new StringTokenizer(in.readLine());
+        int[] day=new int[n];
+            int mayor=0;
+            int i;
+            int pos=0;
+            for(i=0;i<n;i++)
+            {
+            	day[i]=Integer.parseInt(dates.nextToken());
+            	if(i>0&&day[i-1]-day[i]-c>mayor)
+            	{
+            		mayor=day[i-1]-day[i]-c;
+            		pos=i;
+            	}
+            }
+            if(mayor<0)
+            	out.println(0);
+            else
+            	out.println(mayor);
+        out.close();
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Alex
+ */
+public class Main{
+   static int [] permut;
+    public static void main(String[] args)throws IOException {
+        BufferedReader bff = new BufferedReader(new InputStreamReader(System.in));    
+            StringTokenizer st = new StringTokenizer(bff.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int k =Integer.parseInt(st.nextToken());
+            permut = new int[n+1];
+            int cont =0;
+            int res = n-k;
+            int menor =1;
+            int mayor =n;
+            for(int j=0;j<res;j++){
+                 permut[j]=menor;
+                 menor++;
+            }
+            for(int i=res;i<n;i+=2){
+                    permut[i]=mayor;
+                    permut[i+1]=menor;
+                menor++;
+                mayor--;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i <n; i++) {
+                sb.append(permut[i]+" ");
+             }
+            sb.deleteCharAt(sb.length()-1);
+           System.out.println(sb);
+    }
+
+}
+
+// 1472663925193
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = it.next().unwrap().parse().unwrap();
+    let k: i32 = it.next().unwrap().parse().unwrap();
+
+    let n_usize: usize = n as usize;
+
+    let mut permut: Vec<i32> = vec![0; n_usize + 1];
+
+    let res: i32 = n - k;
+    let mut menor: i32 = 1;
+    let mut mayor: i32 = n;
+
+    for j in 0..(res as usize) {
+        permut[j] = menor;
+        menor += 1;
+    }
+
+    let mut i: usize = res as usize;
+    while i < n_usize {
+        permut[i] = mayor;
+        permut[i + 1] = menor;
+        menor += 1;
+        mayor -= 1;
+        i += 2;
+    }
+
+    let mut out = String::new();
+    for i in 0..n_usize {
+        out.push_str(&permut[i].to_string());
+        out.push(' ');
+    }
+    out.pop(); // remove last space
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Stack;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+
+public class Main
+{
+
+	private static BufferedReader in;
+	private static BufferedWriter out;
+	private static int n;
+	private static int k;
+
+
+	public static void main(String... args) throws IOException
+	{
+		// streams
+		boolean file = false;
+		if (file)
+			in = new BufferedReader(new FileReader("input.txt"));
+		else
+			in = new BufferedReader(new InputStreamReader(System.in));
+		out = new BufferedWriter(new OutputStreamWriter(System.out));
+		// out = new BufferedWriter(new FileWriter("output.txt"));
+		StringTokenizer tok;
+		
+		// read params
+		tok = new StringTokenizer(in.readLine());
+		n  =Integer.parseInt(tok.nextToken());
+		k  =Integer.parseInt(tok.nextToken());
+		
+		// solve
+		solve();
+
+		out.flush();
+	}
+
+
+	private static void solve() throws IOException
+	{
+		// check we can make those k
+		int maxEdges = n * (n-1) / 2;
+		int maxGames = (maxEdges / n) * n;
+		if (k*n > maxGames )
+		{
+			out.write("-1\n");
+			return;
+		}
+		
+		// output
+		out.write(k*n + "\n");
+		for (int g = 1; g <= k; g++) 
+		{
+			for (int i = 1; i <= n; i++) 
+			{
+				int a = i;
+				int b = i + g;
+				if (b > n)
+				 b-= n;
+				out.write(a + " " + b + "\n");
+			}
+				
+		}
+			
+			
+		
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let k: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut out = String::new();
+
+    let max_edges: i32 = n * (n - 1) / 2;
+    let max_games: i32 = (max_edges / n) * n;
+
+    if k * n > max_games {
+        out.push_str("-1\n");
+        print!("{out}");
+        return;
+    }
+
+    out.push_str(&(k * n).to_string());
+    out.push('\n');
+
+    for g in 1..=k {
+        for i in 1..=n {
+            let a = i;
+            let mut b = i + g;
+            if b > n {
+                b -= n;
+            }
+            out.push_str(&a.to_string());
+            out.push(' ');
+            out.push_str(&b.to_string());
+            out.push('\n');
+        }
+    }
+
+    let mut stdout = io::BufWriter::new(io::stdout());
+    stdout.write_all(out.as_bytes()).unwrap();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

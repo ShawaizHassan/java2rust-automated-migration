@@ -1,0 +1,504 @@
+INDEX: 67 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Main {
+
+    public static void main(String[] args) {
+        ScanReader in=new ScanReader(System.in);
+        int n = in.scanInt();
+        int k = in.scanInt();
+        String a=in.scanString();
+        ArrayList<Character> array=new ArrayList<Character>();
+        for(int i=0;i<n;i++){
+            if(!array.contains(a.charAt(i))){
+                array.add(a.charAt(i));
+            }
+        }
+        Collections.sort(array);
+        long ans=0;
+        int t=1;
+        boolean aa[]=new boolean[n];
+        int count=0;
+        for(int i=0;i<array.size();i++){
+
+            if(!aa[i]) {
+                count++;
+                if(count<=k) {
+                    ans += (array.get(i) - 'a' + 1);
+                }else{
+
+                    System.out.println(ans);
+                    return;
+                }
+                if(i+1<array.size() && (array.get(i+1)-array.get(i))<2){
+                    aa[i+1]=true;
+                }
+            }
+
+        }
+        if(count<k){
+            System.out.println("-1");
+            return;
+        }
+        System.out.println(ans);
+
+    }
+
+    static  class ScanReader {
+        /**
+         * @author Nirav
+         */
+        private byte[] buf = new byte[4 * 1024];
+        private int INDEX;
+        private BufferedInputStream in;
+        private int TOTAL;
+
+        public ScanReader(InputStream inputStream)   {
+            in = new BufferedInputStream(inputStream);
+        }
+
+        private int scan() {
+            if (INDEX >= TOTAL) {
+                INDEX = 0;
+                try {
+                    TOTAL = in.read(buf);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (TOTAL <= 0) return -1;
+            }
+            return buf[INDEX++];
+        }
+
+
+        public String scanLine() {
+            int c = scan();
+            if (c == -1) return null;
+            while (isWhiteSpace(c)) c = scan();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = scan();
+            } while (c != '\n' && c != -1);
+            return res.toString();
+        }
+
+        public char scanChar() {
+            int c = scan();
+            while (isWhiteSpace(c)) c = scan();
+            return (char) c;
+        }
+
+
+        public int scanInt() {
+            int I = 0;
+            int n = scan();
+            while (isWhiteSpace(n)) n = scan();
+            int neg = 1;
+            if (n == '-') {
+                neg = -1;
+                n = scan();
+            }
+            while (!isWhiteSpace(n)) {
+                if (n >= '0' && n <= '9') {
+                    I *= 10;
+                    I += n - '0';
+                    n = scan();
+                }
+            }
+            return neg * I;
+        }
+
+        public String scanString() {
+            int c = scan();
+            while (isWhiteSpace(c)) c = scan();
+            StringBuilder RESULT = new StringBuilder();
+            do {
+                RESULT.appendCodePoint(c);
+                c = scan();
+            } while (!isWhiteSpace(c));
+            return RESULT.toString();
+        }
+
+        private boolean isWhiteSpace(int n) {
+            if (n == ' ' || n == '\n' || n == '\r' || n == '\t' || n == -1) return true;
+            else return false;
+        }
+
+        public long scanLong() {
+            long I = 0;
+            int n = scan();
+            while (isWhiteSpace(n)) n = scan();
+            int neg = 1;
+            if (n == '-') {
+                neg = -1;
+                n = scan();
+            }
+            while (!isWhiteSpace(n)) {
+                if (n >= '0' && n <= '9') {
+                    I *= 10;
+                    I += n - '0';
+                    n = scan();
+                }
+            }
+            return neg * I;
+        }
+
+        public void scanLong(long[] A) {
+            for (int i = 0; i < A.length; i++) A[i] = scanLong();
+        }
+
+        public void scanInt(int[] A) {
+            for (int i = 0; i < A.length; i++) A[i] = scanInt();
+        }
+
+        public double scanDouble() {
+            int c = scan();
+            while (isWhiteSpace(c)) c = scan();
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = scan();
+            }
+            double RESULT = 0;
+            while (!isWhiteSpace(c) && c != '.') {
+                if (c == 'e' || c == 'E') {
+                    return RESULT * Math.pow(10, scanInt());
+                }
+                RESULT *= 10;
+                RESULT += c - '0';
+                c = scan();
+            }
+            if (c == '.') {
+                c = scan();
+                double m = 1;
+                while (!isWhiteSpace(c)) {
+                    if (c == 'e' || c == 'E') {
+                        return RESULT * Math.pow(10, scanInt());
+                    }
+                    m /= 10;
+                    RESULT += (c - '0') * m;
+                    c = scan();
+                }
+            }
+            return RESULT * sgn;
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+import java.util.HashMap;
+
+public class Tester {
+	static Node[] node;
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner scan = new Scanner(System.in);
+		int n = scan.nextInt();
+		node = new Node[n];
+		
+		for(int i=0;i<n;i++){
+			node[i] = new Node(scan.nextLong());
+		}
+		for(int i=0;i<n-1;i++){
+			int t = scan.nextInt();
+			node[t-1].edge.put(i+1,scan.nextLong());
+		}
+		df(node[0]);
+		System.out.println(f(node[0],0));
+	}
+	
+	private static int f(Node n, long t) {
+		int c = 0;
+		if(t>n.a)
+			return n.c;
+		for(int i:n.edge.keySet()){
+			long total = t + n.edge.get(i);
+			if(total>0)
+			c = c + f(node[i],total);
+			else
+			c = c + f(node[i],0);
+		}
+		return c;
+	}
+
+	public static void df(Node n){
+		int c = 1;
+		for(int i:n.edge.keySet()){
+			df(node[i]);
+			c += node[i].c;
+		}
+		n.c = c;
+	}
+	public static class Node {
+	long a=0;
+	HashMap<Integer,Long> edge = new HashMap<Integer,Long>();
+	int c=0;
+	
+	public Node(long a){
+		this.a = a;
+	}
+}
+
+}
+
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+#[derive(Clone)]
+struct Node {
+    a: i64,
+    c: i32,
+    edge: Vec<(usize, i64)>, // (child, weight)
+}
+
+fn df(nodes: &mut [Node]) {
+    let n = nodes.len();
+    if n == 0 {
+        return;
+    }
+    let mut stack: Vec<(usize, bool)> = Vec::with_capacity(2 * n);
+    stack.push((0, false));
+
+    while let Some((u, visited)) = stack.pop() {
+        if !visited {
+            stack.push((u, true));
+            let children = nodes[u].edge.clone();
+            for (v, _) in children {
+                stack.push((v, false));
+            }
+        } else {
+            let mut c: i32 = 1;
+            for &(v, _) in nodes[u].edge.iter() {
+                c += nodes[v].c;
+            }
+            nodes[u].c = c;
+        }
+    }
+}
+
+fn f(nodes: &[Node], start: usize, t0: i64) -> i32 {
+    let mut ans: i32 = 0;
+    let mut stack: Vec<(usize, i64)> = Vec::new();
+    stack.push((start, t0));
+
+    while let Some((u, t)) = stack.pop() {
+        if t > nodes[u].a {
+            ans += nodes[u].c;
+            continue;
+        }
+        for &(v, w) in nodes[u].edge.iter() {
+            let total = t + w;
+            if total > 0 {
+                stack.push((v, total));
+            } else {
+                stack.push((v, 0));
+            }
+        }
+    }
+    ans
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+
+    let mut nodes: Vec<Node> = Vec::with_capacity(n);
+    for _ in 0..n {
+        let a: i64 = it.next().unwrap().parse().unwrap();
+        nodes.push(Node {
+            a,
+            c: 0,
+            edge: Vec::new(),
+        });
+    }
+
+    for i in 0..n.saturating_sub(1) {
+        let t: usize = it.next().unwrap().parse::<usize>().unwrap() - 1;
+        let w: i64 = it.next().unwrap().parse().unwrap();
+        nodes[t].edge.push((i + 1, w));
+    }
+
+    df(&mut nodes);
+    let res = f(&nodes, 0, 0);
+    println!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

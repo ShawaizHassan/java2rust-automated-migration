@@ -1,0 +1,319 @@
+INDEX: 450 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static int MOD = (int)Math.pow(10, 9)+7;
+
+
+    public static long powMod(long X,long N){
+        long result = 1;
+        X = X % MOD;
+        while(N > 0){
+            if(N % 2 == 1)
+                result = (result * X) % MOD;
+            N >>= 1;
+            X = (X*X)%MOD;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        long X = in.nextLong();
+        long K = in.nextLong();
+        if(X == 1)
+            System.out.println(powMod(2, K) + 1);
+        else if(X == 0)
+            System.out.println(0);
+        else if(K == 0)
+            System.out.println((X*2)%MOD);
+        else {
+            long upperLimit = ((X%MOD) * powMod(2, K)) /*% MOD*/;
+            long diff = (X - 1) % MOD;
+            long lowerLimit = ((-diff*((1-powMod(2, K)))) + (X%MOD))%MOD;
+
+            System.out.println((upperLimit + lowerLimit) % MOD);
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.StringTokenizer;
+
+public class C {
+
+	static long MOD = (long) (1e9 + 7);
+	static int N;
+	static long initial;
+
+	public static void main(String[] args) throws IOException {
+		
+		BufferedReader s = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(s.readLine());
+		String numberString = s.readLine();
+		StringTokenizer st = new StringTokenizer(numberString, " ");
+		
+		initial = powmod(2, N) + 1;
+		Long[] vals = new Long[N];
+		int ind = 0;
+		while(st.hasMoreTokens())
+			vals[ind++] = Long.parseLong(st.nextToken());
+		
+		ArrayList<Long> vv = new ArrayList<Long>(Arrays.asList(vals));
+		Collections.sort(vv);
+		ind = 0;
+		for(Long l : vv)
+			vals[ind++] = l;
+		
+		long tot = 0;
+		for (int i = 0; i < N - 1; i++) {
+			tot += (vals[i + 1] - vals[i]) * getCoefficient(i);
+			tot %= MOD;
+		}
+
+		System.out.println(tot);
+
+		s.close();
+		
+	}
+
+	public static long getCoefficient(int i) {
+		long cur = initial;
+		cur -= powmod(2, N - i - 1);
+		cur -= powmod(2, i + 1);
+		cur %= MOD;
+		cur = (cur + MOD) % MOD;
+		return cur;
+	}
+
+	public static long powmod(long a, long b) {
+		long ans = 1;
+
+		while (b > 0) {
+			if (b % 2 == 1) {
+				ans = (ans % MOD) * (a % MOD);
+				b--;
+			} else {
+				a = (a % MOD) * (a % MOD);
+				b /= 2;
+			}
+			ans %= MOD;
+			a %= MOD;
+		}
+
+		return ans;
+	}
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 1_000_000_007;
+
+fn powmod(mut a: i64, mut b: i64) -> i64 {
+    let mut ans: i64 = 1;
+    while b > 0 {
+        if b % 2 == 1 {
+            ans = ((ans % MOD) * (a % MOD)) % MOD;
+            b -= 1;
+        } else {
+            a = ((a % MOD) * (a % MOD)) % MOD;
+            b /= 2;
+        }
+        ans %= MOD;
+        a %= MOD;
+    }
+    ans
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+    let n_usize = n as usize;
+
+    let initial: i64 = powmod(2, n as i64) + 1;
+
+    let mut vals: Vec<i64> = Vec::with_capacity(n_usize);
+    for _ in 0..n_usize {
+        if let Some(x) = it.next() {
+            vals.push(x.parse().unwrap());
+        } else {
+            vals.push(0);
+        }
+    }
+
+    vals.sort();
+
+    let mut tot: i64 = 0;
+    if n_usize >= 2 {
+        for i in 0..(n_usize - 1) {
+            let i_i32 = i as i32;
+            let mut cur = initial;
+            cur -= powmod(2, (n - i_i32 - 1) as i64);
+            cur -= powmod(2, (i_i32 + 1) as i64);
+            cur %= MOD;
+            cur = (cur + MOD) % MOD;
+
+            let diff = vals[i + 1] - vals[i];
+            let add = ((diff as i128) * (cur as i128)) % (MOD as i128);
+            tot = (tot + add as i64) % MOD;
+        }
+    }
+
+    println!("{}", tot);
+}
+```
+
+Java:
+```
+/*
+If you want to aim high, aim high
+Don't let that studying and grades consume you
+Just live life young
+******************************
+If I'm the sun, you're the moon
+Because when I go up, you go down
+*******************************
+I'm working for the day I will surpass you
+https://www.a2oj.com/Ladder16.html
+*/
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+   public class x1009E
+   {
+      static long MOD = 998244353L;
+      public static void main(String omkar[]) throws Exception
+      {
+         BufferedReader infile = new BufferedReader(new InputStreamReader(System.in));  
+         StringTokenizer st = new StringTokenizer(infile.readLine());
+         int N = Integer.parseInt(st.nextToken());
+         int[] arr = new int[N];
+         st = new StringTokenizer(infile.readLine());
+         for(int i=0; i < N; i++)
+            arr[i] = Integer.parseInt(st.nextToken());
+         long res = 0L;
+         long curr = arr[0];
+         for(int i=0; i < N; i++)
+         {
+            res = (res+curr)%MOD;
+            if(i+1 < N)
+            {
+               long addend = arr[i+1]-arr[i];
+               addend = (addend*power(power(2,i+1,MOD),MOD-2,MOD))%MOD;
+               curr += addend;
+               curr %= MOD;
+            }
+         }
+         res = (res*power(2, N, MOD))%MOD;
+         res = (res*power(2, MOD-2, MOD))%MOD;
+         System.out.println(res);
+      }
+      public static long power(long x, long y, long p) 
+      { 
+          long res = 1L;      
+          x = x % p;  
+          while (y > 0) 
+          { 
+              if((y & 1)==1) 
+                  res = (res * x) % p; 
+              y = y >> 1;  
+              x = (x * x) % p;  
+          } 
+          return res; 
+      }
+   }
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 998_244_353;
+
+fn power(mut x: i64, mut y: i64, p: i64) -> i64 {
+    let mut res: i64 = 1;
+    x %= p;
+    while y > 0 {
+        if (y & 1) == 1 {
+            res = (res * x) % p;
+        }
+        y >>= 1;
+        x = (x * x) % p;
+    }
+    res
+}
+
+fn main() {
+    // Fast token scanner
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+    let mut arr: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        arr.push(it.next().unwrap().parse::<i32>().unwrap());
+    }
+
+    let mut res: i64 = 0;
+    let mut curr: i64 = arr[0] as i64;
+
+    for i in 0..n {
+        res = (res + curr) % MOD;
+
+        if i + 1 < n {
+            let mut addend: i64 = (arr[i + 1] as i64) - (arr[i] as i64);
+            let denom = power(2, (i + 1) as i64, MOD);
+            let inv = power(denom, MOD - 2, MOD);
+            addend = (addend * inv) % MOD;
+            curr += addend;
+            curr %= MOD;
+        }
+    }
+
+    res = (res * power(2, n as i64, MOD)) % MOD;
+    res = (res * power(2, MOD - 2, MOD)) % MOD;
+
+    println!("{}", res);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

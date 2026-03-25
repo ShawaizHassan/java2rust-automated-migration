@@ -1,0 +1,452 @@
+INDEX: 173 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.awt.geom.*;
+
+public class TvSet {
+    public static long gcd(long a, long b) {
+        if (a == 1 || b == 1)
+            return 1;
+        if (a % b == 0)
+            return b;
+        return gcd(b, a % b);
+    }
+
+    public static void main(String[] args) {
+        MyScanner sc = new MyScanner();
+        long a = sc.nl(), b = sc.nl(), x = sc.nl(), y = sc.nl();
+        long hcf = gcd(x, y);
+        x /= hcf;
+        y /= hcf;
+        long v1 = a / x;
+        long v2 = b / y;
+        System.out.println(Math.min(v1, v2));
+    }
+
+    /////////// TEMPLATE FROM HERE /////////////////
+    private static class MyScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public MyScanner() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int ni() {
+            return Integer.parseInt(next());
+        }
+
+        float nf() {
+            return Float.parseFloat(next());
+        }
+
+        long nl() {
+            return Long.parseLong(next());
+        }
+
+        double nd() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.awt.geom.*;
+public class Travel{
+    public static void main(String[] args) {
+      MyScanner sc=new MyScanner();
+      int towers=sc.ni();
+      int floors=sc.ni();
+      int a=sc.ni();
+      int b=sc.ni();
+      int q=sc.ni();
+      while(q-->0) {
+    	  int ans=0;
+    	  int initBuild=sc.ni(), initFloor=sc.ni(), finalBuild=sc.ni(), finalFloor=sc.ni();
+    	  int buildGap=Math.abs(initBuild-finalBuild);
+    	  int elevation=-1;
+    	  
+    	  if(initBuild==finalBuild && initFloor==finalFloor) {
+    		  System.out.println(0);
+    		  continue;
+    	  }
+    	  
+    	  else if(initBuild==finalBuild) {
+    		  System.out.println(Math.abs(initFloor-finalFloor));
+    		  continue;
+    	  }
+    	  
+    	  if(initFloor<a) {ans+=a-initFloor;elevation=a;}
+    	  else if(initFloor>b) {ans+=initFloor-b;elevation=b;}
+    	  else {ans=0;elevation=initFloor;}
+    	  
+    	  ans+=buildGap;
+    	  ans+=Math.abs(elevation-finalFloor);
+    	  
+    	  System.out.println(ans);
+      }
+  }
+
+
+    private static class MyScanner {
+      BufferedReader br;
+      StringTokenizer st;
+
+      public MyScanner() {
+         br = new BufferedReader(new InputStreamReader(System.in));
+      }
+
+      String next() {
+          while (st == null || !st.hasMoreElements()) {
+              try {
+                  st = new StringTokenizer(br.readLine());
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          }
+          return st.nextToken();
+      }
+
+      int ni() {
+          return Integer.parseInt(next());
+      }
+      float nf() {
+        return Float.parseFloat(next());
+      }
+      long nl() {
+          return Long.parseLong(next());
+      }
+
+      double nd() {
+          return Double.parseDouble(next());
+      }
+
+      String nextLine(){
+          String str = "";
+	  try {
+	     str = br.readLine();
+	  } catch (IOException e) {
+	     e.printStackTrace();
+	  }
+	  return str;
+      }
+   }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let _towers = sc.next_i32();
+    let _floors = sc.next_i32();
+    let a = sc.next_i32();
+    let b = sc.next_i32();
+    let mut q = sc.next_i32();
+
+    let mut out = String::new();
+
+    while q > 0 {
+        q -= 1;
+        let init_build = sc.next_i32();
+        let init_floor = sc.next_i32();
+        let final_build = sc.next_i32();
+        let final_floor = sc.next_i32();
+
+        if init_build == final_build && init_floor == final_floor {
+            out.push_str("0\n");
+            continue;
+        } else if init_build == final_build {
+            out.push_str(&(i32::abs(init_floor - final_floor).to_string()));
+            out.push('\n');
+            continue;
+        }
+
+        let build_gap = i32::abs(init_build - final_build);
+        let mut ans: i32 = 0;
+        let elevation: i32;
+
+        if init_floor < a {
+            ans += a - init_floor;
+            elevation = a;
+        } else if init_floor > b {
+            ans += init_floor - b;
+            elevation = b;
+        } else {
+            ans = 0;
+            elevation = init_floor;
+        }
+
+        ans += build_gap;
+        ans += i32::abs(elevation - final_floor);
+
+        out.push_str(&ans.to_string());
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.awt.geom.*;
+public class RecursiveQueries{
+    static final int MAX=1000007;
+    static int ans[]=new int[MAX];
+    public static int g(int n){
+      if(n<10) return n;
+      if(ans[n]!=0) return ans[n];
+      int p=1,m=n;
+      while(m>0){
+        int d=m%10;
+        if(d!=0)
+          p*=d;
+        m/=10;
+      }
+      if(p<10){
+        ans[n]=p;
+        return ans[n];
+      }
+      else
+        return g(p);
+    }
+    public static void main(String[] args) {
+        MyScanner sc=new MyScanner();
+        for(int i=1;i<MAX;i++)
+          ans[i]=g(i);
+        int table[][]=new int[10][MAX];
+        for(int i=1;i<10;i++){
+          for(int j=1;j<MAX;j++){
+            if(ans[j]==i) table[i][j]=table[i][j-1]+1;
+            else table[i][j]=table[i][j-1];
+          }
+        }
+        int q=sc.ni();
+        while(q-->0){
+          int L=sc.ni();
+          int R=sc.ni();
+          int k=sc.ni();
+          int answer=table[k][R]-table[k][L-1];
+          System.out.println(answer);
+        }
+    }
+
+
+    private static class MyScanner {
+      BufferedReader br;
+      StringTokenizer st;
+
+      public MyScanner() {
+         br = new BufferedReader(new InputStreamReader(System.in));
+      }
+
+      String next() {
+          while (st == null || !st.hasMoreElements()) {
+              try {
+                  st = new StringTokenizer(br.readLine());
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          }
+          return st.nextToken();
+      }
+
+      int ni() {
+          return Integer.parseInt(next());
+      }
+      float nf() {
+        return Float.parseFloat(next());
+      }
+      long nl() {
+          return Long.parseLong(next());
+      }
+
+      double nd() {
+          return Double.parseDouble(next());
+      }
+
+      String nextLine(){
+          String str = "";
+	  try {
+	     str = br.readLine();
+	  } catch (IOException e) {
+	     e.printStackTrace();
+	  }
+	  return str;
+      }
+   }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MAX: usize = 1_000_007;
+
+fn g(n: usize, ans: &mut [i32]) -> i32 {
+    if n < 10 {
+        return n as i32;
+    }
+    if ans[n] != 0 {
+        return ans[n];
+    }
+    let mut p: i32 = 1;
+    let mut m = n as i32;
+    while m > 0 {
+        let d = m % 10;
+        if d != 0 {
+            p *= d;
+        }
+        m /= 10;
+    }
+    if p < 10 {
+        ans[n] = p;
+        ans[n]
+    } else {
+        g(p as usize, ans)
+    }
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut ans = vec![0i32; MAX];
+    for i in 1..MAX {
+        let v = g(i, &mut ans);
+        ans[i] = v;
+    }
+
+    let mut table = vec![vec![0i32; MAX]; 10];
+    for i in 1..10 {
+        for j in 1..MAX {
+            let prev = table[i][j - 1];
+            if ans[j] == i as i32 {
+                table[i][j] = prev + 1;
+            } else {
+                table[i][j] = prev;
+            }
+        }
+    }
+
+    let mut sc = Scanner::new();
+    let q = sc.next_i32();
+    let mut out = String::new();
+    for _ in 0..q {
+        let l = sc.next_i32() as usize;
+        let r = sc.next_i32() as usize;
+        let k = sc.next_i32() as usize;
+        let answer = table[k][r] - table[k][l - 1];
+        out.push_str(&format!("{answer}\n"));
+    }
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

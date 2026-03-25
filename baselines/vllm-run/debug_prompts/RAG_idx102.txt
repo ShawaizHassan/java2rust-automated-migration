@@ -1,0 +1,217 @@
+INDEX: 102 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+ 
+public class Solution{
+    
+    public static void main(String args[]){
+        
+        Scanner scan = new Scanner(System.in);
+        
+        int limar = scan.nextInt();
+        int bob = scan.nextInt();
+        int years = 0;
+        while(limar<=bob){
+            years++;
+            limar=limar*3;
+            bob=bob*2;
+        }
+        System.out.println(years);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Scanner;
+
+public class Bob {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int j;
+        HashSet<Integer> a = new HashSet<>();
+        for (j = 0; j < n; j++) {
+            a.add(sc.nextInt());
+        }
+        if (a.size() == 1) {
+            System.out.println("NO");
+        } else {
+            ArrayList l = new ArrayList(a);
+            Collections.sort(l);
+            int min = (int) Collections.min(l);
+            int index = l.indexOf(min);
+            int ans = index + 1;
+            System.out.println(l.get(ans));
+        }
+
+    }
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashSet;
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+
+    let mut set: HashSet<i32> = HashSet::new();
+    for _ in 0..n {
+        let v: i32 = it.next().unwrap().parse().unwrap();
+        set.insert(v);
+    }
+
+    if set.len() == 1 {
+        println!("NO");
+    } else {
+        let mut vec: Vec<i32> = set.into_iter().collect();
+        vec.sort();
+        println!("{}", vec[1]);
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+public class Bob{
+public static void main(String[] args){
+Scanner in=new Scanner(System.in);
+int n=in.nextInt();
+
+int sum=0;
+for(int i=0;i<n+1;i++)
+{
+String s=in.nextLine();
+if(s.equals("Tetrahedron")){
+sum=sum+4;
+}
+else if(s.equals("Cube")){
+sum=sum+6;
+}
+else if(s.equals("Octahedron"))
+{
+sum=sum+8;
+}
+else if(s.equals("Dodecahedron"))
+{
+sum=sum+12;
+}
+else if(s.equals("Icosahedron"))
+{
+sum=sum+20;
+}}
+System.out.println(sum);
+}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut s = String::new();
+        io::stdin().read_to_string(&mut s).unwrap();
+        Self { input: s.into_bytes(), idx: 0 }
+    }
+
+    fn next_int(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut val: i32 = 0;
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_digit() {
+            val = val * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        sign * val
+    }
+
+    fn next_line(&mut self) -> String {
+        if self.idx >= self.input.len() {
+            return String::new();
+        }
+        if self.input[self.idx] == b'\n' {
+            self.idx += 1;
+            return String::new();
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && self.input[self.idx] != b'\n' {
+            self.idx += 1;
+        }
+        let end = self.idx;
+        if self.idx < self.input.len() && self.input[self.idx] == b'\n' {
+            self.idx += 1;
+        }
+        let mut slice = &self.input[start..end];
+        if !slice.is_empty() && slice[slice.len() - 1] == b'\r' {
+            slice = &slice[..slice.len() - 1];
+        }
+        String::from_utf8_lossy(slice).to_string()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_int();
+    let mut sum: i32 = 0;
+
+    for _ in 0..(n + 1) {
+        let s = sc.next_line();
+        if s == "Tetrahedron" {
+            sum += 4;
+        } else if s == "Cube" {
+            sum += 6;
+        } else if s == "Octahedron" {
+            sum += 8;
+        } else if s == "Dodecahedron" {
+            sum += 12;
+        } else if s == "Icosahedron" {
+            sum += 20;
+        }
+    }
+
+    println!("{}", sum);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

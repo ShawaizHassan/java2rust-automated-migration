@@ -1,0 +1,375 @@
+INDEX: 385 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class Prob_Hanoi{
+    public static long V[][];
+    public static boolean Visited[][][];
+    public static long MEMO[][][];
+    public static void main(String args[]){
+        Scanner input=new Scanner(System.in);
+        V=new long[3][];
+        V[0]=new long[3];
+        V[1]=new long[3];
+        V[2]=new long[3];
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                V[i][j]=input.nextLong();
+            }
+        }
+        int n=input.nextInt();
+        Visited=new boolean[n+1][][];
+        MEMO=new long[n+1][][];
+        for(int i=0;i<=n;i++){
+            Visited[i]=new boolean[3][];
+            MEMO[i]=new long[3][];
+            for(int j=0;j<3;j++){
+                Visited[i][j]=new boolean[3];
+                for(int k=0;k<3;k++){
+                    Visited[i][j][k]=false;
+                }
+                MEMO[i][j]=new long[3];
+            }
+        }
+        onlyOne();        
+        for(int i=1;i<n;i++){
+            for(int j=0;j<3;j++){
+                for(int k=0;k<3;k++){
+                    if(j!=k){
+                     //   System.out.println(i+""+j+""+k+")="+DP(i,j,k));                        
+                    }
+                }
+            }
+        }
+        System.out.println(DP(n,0,2));
+        
+    }
+    public static void onlyOne(){
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                    if(i==j) continue;
+                    int k=0+1+2-i-j;
+                    MEMO[1][i][j]=Math.min(V[i][j],V[i][k]+V[k][j]);
+                    Visited[1][i][j]=true;
+            }
+        }
+    }
+    public static long DP(int n,int i,int j){
+        if(Visited[n][i][j])
+            return MEMO[n][i][j];
+        int k=0+1+2-i-j;
+        MEMO[n][i][j]=Math.min(DP(n-1,i,k)+V[i][j]+DP(n-1,k,j),
+                               DP(n-1,i,j)+V[i][k]+DP(n-1,j,i)+V[k][j]+DP(n-1,i,j)); 
+       Visited[n][i][j]   =true;
+       return MEMO[n][i][j];
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+// package Div2;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class CF277 {
+	private static final int MAXN = 2010;
+	private static final long MOD = (int)1e9 + 7;
+
+	private static ArrayList<Integer>[] adj = new ArrayList[MAXN];
+	private static int[] a = new int[MAXN];
+	private static long[] f = new long[MAXN];
+	private static boolean[] visited = new boolean[MAXN];
+
+	private static int d, n;
+	
+	private static void DFS(int u, int root){
+		visited[u] = true;
+		f[u] = 1;
+		for(int i=0; i<adj[u].size(); i++){
+			int v = adj[u].get(i);
+			if(!visited[v]){
+				if((a[v] < a[root]) || (a[v] > a[root] +d)) continue;
+				if((a[v] == a[root]) && (v < root)) continue;
+				DFS(v, root);
+				f[u] = f[u] * (f[v] + 1) % MOD;
+			}
+		}
+	}
+	
+	public static void main(String[] args){
+		Scanner input = new Scanner(System.in);
+		d = input.nextInt();
+		n = input.nextInt();
+				
+		for(int i=1; i<=n; i++){
+			adj[i] = new ArrayList<Integer>();
+			a[i] = input.nextInt();
+		}
+		for(int i=1; i<=n-1; i++){
+			int u, v;
+			u = input.nextInt();
+			v = input.nextInt();
+			adj[u].add(v);
+			adj[v].add(u);
+		}
+		input.close();
+		
+		long result = 0;
+		for(int i=1; i<=n; i++){
+			for(int j=1; j<=n; j++){
+				f[j] = 0;
+				visited[j] = false;
+			}
+			DFS(i, i);
+			result = (result + f[i]) % MOD;
+		}
+		
+		System.out.println(result);
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 1_000_000_007;
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_usize(&mut self) -> usize {
+        self.next_i32() as usize
+    }
+}
+
+fn dfs(
+    u: usize,
+    root: usize,
+    adj: &Vec<Vec<usize>>,
+    a: &Vec<i32>,
+    d: i32,
+    visited: &mut Vec<bool>,
+    f: &mut Vec<i64>,
+) {
+    visited[u] = true;
+    f[u] = 1;
+    for &v in &adj[u] {
+        if !visited[v] {
+            if a[v] < a[root] || a[v] > a[root] + d {
+                continue;
+            }
+            if a[v] == a[root] && v < root {
+                continue;
+            }
+            dfs(v, root, adj, a, d, visited, f);
+            f[u] = (f[u] * ((f[v] + 1) % MOD)) % MOD;
+        }
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let d = sc.next_i32();
+    let n = sc.next_usize();
+
+    let mut adj: Vec<Vec<usize>> = vec![Vec::new(); n + 1];
+    let mut a: Vec<i32> = vec![0; n + 1];
+    for i in 1..=n {
+        a[i] = sc.next_i32();
+    }
+    for _ in 1..=n.saturating_sub(1) {
+        let u = sc.next_usize();
+        let v = sc.next_usize();
+        adj[u].push(v);
+        adj[v].push(u);
+    }
+
+    let mut f: Vec<i64> = vec![0; n + 1];
+    let mut visited: Vec<bool> = vec![false; n + 1];
+
+    let mut result: i64 = 0;
+    for i in 1..=n {
+        for j in 1..=n {
+            f[j] = 0;
+            visited[j] = false;
+        }
+        dfs(i, i, &adj, &a, d, &mut visited, &mut f);
+        result = (result + f[i]) % MOD;
+    }
+
+    println!("{}", result);
+}
+```
+
+Java:
+```
+/* package whatever; // don't place package name! */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+public class Main
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		Scanner scan=new Scanner(System.in);
+		String s=scan.next();
+		int[][] memo=new int[26][5001];
+		int[] sz=new int[26];
+		for(int i=0;i<26;i++){sz[i]=0;}
+		int n=s.length();
+		for(int i=0;i<n;i++){
+			char c=s.charAt(i);
+			int p=c-'a';
+			memo[p][sz[p]]=i;
+			sz[p]++;
+		}
+		int res=0;
+		for(int i=0;i<26;i++){
+			int tot=0;
+			for(int d=0;d<=n;d++){
+				int[] fr=new int[26];
+				for(int j=0;j<26;j++){fr[j]=0;}
+				for(int k=0;k<sz[i];k++){
+					int ind=(memo[i][k]+d)%n;
+					int v=s.charAt(ind)-'a';
+					fr[v]++;
+				}
+				int count=0;
+				for(int j=0;j<26;j++){
+					if(fr[j]==1){
+						count++;
+					}
+				}
+				tot=(int)Math.max(tot,count);
+			}
+			res+=tot;
+		}
+		System.out.println(1.0*res/n);
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_string(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut scan = FastScanner::new();
+    let s = scan.next_string();
+    let bytes = s.as_bytes();
+    let n = bytes.len();
+    if n == 0 {
+        return;
+    }
+
+    let mut memo = vec![vec![0i32; 5001]; 26];
+    let mut sz = vec![0usize; 26];
+
+    for (i, &c) in bytes.iter().enumerate() {
+        let p = (c - b'a') as usize;
+        if sz[p] < 5001 {
+            memo[p][sz[p]] = i as i32;
+        }
+        sz[p] += 1;
+    }
+
+    let mut res: i32 = 0;
+    for i in 0..26usize {
+        let mut tot: i32 = 0;
+        for d in 0..=n {
+            let mut fr = [0i32; 26];
+            for k in 0..sz[i] {
+                let pos = memo[i][k] as usize;
+                let ind = (pos + d) % n;
+                let v = (bytes[ind] - b'a') as usize;
+                fr[v] += 1;
+            }
+            let mut count: i32 = 0;
+            for j in 0..26usize {
+                if fr[j] == 1 {
+                    count += 1;
+                }
+            }
+            if count > tot {
+                tot = count;
+            }
+        }
+        res += tot;
+    }
+
+    let val = (res as f64) / (n as f64);
+    if val.fract() == 0.0 {
+        println!("{:.1}", val);
+    } else {
+        println!("{}", val);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

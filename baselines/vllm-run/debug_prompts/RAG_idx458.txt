@@ -1,0 +1,414 @@
+INDEX: 458 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.util.Comparator;
+public class Main
+{
+    public static void main(String[] args)throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer stk =new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(stk.nextToken());
+        int m = Integer.parseInt(stk.nextToken());
+        int[] arr = new int[n];
+        stk = new StringTokenizer(br.readLine());
+
+        for(int i=0;i<n;i++){
+            arr[i]  =Integer.parseInt(stk.nextToken());
+        }
+
+        Arrays.sort(arr);
+        int l = 1;
+        int r = n;
+        long min = Long.MAX_VALUE;
+        while(l<=r){
+            int mid = (l+r)/2;
+            long sum = 0;
+            int cnt = 0 ;
+            //System.out.println(mid);
+            for(int i=n-1; i >= 0 ; i -= mid){
+                for(int k=0;k<mid && i - k >=0;k++){
+                    sum += Math.max(0,arr[i-k] - cnt);
+                }
+                cnt++;
+            }
+            //System.out.println(sum);
+            if(sum >= m){
+                r = mid -1;
+                min = Math.min(mid,min);
+            }
+            else
+                l = mid +1;
+        }
+        if(min == Long.MAX_VALUE){
+            System.out.println(-1);
+        }
+        else{
+            System.out.println(min);
+        }
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main{
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner scanner =new Scanner(System.in);
+//        Scanner scanner =new Scanner(new FileInputStream("src/in.txt"));
+        int n=scanner.nextInt();
+        int k=scanner.nextInt();
+        int s=scanner.nextInt();
+        int t=scanner.nextInt();
+        int [] c=new int[n];
+        int [] v=new int[n];
+        for(int i=0;i<n;i++){
+            c[i]=scanner.nextInt();
+            v[i]=scanner.nextInt();
+        }
+        int pre = 0;
+        int []g=new int[k];
+        for(int i=0;i<k;i++){
+            g[i]=scanner.nextInt();
+        }
+        Arrays.sort(g);
+
+
+        List<Integer> list = new LinkedList<>();
+        for(int i=0;i<k;i++){
+            int cnt = g[i];
+            list.add(cnt-pre);
+            pre=cnt;
+        }
+        list.add(s-pre);
+
+        int l=0,r=Integer.MAX_VALUE/2;
+        int ans = Integer.MAX_VALUE;
+        while (r>=l){
+            int mid=(l+r)>>1;
+            int cost = 0;
+            for(int p:list){
+                if(p>mid){
+                    cost=Integer.MAX_VALUE;
+                    break;
+                }
+
+                if(p*2<=mid){
+                    cost+=p;
+                }else{
+                    cost+=3*p-mid;
+                }
+            }
+
+            if(cost>t){
+                l=mid+1;
+            }else{
+                ans=mid;
+                r=mid-1;
+            }
+//            System.out.println(mid+" "+cost);
+        }
+
+
+        int ret = Integer.MAX_VALUE;
+        for(int i=0;i<n;i++){
+            if(ans<=v[i]){
+                ret=Math.min(ret,c[i]);
+            }
+        }
+        if(ret==Integer.MAX_VALUE){
+            ret=-1;
+        }
+        System.out.println(ret);
+
+
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    data: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { data: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.data[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+
+    let n = fs.next_i32() as usize;
+    let k = fs.next_i32() as usize;
+    let s = fs.next_i32();
+    let t = fs.next_i32();
+
+    let mut c = vec![0i32; n];
+    let mut v = vec![0i32; n];
+    for i in 0..n {
+        c[i] = fs.next_i32();
+        v[i] = fs.next_i32();
+    }
+
+    let mut g = vec![0i32; k];
+    for i in 0..k {
+        g[i] = fs.next_i32();
+    }
+    g.sort();
+
+    let mut pre = 0i32;
+    let mut segs: Vec<i32> = Vec::with_capacity(k + 1);
+    for i in 0..k {
+        let cnt = g[i];
+        segs.push(cnt - pre);
+        pre = cnt;
+    }
+    segs.push(s - pre);
+
+    let mut l: i32 = 0;
+    let mut r: i32 = i32::MAX / 2;
+    let mut ans: i32 = i32::MAX;
+
+    while r >= l {
+        let mid = (l + r) >> 1;
+        let mut cost: i64 = 0;
+
+        for &p in &segs {
+            if p > mid {
+                cost = i64::from(i32::MAX);
+                break;
+            }
+            let p64 = p as i64;
+            let mid64 = mid as i64;
+            if p64 * 2 <= mid64 {
+                cost += p64;
+            } else {
+                cost += 3 * p64 - mid64;
+            }
+            if cost > t as i64 {
+                break;
+            }
+        }
+
+        if cost > t as i64 {
+            l = mid + 1;
+        } else {
+            ans = mid;
+            r = mid - 1;
+        }
+    }
+
+    let mut ret: i32 = i32::MAX;
+    for i in 0..n {
+        if ans <= v[i] {
+            ret = ret.min(c[i]);
+        }
+    }
+    if ret == i32::MAX {
+        ret = -1;
+    }
+    println!("{}", ret);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.lang.Math;
+
+public class Solution{
+
+	public static void main(String[] args) throws Exception{
+
+		FastScanner fs = new FastScanner();
+		PrintWriter out = new PrintWriter(System.out);
+
+		int t = fs.nextInt();
+		while(t-->0) {
+			int n = fs.nextInt();
+			double d = (double)180;
+			d = Math.toRadians(d);
+			out.println(String.format("%.9f",1/Math.tan(d/(2*n))));
+			
+		}
+			out.close();
+		
+		
+		
+	
+			
+		
+		
+	
+	}
+
+	
+	
+
+	
+	static class FastScanner{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer("");
+
+		public String next(){
+			while(!st.hasMoreElements()){
+				try{
+					st = new StringTokenizer(br.readLine());
+				} catch(IOException e){
+					e.printStackTrace();
+				}
+			}
+			return st.nextToken();
+		}
+
+		public int nextInt(){
+			return Integer.parseInt(next());
+		}
+
+		public int[] readArray(int n){
+			int[] a = new int[n];
+			for(int i=0;i<n;i++)
+				a[i] = nextInt();
+			return a;
+		}
+		
+		public long nextLong() {
+			return Long.parseLong(next());
+		}
+	}
+	
+	
+	static int lowerBound(int[] arr, int l, int r, int k) {
+		while(r>l) {
+			int mid = (l+r)/2;
+			if(arr[mid]>=k) {
+				r = mid;
+			}
+			else {
+				l = mid+1;
+			}
+		}
+		if(arr[l]<k)
+			return -1;
+		return l;
+	}
+	
+	
+	
+	static int upperBound(int[] arr, int l, int r, int k) {
+		while(r>l) {
+			int mid = (l+r)/2;
+			if(arr[mid]>k) {
+				r = mid;
+			}
+			else {
+				l = mid+1;
+			}
+		}
+		if(arr[l]<=k)
+			return -1;
+		return l;
+	}
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let t = fs.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = fs.next_i32() as f64;
+        let d = std::f64::consts::PI; // radians(180)
+        let val = 1.0f64 / (d / (2.0 * n)).tan();
+        out.push_str(&format!("{:.9}\n", val));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,194 @@
+INDEX: 77 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class Mohsen{
+    public static void main(String[] args){
+        Scanner  console = new Scanner(System.in);
+        long n = console.nextLong(), m=console.nextLong(), a=console.nextLong(), b=console.nextLong();
+        System.out.println(Math.min((n % m)*b, (m - (n % m))*a));
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class solution
+{
+    static int n, m, curr;
+    static long answer;
+    static ArrayList<Integer>[] adj;
+    static int[] cost;
+    static boolean[] vis;
+    public static void main(String[] args)
+    {
+        answer = 0;
+        Scanner console = new Scanner(System.in);
+        n = console.nextInt();
+        m = console.nextInt();
+        cost = new int[n];
+        adj = new ArrayList[n];
+        for ( int i = 0; i < n; i++ )
+        {
+            adj[i] = new ArrayList<>();
+        }
+        for ( int i = 0; i < n; i++ )
+        {
+            cost[i] = console.nextInt();
+        }
+        for ( int i = 0; i < m; i++ )
+        {
+            int a = console.nextInt()-1;
+            int b = console.nextInt()-1;
+            adj[a].add(b);
+            adj[b].add(a);
+        }
+        vis = new boolean[n];
+        for ( int i = 0; i < n; i++ )
+        {
+            if ( !vis[i] )
+            {
+                curr = cost[i];
+                dfs (i);
+                answer += curr;
+            }
+        }
+        System.out.println(answer);
+    }
+    static void dfs ( int x )
+    {
+        if ( !vis[x] )
+        {
+          vis[x] = true;
+        curr = Math.min(cost[x], curr);
+        for ( int p : adj[x] )
+        {
+            dfs(p);
+        }
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: usize = it.next().unwrap().parse().unwrap();
+
+    let mut cost: Vec<i32> = vec![0; n];
+    let mut adj: Vec<Vec<usize>> = vec![Vec::new(); n];
+
+    for i in 0..n {
+        cost[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    for _ in 0..m {
+        let a: usize = it.next().unwrap().parse::<usize>().unwrap() - 1;
+        let b: usize = it.next().unwrap().parse::<usize>().unwrap() - 1;
+        adj[a].push(b);
+        adj[b].push(a);
+    }
+
+    let mut vis = vec![false; n];
+    let mut answer: i64 = 0;
+
+    for i in 0..n {
+        if !vis[i] {
+            let mut curr = cost[i];
+            dfs(i, &adj, &cost, &mut vis, &mut curr);
+            answer += curr as i64;
+        }
+    }
+
+    println!("{}", answer);
+}
+
+fn dfs(x: usize, adj: &Vec<Vec<usize>>, cost: &Vec<i32>, vis: &mut Vec<bool>, curr: &mut i32) {
+    if !vis[x] {
+        vis[x] = true;
+        *curr = (*curr).min(cost[x]);
+        for &p in &adj[x] {
+            dfs(p, adj, cost, vis, curr);
+        }
+    }
+}
+```
+
+Java:
+```
+
+
+
+import java.util.Scanner;
+
+public class Drinks {
+
+    public static void main(String[] args) {
+
+        Scanner console=new Scanner(System.in);
+        int n=console.nextInt();
+        int x;
+        double sum=0;
+        for(int i=0;i<n;i++)
+        {
+            x=console.nextInt();
+            sum=sum+x;
+        }
+        System.out.println(sum/n);
+        
+        
+    }
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut sum: f64 = 0.0;
+    for _ in 0..(n as usize) {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        sum += x as f64;
+    }
+
+    println!("{}", sum / n as f64);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

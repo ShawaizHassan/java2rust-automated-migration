@@ -1,0 +1,285 @@
+INDEX: 375 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.TreeMap;
+public class Main {
+	public static Scanner in=new Scanner(System.in);
+	public static int num;
+	public static int time[][]=new int[25][61];
+	public static void main(String[] args){
+		int a;
+		int ta;
+		int b;
+		int tb;
+		String s=in.nextLine();
+		int z=0;
+		int count=0;
+		while(s.charAt(z)!=' ')z++;
+		a=Integer.parseInt(s.substring(0, z));
+		ta=Integer.parseInt(s.substring(z+1, s.length()));
+		s=in.nextLine();
+		z=0;
+		while(s.charAt(z)!=' ')z++;
+		b=Integer.parseInt(s.substring(0, z));
+		tb=Integer.parseInt(s.substring(z+1, s.length()));
+		s=in.nextLine();
+		int starth=Integer.parseInt(s.substring(0, 2));
+		int startm=Integer.parseInt(s.substring(3, 5));
+		int hs=starth*60+startm;
+		int he=hs+ta;
+		int j=b;
+		for(int i=300;i<24*60;i++){
+			if(j==b){
+				if(i>(hs-tb)&&i<he){
+					count++;
+				}
+				j=1;
+			}
+			else{
+				j++;
+			}
+		}
+		System.out.println(count);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.math.*;
+import java.util.*;
+import java.io.*;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner cin = new Scanner(System.in);
+		
+		String s1 = cin.next();
+		String s2 = cin.next();
+		int z1 = 0, z2 = 0;
+		
+		for (int i = 0; i < s1.length(); i++)
+			if (s1.charAt(i) == '1') z1++;
+		if (z1 % 2 == 1) z1++;
+		
+		for (int i = 0; i < s2.length(); i++)
+			if (s2.charAt(i) == '1') z2++;
+		
+		//System.out.printf("%d %d\n", z1, z2);
+		if (z1 >= z2) System.out.println("YES");
+		else System.out.println("NO");
+	}
+}
+
+
+/*cjefffrqmesfheriterleekkebcpcodeptcnrtjjptgcedkpht*/
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let s1 = match it.next() {
+        Some(v) => v,
+        None => return,
+    };
+    let s2 = match it.next() {
+        Some(v) => v,
+        None => return,
+    };
+
+    let mut z1: i32 = 0;
+    let mut z2: i32 = 0;
+
+    for b in s1.as_bytes() {
+        if *b == b'1' {
+            z1 += 1;
+        }
+    }
+    if z1 % 2 == 1 {
+        z1 += 1;
+    }
+
+    for b in s2.as_bytes() {
+        if *b == b'1' {
+            z2 += 1;
+        }
+    }
+
+    if z1 >= z2 {
+        println!("YES");
+    } else {
+        println!("NO");
+    }
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+public class NewBuild{
+	public static void main(String args[]){
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int h = sc.nextInt();
+		int a = sc.nextInt();
+		int b = sc.nextInt();
+		int k = sc.nextInt();
+		long  arr[] = new long[k];
+		long sum = 0;
+		int z = 0;
+		for(int j = 0;j < k;j++){
+			int ta = sc.nextInt();
+			int fa = sc.nextInt();
+			int tb = sc.nextInt();
+			int fb = sc.nextInt();
+			if(ta < tb)
+			sum = tb - ta;
+			else
+			sum = ta - tb;
+			int i = 0;
+			if(sum == 0){
+				if(fa > fb)
+					sum = sum + fa - fb;
+				else
+					sum = sum + fb - fa; 
+			}
+			else{
+			    
+			    
+				if(fa >= b && fb >= b){
+				    i = b; 
+				    
+				}
+				else if(fa < a && fb < a)
+				    i = a;
+				else{
+				    if(fa < fb)
+				        i = (fb + fa) / 2;
+				    else
+				        i = (fb + fa) / 2;
+				}
+                if(i < fa)
+				    sum = sum + fa - i;	
+			    else
+				    sum = sum + i - fa;
+    			if(i > fb)
+	    			sum  = sum + i - fb;
+		    	else
+			        sum  = sum + fb - i;			    
+			}
+			arr[z] = sum;
+			z++;
+		}
+		for(long s: arr)
+			System.out.println(s);
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let _n = sc.next_i32();
+    let _h = sc.next_i32();
+    let a = sc.next_i32();
+    let b = sc.next_i32();
+    let k = sc.next_i32() as usize;
+
+    let mut arr: Vec<i64> = vec![0; k];
+    let mut z: usize = 0;
+
+    for _ in 0..k {
+        let ta = sc.next_i32();
+        let fa = sc.next_i32();
+        let tb = sc.next_i32();
+        let fb = sc.next_i32();
+
+        let mut sum: i64 = (ta - tb).abs() as i64;
+        let mut i: i32 = 0;
+
+        if sum == 0 {
+            sum += (fa - fb).abs() as i64;
+        } else {
+            if fa >= b && fb >= b {
+                i = b;
+            } else if fa < a && fb < a {
+                i = a;
+            } else {
+                if fa < fb {
+                    i = (fb + fa) / 2;
+                } else {
+                    i = (fb + fa) / 2;
+                }
+            }
+
+            sum += (fa - i).abs() as i64;
+            sum += (fb - i).abs() as i64;
+        }
+
+        arr[z] = sum;
+        z += 1;
+    }
+
+    let mut out = String::new();
+    for s in arr {
+        out.push_str(&format!("{s}\n"));
+    }
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

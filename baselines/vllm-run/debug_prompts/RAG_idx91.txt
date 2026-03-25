@@ -1,0 +1,429 @@
+INDEX: 91 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+import javax.tools.ToolProvider;
+
+
+
+public class knapsack {
+	static int a[];	
+	static int n;
+	static int memo[][];
+	
+	
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		Scanner sc=new Scanner(System.in);
+		long n=sc.nextLong();
+		int count=1;
+		
+		while(n-count>0) {
+			n-=count;
+			count++;
+		}
+		System.out.println(n);
+	}
+	
+
+	
+	
+	static class Scanner {
+
+        BufferedReader br;
+        StringTokenizer st;
+
+        Scanner(InputStream system) {
+            br = new BufferedReader(new InputStreamReader(system));
+        }
+
+        String next() throws IOException {
+            while (st == null || !st.hasMoreTokens())
+                st = new StringTokenizer(br.readLine());
+            return st.nextToken();
+        }
+
+        int nextInt() throws IOException {
+            return Integer.parseInt(next());
+        }
+
+        double nextDouble() throws IOException {
+            return Double.parseDouble(next());
+        }
+
+        long nextLong() throws IOException {
+            return Long.parseLong(next());
+        }
+
+
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class DividingOrange {
+
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner (System.in);
+		int n = sc.nextInt();
+		int k = sc.nextInt();
+		boolean [] wanted= new boolean [n*k];
+		int[] kids= new int[k];
+		for(int i=0; i < k; i++){
+			kids[i]=sc.nextInt();
+			wanted[kids[i]-1]=true;
+		}
+		int j=0;
+		for(int i =0; i<k ; i++){
+			StringBuilder out= new StringBuilder("");
+			out.append(kids[i]+" ");
+			int count=1;
+			while(count<n){
+				if(!wanted[j])
+				{
+					count++;
+					out.append((j+1)+" ");
+				}
+				j++;
+			}
+			System.out.println(out.toString());
+		}
+	}
+
+	static class Scanner {
+		StringTokenizer st;
+		BufferedReader br;
+
+		public Scanner(InputStream s) {
+			br = new BufferedReader(new InputStreamReader(s));
+		}
+
+		public String next() throws IOException {
+			while (st == null || !st.hasMoreTokens())
+				st = new StringTokenizer(br.readLine());
+			return st.nextToken();
+		}
+
+		public int nextInt() throws IOException {
+			return Integer.parseInt(next());
+		}
+
+		public long nextLong() throws IOException {
+			return Long.parseLong(next());
+		}
+
+		public String nextLine() throws IOException {
+			return br.readLine();
+		}
+
+		public double nextDouble() throws IOException {
+			return Double.parseDouble(next());
+		}
+
+		public boolean ready() throws IOException {
+			return br.ready();
+		}
+
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let k = sc.next_i32() as usize;
+
+    let mut wanted = vec![false; n * k];
+    let mut kids = vec![0i32; k];
+
+    for i in 0..k {
+        let x = sc.next_i32();
+        kids[i] = x;
+        let idx = (x - 1) as usize;
+        wanted[idx] = true;
+    }
+
+    let mut j: usize = 0;
+    let mut out_all = String::new();
+
+    for i in 0..k {
+        let mut line = String::new();
+        line.push_str(&kids[i].to_string());
+        line.push(' ');
+
+        let mut count: usize = 1;
+        while count < n {
+            if !wanted[j] {
+                count += 1;
+                line.push_str(&(j + 1).to_string());
+                line.push(' ');
+            }
+            j += 1;
+        }
+
+        out_all.push_str(&line);
+        out_all.push('\n');
+    }
+
+    print!("{}", out_all);
+}
+```
+
+Java:
+```
+	import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+	
+	
+	public class Scanner {
+		BufferedReader br;
+		StringTokenizer st;
+		Scanner()
+		{
+			br = new BufferedReader(new InputStreamReader(System.in));
+		}
+		String next() throws IOException
+		{
+			while(st==null || !st.hasMoreTokens())
+			{
+				st = new StringTokenizer(br.readLine());
+			}
+			return st.nextToken();
+		}
+		int nextInt() throws IOException
+		{
+			return Integer.parseInt(next());
+		}
+		long nextLong() throws IOException
+		{
+			return Long.parseLong(next());
+		}
+		
+		
+		public static void main(String[] args) throws IOException {
+			Scanner sc = new Scanner();
+			int t = sc.nextInt();
+			while(t-- >0)
+			{
+			long n = sc.nextLong();
+			int count = 0;
+			while(n%2==0 || n%3==0 || n%5==0)
+			{
+				if(n%2==0)
+					n = n/2;
+				else if(n%3==0)
+				{
+					n = 2*(n/3);
+				}
+				else n = 4*(n/5);
+				count++;
+			}
+			if(n==1)
+			System.out.println(count);
+			else System.out.println("-1");
+			}
+			
+			
+							
+		}
+		
+	
+		
+			
+		}
+		
+		
+		
+		
+			
+		
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next(&mut self) -> Option<String> {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        if self.idx >= self.input.len() {
+            return None;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        Some(String::from_utf8_lossy(&self.input[start..self.idx]).to_string())
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next().unwrap().parse::<i32>().unwrap()
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        self.next().unwrap().parse::<i64>().unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let mut n = sc.next_i64();
+        let mut count: i32 = 0;
+
+        while n % 2 == 0 || n % 3 == 0 || n % 5 == 0 {
+            if n % 2 == 0 {
+                n /= 2;
+            } else if n % 3 == 0 {
+                n = 2 * (n / 3);
+            } else {
+                n = 4 * (n / 5);
+            }
+            count += 1;
+        }
+
+        if n == 1 {
+            out.push_str(&format!("{}\n", count));
+        } else {
+            out.push_str("-1\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

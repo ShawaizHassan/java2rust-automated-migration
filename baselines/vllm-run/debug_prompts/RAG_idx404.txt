@@ -1,0 +1,275 @@
+INDEX: 404 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+import java.math.*;
+public class hi{
+   
+  
+    public static void main(String[] args) throws IOException  {
+        Scanner sc = new Scanner(System.in);
+        long n = sc.nextLong();
+        long m = sc.nextLong();
+        long rep = 0;
+        if(n>=4&&m>=4){
+            if(n%2==0||m%2==0) rep = n*m;
+            else rep = n*m-1;
+        }
+        else{
+            long min = Math.min(n,m);
+            long max = Math.max(n,m);
+            if(min==1){
+                rep = max- (max%6);
+                if(max%6==4) rep += 2;
+                if(max%6==5) rep += 4;
+            }
+            else if(min==2){
+                if(max<3) rep = 0;
+                else if(max==3) rep = 4;
+                else if(max==7) rep = 12;
+                else rep = min * max;
+            }
+            else if(min==3) {
+                if(max<3) rep = 0;
+                else {
+                    rep = min * max;
+                    if(max%2==1) rep--;
+                }
+            }
+            
+        }
+        System.out.println(rep);
+    }
+    
+
+   
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class LevkoAndTable 
+{
+    public static void main(String[] args) throws IOException
+    {
+        Scanner input = new Scanner(System.in);
+        //Scanner input = new Scanner(new File("Sample Input.txt"));
+        StringBuilder output = new StringBuilder();
+        int rep;
+        int n = input.nextInt();
+        int k = input.nextInt();
+        if ( n > k)
+        {
+            rep = k;
+        }
+        else
+        {
+            rep = (k - n) + 1;
+        }
+        
+        
+        
+        int[][] array = new int[n][n];
+        if ( n <= k)
+            Arrays.fill(array[0], 1);
+        else
+            Arrays.fill(array[0], 0);
+        array[0][0]=rep;
+        
+        int temp;
+        for (int i = 0; i < n; i++) 
+        {
+            for (int j = 0; j < n; j++) 
+            {
+                output.append(array[i][j]).append(" ");
+            }
+            output.append("\n");
+            if ( i+1 < n)
+            {
+                array[i+1] = array[i];
+            temp = array[i+1][i+1];
+            array[i+1][i+1] = array[i+1][i];
+            array[i+1][i] = temp;
+            }
+            
+        }
+        System.out.print(output);
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let k: i32 = it.next().unwrap().parse().unwrap();
+
+    let rep: i32 = if n > k { k } else { (k - n) + 1 };
+
+    let nn = n as usize;
+    let mut row = vec![if n <= k { 1 } else { 0 }; nn];
+    if nn > 0 {
+        row[0] = rep;
+    }
+
+    let mut out = String::new();
+    for i in 0..nn {
+        for j in 0..nn {
+            out.push_str(&row[j].to_string());
+            out.push(' ');
+        }
+        out.push('\n');
+
+        if i + 1 < nn {
+            row.swap(i, i + 1);
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+/*
+ID: nikchee1
+PROB: Greg and Graph
+LANG: JAVA
+*/
+
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+  static Scanner in = new Scanner(System.in);
+  static int N = in.nextInt();
+  static long[][] D = new long[N + 1][N + 1];
+  static int[] remove = new int[N + 1];
+  static long[] ans = new long[N];
+  
+  public static void main (String [] args) {
+        
+        for(int i=1; i <= N; i++) for(int j = 1; j <= N; j++) D[i][j] = in.nextInt();
+        for(int i=1; i <= N; i++) remove[i] = in.nextInt();
+        
+        long sum = 0;
+        for(int rep = N; rep >= 1; rep--) {
+            sum = 0;
+            
+            int cr = remove[rep];
+            for(int i = 1; i <= N; i++){
+              for(int j = 1; j <= N; j++){
+                long cd = D[i][cr] + D[cr][j];
+                if(D[i][j] > cd){
+                  D[i][j] = cd;
+                }
+              }
+            }
+            
+            for(int i = rep; i <= N; i++){
+              for(int j = rep; j <= N; j++) {
+                sum += D[ remove[i] ][ remove[j] ];
+              }
+            }
+            ans[rep - 1] = sum;
+        }
+        
+        for(int i = 0; i < N; i++){
+          System.out.print(ans[i] + " ");
+        }
+        System.out.println();
+    }
+ 
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse::<usize>().unwrap(),
+        None => return,
+    };
+
+    let mut d = vec![vec![0i64; n + 1]; n + 1];
+    for i in 1..=n {
+        for j in 1..=n {
+            d[i][j] = it.next().unwrap().parse::<i64>().unwrap();
+        }
+    }
+
+    let mut remove = vec![0usize; n + 1];
+    for i in 1..=n {
+        remove[i] = it.next().unwrap().parse::<usize>().unwrap();
+    }
+
+    let mut ans = vec![0i64; n];
+
+    for rep in (1..=n).rev() {
+        let cr = remove[rep];
+
+        for i in 1..=n {
+            let dicr = d[i][cr];
+            for j in 1..=n {
+                let cd = dicr + d[cr][j];
+                if d[i][j] > cd {
+                    d[i][j] = cd;
+                }
+            }
+        }
+
+        let mut sum: i64 = 0;
+        for i in rep..=n {
+            let ri = remove[i];
+            for j in rep..=n {
+                let rj = remove[j];
+                sum += d[ri][rj];
+            }
+        }
+        ans[rep - 1] = sum;
+    }
+
+    let mut out = String::new();
+    for i in 0..n {
+        out.push_str(&ans[i].to_string());
+        out.push(' ');
+    }
+    out.push('\n');
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

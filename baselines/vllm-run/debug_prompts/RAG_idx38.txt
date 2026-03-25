@@ -1,0 +1,331 @@
+INDEX: 38 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+public class JavaApplication71 {
+    public static void main(String[] args) {
+        //helpful mathe
+        Scanner input =new Scanner(System.in);
+        String s=input.next();
+        int c1=0 ;int c2=0 ;int c3=0;
+        String result="";
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='1'){
+                c1++;
+            }else if(s.charAt(i)=='2'){
+                c2++;
+            }else if(s.charAt(i)=='3'){
+                c3++;
+            }
+            }
+                for(int j=0;j<c1;j++){
+                    result=result+"1+";
+                }
+                for(int j=0;j<c2;j++){
+                    result=result+"2+";
+        }
+                for(int j=0;j<c3;j++){
+                    result=result+"3+";
+    }
+                result=result.substring(0, s.length());
+                System.out.println(result);
+    
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+//package com.corning.cms.components.bannerhomepage;
+
+
+
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+		
+		int n = sc.nextInt();
+		for (int j = 0; j < n; j++) {
+			String str = sc.next();
+			String excelRow = "";
+
+			String result = "";
+
+			String openRow = "";
+			String openColum = "";
+			if (str.matches("R[0-9]+C[0-9]+")) {
+
+				excelRow = str
+						.substring(str.indexOf('R') + 1, str.indexOf('C'));
+				// String excelColumn=;
+				int excelColumn = Integer.parseInt(str.substring(
+						str.indexOf('C') + 1, str.length()));
+
+				while (true) {
+					if (excelColumn <= 26) {
+						result += Character
+								.toString(charOfinteger(excelColumn));
+						break;
+					} else if(excelColumn%26==0){
+						result += Character
+								.toString(charOfinteger(26));
+						excelColumn = excelColumn-1;
+						excelColumn /= 26;
+					}
+					
+					
+					
+					else {
+						result += Character
+								.toString(charOfinteger(excelColumn % 26));
+						excelColumn /= 26;
+					}
+
+				}
+				result = new StringBuilder(result).reverse().toString();
+				result += excelRow;
+				System.out.println(result);
+
+			} else {
+				openColum = str.split("[0-9]+")[0];
+				openRow = str.substring(openColum.length(), str.length());
+				openColum = new StringBuilder(openColum).reverse().toString();
+				int column = 0;
+
+				for (int i = 0; i < openColum.length(); i++) {
+
+					column += (int) Math.pow(26, i)
+							* intOfAlphabet(openColum.charAt(i));
+				}
+				System.out.println("R" + openRow + "C" + column);
+			}
+		}
+
+	}
+
+	public static int intOfAlphabet(char ch) {
+
+		return "-ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(ch);
+
+	}
+
+	public static char charOfinteger(int i) {
+		char[] alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+		return alphabet[i];
+	}
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn int_of_alphabet(ch: u8) -> i32 {
+    // "-ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    if ch >= b'A' && ch <= b'Z' {
+        (ch - b'A' + 1) as i32
+    } else {
+        0
+    }
+}
+
+fn char_of_integer(i: i32) -> u8 {
+    // 1..=26 -> 'A'..'Z'
+    (b'A' + (i as u8) - 1) as u8
+}
+
+fn is_rc_format(s: &str) -> bool {
+    // matches "R[0-9]+C[0-9]+"
+    let b = s.as_bytes();
+    if b.len() < 4 || b[0] != b'R' {
+        return false;
+    }
+    let mut i = 1usize;
+    if i >= b.len() || !b[i].is_ascii_digit() {
+        return false;
+    }
+    while i < b.len() && b[i].is_ascii_digit() {
+        i += 1;
+    }
+    if i >= b.len() || b[i] != b'C' {
+        return false;
+    }
+    i += 1;
+    if i >= b.len() || !b[i].is_ascii_digit() {
+        return false;
+    }
+    while i < b.len() && b[i].is_ascii_digit() {
+        i += 1;
+    }
+    i == b.len()
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+
+    for _ in 0..n {
+        let strv = it.next().unwrap();
+
+        if is_rc_format(strv) {
+            let bytes = strv.as_bytes();
+            let c_pos = bytes.iter().position(|&ch| ch == b'C').unwrap();
+
+            let excel_row = &strv[1..c_pos];
+            let mut excel_column: i32 = strv[c_pos + 1..].parse().unwrap();
+
+            let mut result_bytes: Vec<u8> = Vec::new();
+
+            loop {
+                if excel_column <= 26 {
+                    result_bytes.push(char_of_integer(excel_column));
+                    break;
+                } else if excel_column % 26 == 0 {
+                    result_bytes.push(char_of_integer(26));
+                    excel_column -= 1;
+                    excel_column /= 26;
+                } else {
+                    result_bytes.push(char_of_integer(excel_column % 26));
+                    excel_column /= 26;
+                }
+            }
+
+            result_bytes.reverse();
+            let mut result = String::from_utf8(result_bytes).unwrap();
+            result.push_str(excel_row);
+
+            out.push_str(&result);
+            out.push('\n');
+        } else {
+            // openColum = str.split("[0-9]+")[0]; => prefix letters until first digit
+            let b = strv.as_bytes();
+            let mut k = 0usize;
+            while k < b.len() && !b[k].is_ascii_digit() {
+                k += 1;
+            }
+            let open_colum = &strv[..k];
+            let open_row = &strv[k..];
+
+            let col_bytes = open_colum.as_bytes();
+            let mut column: i32 = 0;
+
+            // reversed, sum pow(26,i) * intOfAlphabet(ch)
+            for (i, &ch) in col_bytes.iter().rev().enumerate() {
+                let pow = 26_i32.pow(i as u32);
+                column += pow * int_of_alphabet(ch);
+            }
+
+            out.push('R');
+            out.push_str(open_row);
+            out.push('C');
+            out.push_str(&column.to_string());
+            out.push('\n');
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+
+/**
+ ** Created by Alik on 10/25/2015.
+ */
+public class Problem_25B {
+    public static void main(String[] args){
+        Scanner in = new Scanner(System.in);
+        int length = in.nextInt();
+        String dummy = in.nextLine();
+        String input = in.nextLine();
+
+        String result="";
+        if (length % 2 == 0){
+            for (int i = 0; i < length; i+=2) {
+                result += input.substring(i, i + 2) + "-";
+            }
+        }
+        else{
+            result += input.substring(0, 3) + "-";
+            for (int i = 3; i < length; i+=2) {
+                result += input.substring(i, i + 2) + "-";
+            }
+        }
+        System.out.print(result.substring(0,result.length()-1));
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut s = String::new();
+    io::stdin().read_to_string(&mut s).unwrap();
+
+    let mut it = s.split_whitespace();
+    let length: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let input = it.next().unwrap_or("");
+
+    let bytes = input.as_bytes();
+    let mut out = String::new();
+
+    if length % 2 == 0 {
+        let mut i = 0;
+        while i < length {
+            out.push_str(std::str::from_utf8(&bytes[i..i + 2]).unwrap());
+            out.push('-');
+            i += 2;
+        }
+    } else {
+        out.push_str(std::str::from_utf8(&bytes[0..3]).unwrap());
+        out.push('-');
+        let mut i = 3;
+        while i < length {
+            out.push_str(std::str::from_utf8(&bytes[i..i + 2]).unwrap());
+            out.push('-');
+            i += 2;
+        }
+    }
+
+    if out.ends_with('-') {
+        out.pop();
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

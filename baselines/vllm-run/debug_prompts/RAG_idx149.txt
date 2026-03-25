@@ -1,0 +1,200 @@
+INDEX: 149 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*; import java.lang.*; import java.io.*;
+public class Metro {
+
+  public static void main(String args[]){
+  Scanner sc = new Scanner(System.in);
+  int a = sc.nextInt();
+  int b = sc.nextInt();
+  int c = sc.nextInt(); int diff =0;
+  long sum = 0;
+  sum += c*2;
+  int min = Math.min(a,b);
+  sum +=min*2+1;
+if((a-b)==0)
+sum -=1;
+  System.out.println(sum);
+  }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+//package pkg33a;
+import static java.lang.Math.min;
+import java.util.*;
+public class Main
+{
+    public static void main(String[] args) 
+    {
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),m=sc.nextInt(),k=sc.nextInt();
+        int array[]=new int[m+1];
+        Arrays.fill(array,1000000);
+        array[0]=0;
+        for(int i=0;i<n;i++)
+        {
+            int r=sc.nextInt();
+            int c=sc.nextInt();
+            array[r]=min(array[r],c);
+        }
+        int sum=0;
+        for(int i:array)
+        {
+            sum=sum + i;
+        }
+        System.out.println(min(sum,k));
+    }
+    
+}
+
+```
+Translated Rust:
+```
+use std::cmp::min;
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: i32 = it.next().unwrap().parse().unwrap();
+    let k: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut array = vec![1_000_000i32; (m as usize) + 1];
+    array[0] = 0;
+
+    for _ in 0..n {
+        let r: i32 = it.next().unwrap().parse().unwrap();
+        let c: i32 = it.next().unwrap().parse().unwrap();
+        let idx = r as usize;
+        array[idx] = min(array[idx], c);
+    }
+
+    let mut sum: i32 = 0;
+    for v in array.iter() {
+        sum += *v;
+    }
+
+    println!("{}", min(sum, k));
+}
+```
+
+Java:
+```
+import java.util.*;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int c1 = sc.nextInt();
+		int c2 = sc.nextInt();
+		int c3 = sc.nextInt();
+		int c4 = sc.nextInt();
+		int n = sc.nextInt();
+		int m = sc.nextInt();
+		int a , b;
+		a = b = 0;
+		int res = Math.min(2*c3,c4);
+		int sum1 , sum2;
+		sum1 = sum2 = 0;
+		for ( int i = 0 ; i<n ; ++i ) {
+			a = sc.nextInt();
+			sum1 += Math.min(a*c1,c2);
+		}
+		sum1 = Math.min(sum1, c3);
+		for ( int i = 0 ; i<m ; ++i ) {
+			b = sc.nextInt();
+			sum2 += Math.min(b*c1,c2);
+		}
+		sum2 = Math.min(sum2, c3);
+		System.out.println(Math.min(sum1+sum2, res));
+	}
+}
+//算1-N里面的 因子最多的那个数
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let c1 = sc.next_i32();
+    let c2 = sc.next_i32();
+    let c3 = sc.next_i32();
+    let c4 = sc.next_i32();
+    let n = sc.next_i32();
+    let m = sc.next_i32();
+
+    let res = std::cmp::min(2 * c3, c4);
+    let mut sum1: i32 = 0;
+    let mut sum2: i32 = 0;
+
+    for _ in 0..(n as usize) {
+        let a = sc.next_i32();
+        sum1 += std::cmp::min(a * c1, c2);
+    }
+    sum1 = std::cmp::min(sum1, c3);
+
+    for _ in 0..(m as usize) {
+        let b = sc.next_i32();
+        sum2 += std::cmp::min(b * c1, c2);
+    }
+    sum2 = std::cmp::min(sum2, c3);
+
+    let ans = std::cmp::min(sum1 + sum2, res);
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

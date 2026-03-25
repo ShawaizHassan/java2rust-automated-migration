@@ -1,0 +1,220 @@
+INDEX: 271 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class JavaApplication7 {
+ public static void main(String[] args) {
+  Scanner obj = new Scanner(System.in);
+  long [] arr = new long [3]; 
+  for(int i=0 ; i<3; i ++)  arr[i]=obj.nextLong();
+  if(arr[2]<=arr[1])
+      System.out.println(arr[2]);
+  else if (arr[2]<=(arr[0]))
+      System.out.println(arr[1]);
+  else{
+      long n=arr[2]-arr[0];
+      System.out.println(Math.abs(n-arr[1]));
+  }
+ }}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Scanner;
+public class Main {
+	private static Scanner ob;
+	public static void main( String args[] ){
+		ob = new Scanner( System.in );
+		int n = ob.nextInt();
+		long arr [] = new long [n+1];
+		for (int i = 0; i < n ; i++) {
+			arr[i] = ob.nextLong();
+		}
+		long Ans = 0 ;
+		for(int i = 1 ; i < n ; i++ ){
+		   arr[i] += Ans ;
+			if( arr[i] < arr[i-1] ){
+				Ans += ( arr[i-1] - arr[i]  );
+				arr[i] = arr[i-1];
+			}
+		}
+		pln( Ans ) ;
+	}
+	public static void pln( Object obj ){
+		System.out.println(obj) ;
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut arr: Vec<i64> = vec![0; n + 1];
+    for i in 0..n {
+        if let Some(v) = it.next() {
+            arr[i] = v.parse::<i64>().unwrap();
+        }
+    }
+
+    let mut ans: i64 = 0;
+    for i in 1..n {
+        arr[i] += ans;
+        if arr[i] < arr[i - 1] {
+            ans += arr[i - 1] - arr[i];
+            arr[i] = arr[i - 1];
+        }
+    }
+
+    println!("{}", ans);
+}
+```
+
+Java:
+```
+import java.util.*;
+public class Japanese_crossword {
+	public static void main(String a[]){
+		Scanner s = new Scanner(System.in);
+		int n = s.nextInt();
+		long x = s.nextLong();
+		int[] arr = new int[n];
+		for(int i=0;i<n;i++){
+			arr[i] = s.nextInt();
+		}
+		
+		if(arr.length==1 && arr[0]==x){
+			System.out.println("YES");
+		}
+		else if(arr.length==0){
+			System.out.println("YES");
+		}
+		else if(arr.length>0){
+			int sum = 0;
+			for(int i=0;i<n;i++){
+				sum = sum + arr[i];
+			}
+			if(sum+n-1 == x){
+				System.out.println("YES");
+			}else{
+				System.out.println("NO");
+			}
+		}
+		else{
+			System.out.println("YES");
+		}
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32();
+    let x = sc.next_i64();
+
+    let mut arr: Vec<i32> = Vec::with_capacity(n as usize);
+    for _ in 0..(n as usize) {
+        arr.push(sc.next_i32());
+    }
+
+    if arr.len() == 1 && arr[0] as i64 == x {
+        println!("YES");
+    } else if arr.len() == 0 {
+        println!("YES");
+    } else if arr.len() > 0 {
+        let mut sum: i32 = 0;
+        for &v in &arr {
+            sum += v;
+        }
+        let expr = (sum as i64) + (n as i64) - 1;
+        if expr == x {
+            println!("YES");
+        } else {
+            println!("NO");
+        }
+    } else {
+        println!("YES");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

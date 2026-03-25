@@ -1,0 +1,525 @@
+INDEX: 86 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+public class Main4 {
+    static MyScanner sc;
+
+    public static void main(String[] args) {
+        sc = new MyScanner();
+        out = new PrintWriter(new BufferedOutputStream(System.out));
+
+//        unitTests();
+
+        //Ciel and Flowers
+        solution();
+    }
+
+    private static void unitTests() {
+        startTest(0, 0, 0, 0);
+        startTest(0, 2, 2, 0);
+        startTest(0, 0, 3, 1);
+        startTest(0, 3, 3, 2);
+        startTest(1, 3, 3, 2);
+        startTest(1, 4, 4, 3);
+        startTest(1, 1, 1, 1);
+        startTest(2, 2, 2, 2);
+        startTest(2, 4, 4, 3);
+        startTest(4, 4, 4, 4);
+        startTest(14, 14, 14, 14);
+    }
+
+    private static void startTest(long r, long g, long b, long count) {
+        long bouketsCount = solutionWithParams(r, g, b);
+        if (bouketsCount != count) {
+            long bouketsCount2 = solutionWithParams(r, g, b);
+        }
+    }
+
+    private static void solution() {
+        long r = sc.nextLong();
+        long g = sc.nextLong();
+        long b = sc.nextLong();
+
+        long bouketsCount = solutionWithParams(r, g, b);
+
+        out.println(bouketsCount);
+        out.close();
+
+    }
+
+    private static long solutionWithParams(long r, long g, long b) {
+        long bouketsCount = 0;
+
+        long minCount = r > g ? g : r;
+        minCount = minCount > b ? b : minCount;
+
+        long countToCut = minCount;
+        if (countToCut > 2) {
+            countToCut = 2;
+        }
+
+        minCount -= countToCut;
+        if (minCount < 0) {
+            minCount = 0;
+        }
+
+        long threeCeil = minCount - minCount % 3;
+        bouketsCount += threeCeil;
+
+        r -= threeCeil;
+        g -= threeCeil;
+        b -= threeCeil;
+
+        if (r > 2 + countToCut) {
+            long rThreeCeil = (r - countToCut) / 3;
+            bouketsCount += rThreeCeil;
+            r -= 3 * rThreeCeil;
+        }
+
+        if (g > 2 + countToCut) {
+            long gThreeCeil = (g - countToCut) / 3;
+            bouketsCount += gThreeCeil;
+            g -= 3 * gThreeCeil;
+        }
+
+        if (b > 2 + countToCut) {
+            long bThreeCeil = (b - countToCut) / 3;
+            bouketsCount += bThreeCeil;
+            b -= 3 * bThreeCeil;
+        }
+
+        while (r > countToCut && b > countToCut && g > countToCut) {
+            bouketsCount++;
+            r--;
+            g--;
+            b--;
+        }
+
+        //now all values are [2..4]
+        if (r + g + b >= 10) {//442
+            bouketsCount += 3;
+        } else if (countToCut > 1) {
+            bouketsCount += 2;
+        } else if (countToCut > 0 && r + g + b >= 7) {
+            bouketsCount += 2;
+        } else if (countToCut > 0) {
+            bouketsCount += 1;
+        }
+
+        return bouketsCount;
+    }
+
+    //-----------PrintWriter for faster output---------------------------------
+    public static PrintWriter out;
+
+    //-----------MyScanner class for faster input----------
+    public static class MyScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public MyScanner() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+
+        String nextString(int length) {
+            String str = "";
+            try {
+                char[] buff = new char[length];
+                br.read(buff);
+                str = new String(buff);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+
+    }
+    //--------------------------------------------------------
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+public class A559 {
+    public static void main(String[] args) {
+        MyScanner sc = new MyScanner();
+        PrintWriter out = new PrintWriter(new BufferedOutputStream(System.out));
+        int n = sc.nextInt(); int m = sc.nextInt();
+        long [] b = new long[n];
+        long [] g = new long[m];
+        for (int i = 0; i < n; i++) b[i] = sc.nextLong();
+        for (int i = 0; i < m; i++) g[i] = sc.nextLong();
+        Arrays.sort(b); Arrays.sort(g);
+        if (g[0] < b[n - 1]) {
+            out.println(-1);
+        } else {
+            long base = 0; long max = 0;
+            for (int i = 0; i < n; i++) {
+                base = base + m * b[i];
+                max = Math.max(max, b[i]);
+            }
+            for (int i = 1; i < m; i++) base += (g[i] - max);
+            if (max != g[0]) base += (g[0] - b[n - 2]);
+            out.println(base);
+        }
+        out.close();
+    }
+
+
+    //-----------MyScanner class for faster input----------
+    public static class MyScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public MyScanner() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+
+
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_token().parse::<i32>().unwrap()
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.next_token().parse::<i64>().unwrap()
+    }
+    fn next_token(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32() as usize;
+
+    let mut b: Vec<i64> = vec![0; n];
+    let mut g: Vec<i64> = vec![0; m];
+
+    for i in 0..n {
+        b[i] = sc.next_i64();
+    }
+    for i in 0..m {
+        g[i] = sc.next_i64();
+    }
+
+    b.sort();
+    g.sort();
+
+    if g[0] < b[n - 1] {
+        print!("-1\n");
+    } else {
+        let mut base: i64 = 0;
+        let mut maxv: i64 = 0;
+        for i in 0..n {
+            base += (m as i64) * b[i];
+            if b[i] > maxv {
+                maxv = b[i];
+            }
+        }
+        for i in 1..m {
+            base += g[i] - maxv;
+        }
+        if maxv != g[0] {
+            base += g[0] - b[n - 2];
+        }
+        print!("{}\n", base);
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.awt.geom.*;
+public class RecursiveQueries{
+    static final int MAX=1000007;
+    static int ans[]=new int[MAX];
+    public static int g(int n){
+      if(n<10) return n;
+      if(ans[n]!=0) return ans[n];
+      int p=1,m=n;
+      while(m>0){
+        int d=m%10;
+        if(d!=0)
+          p*=d;
+        m/=10;
+      }
+      if(p<10){
+        ans[n]=p;
+        return ans[n];
+      }
+      else
+        return g(p);
+    }
+    public static void main(String[] args) {
+        MyScanner sc=new MyScanner();
+        for(int i=1;i<MAX;i++)
+          ans[i]=g(i);
+        int table[][]=new int[10][MAX];
+        for(int i=1;i<10;i++){
+          for(int j=1;j<MAX;j++){
+            if(ans[j]==i) table[i][j]=table[i][j-1]+1;
+            else table[i][j]=table[i][j-1];
+          }
+        }
+        int q=sc.ni();
+        while(q-->0){
+          int L=sc.ni();
+          int R=sc.ni();
+          int k=sc.ni();
+          int answer=table[k][R]-table[k][L-1];
+          System.out.println(answer);
+        }
+    }
+
+
+    private static class MyScanner {
+      BufferedReader br;
+      StringTokenizer st;
+
+      public MyScanner() {
+         br = new BufferedReader(new InputStreamReader(System.in));
+      }
+
+      String next() {
+          while (st == null || !st.hasMoreElements()) {
+              try {
+                  st = new StringTokenizer(br.readLine());
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          }
+          return st.nextToken();
+      }
+
+      int ni() {
+          return Integer.parseInt(next());
+      }
+      float nf() {
+        return Float.parseFloat(next());
+      }
+      long nl() {
+          return Long.parseLong(next());
+      }
+
+      double nd() {
+          return Double.parseDouble(next());
+      }
+
+      String nextLine(){
+          String str = "";
+	  try {
+	     str = br.readLine();
+	  } catch (IOException e) {
+	     e.printStackTrace();
+	  }
+	  return str;
+      }
+   }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MAX: usize = 1_000_007;
+
+fn g(n: usize, ans: &mut [i32]) -> i32 {
+    if n < 10 {
+        return n as i32;
+    }
+    if ans[n] != 0 {
+        return ans[n];
+    }
+    let mut p: i32 = 1;
+    let mut m = n as i32;
+    while m > 0 {
+        let d = m % 10;
+        if d != 0 {
+            p *= d;
+        }
+        m /= 10;
+    }
+    if p < 10 {
+        ans[n] = p;
+        ans[n]
+    } else {
+        g(p as usize, ans)
+    }
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut ans = vec![0i32; MAX];
+    for i in 1..MAX {
+        let v = g(i, &mut ans);
+        ans[i] = v;
+    }
+
+    let mut table = vec![vec![0i32; MAX]; 10];
+    for i in 1..10 {
+        for j in 1..MAX {
+            let prev = table[i][j - 1];
+            if ans[j] == i as i32 {
+                table[i][j] = prev + 1;
+            } else {
+                table[i][j] = prev;
+            }
+        }
+    }
+
+    let mut sc = Scanner::new();
+    let q = sc.next_i32();
+    let mut out = String::new();
+    for _ in 0..q {
+        let l = sc.next_i32() as usize;
+        let r = sc.next_i32() as usize;
+        let k = sc.next_i32() as usize;
+        let answer = table[k][r] - table[k][l - 1];
+        out.push_str(&format!("{answer}\n"));
+    }
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

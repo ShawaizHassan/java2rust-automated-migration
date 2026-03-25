@@ -1,0 +1,472 @@
+INDEX: 421 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.Writer;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.util.concurrent.TimeUnit;
+public class check {
+    public static int find(ArrayList<Integer> inp, int n, int target){
+        Collections.sort(inp);
+        Collections.reverse(inp);
+        int res = 0;
+        int num = n;
+        for(int i = 0;i<n && num>0;i++){
+            int curr = inp.get(i);
+            int times = target/curr;
+            if(target%curr != 0)
+                times++;
+            if(times*curr<=target)
+                times++;
+            if(times>num)
+                return res;
+            num = num-times;
+            res++;
+        }
+        return res;
+    }
+
+    public static void main(String args[]) throws java.lang.Exception{
+        Scanner in;
+        try{
+            in = new Scanner(new FileReader("./input.txt"));
+        }
+        catch(Exception e){
+            in = new Scanner(System.in);
+        }
+        int n = in.nextInt();
+        n = n-1;
+
+        if(n == 0){
+            System.out.println(3);
+            return;
+        }
+        if(n == 1){
+            System.out.println(5);
+            return;
+        }
+        
+        long gp = (n-2)/3;
+        long pos = (n-2)%3;
+
+        long base = 5+gp*4;
+        if(pos == 0){
+            base = base+2;
+        }
+        else if(pos == 1)
+            base = base+3;
+        else
+            base = base+4;
+
+        System.out.println(base);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Spreadsheets {
+	
+	public static void main(String[] args) {
+		
+		int n;
+		String regex1 = "R(?<row>[0-9]+)C(?<column>[0-9]+)";
+		String regex2 = "(?<column>[A-Z]+)(?<row>[0-9]+)";
+		
+		Pattern pattern1 = Pattern.compile(regex1);
+		Pattern pattern2 = Pattern.compile(regex2);
+		
+		Scanner scanner = new Scanner(System.in);
+		n = Integer.parseInt(scanner.nextLine());
+		String[] lines = new String[n];
+		
+		int indx = 0;
+		
+		while((n--)>0) {
+			lines[indx++] = scanner.nextLine();
+		}
+		
+		for(int i=0; i<lines.length; i++) {
+			
+			Matcher m1 = pattern1.matcher(lines[i]);
+			
+			if(m1.matches()) {
+				System.out.println(toBase26(Integer.parseInt(m1.group("column"))) + m1.group("row"));
+			} else {
+				Matcher m2 = pattern2.matcher(lines[i]);
+				if(m2.matches()) {
+					System.out.println("R" + m2.group("row") + "C" + toDecimal(m2.group("column")));
+				} else {
+					System.out.println("Format not valid");
+				}
+			}
+			
+		}
+		
+	}
+	
+	public static int toDecimal(String base26) {
+		
+		int res = 0;
+		int base = 1;
+		
+		for(int i=base26.length()-1; i>=0; i--) {
+			res += ((int)(base26.charAt(i)) - 64) * base;
+			base *= 26;
+		}
+		
+		return res;
+		
+	}
+	
+	public static String toBase26(int decimal) {
+		
+		StringBuilder res = new StringBuilder();
+		
+		while(decimal != 0) {
+			int k = decimal % 26;
+			if(k == 0) {
+				decimal = decimal / 26 - 1;
+				res.insert(0, "Z");
+			} else {
+				decimal /= 26;
+				res.insert(0, (char)(k + 64));
+			}
+		}
+		
+		return res.toString();
+		
+	}
+	
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn to_decimal(base26: &str) -> i32 {
+    let mut res: i32 = 0;
+    let mut base: i32 = 1;
+    for b in base26.as_bytes().iter().rev() {
+        let val = (*b as i32) - 64; // 'A' => 1
+        res += val * base;
+        base *= 26;
+    }
+    res
+}
+
+fn to_base26(mut decimal: i32) -> String {
+    let mut res: Vec<u8> = Vec::new();
+    while decimal != 0 {
+        let k = decimal % 26;
+        if k == 0 {
+            decimal = decimal / 26 - 1;
+            res.push(b'Z');
+        } else {
+            decimal /= 26;
+            res.push((k as u8) + 64); // 1->'A'
+        }
+    }
+    res.reverse();
+    String::from_utf8(res).unwrap()
+}
+
+fn is_digits(s: &str) -> bool {
+    !s.is_empty() && s.as_bytes().iter().all(|c| c.is_ascii_digit())
+}
+
+fn is_upper_letters(s: &str) -> bool {
+    !s.is_empty() && s.as_bytes().iter().all(|c| c.is_ascii_uppercase())
+}
+
+fn parse_rc(s: &str) -> Option<(String, String)> {
+    // Matches: R<rowdigits>C<columndigits>
+    if !s.starts_with('R') {
+        return None;
+    }
+    let after_r = &s[1..];
+    let c_pos = after_r.find('C')?;
+    let row = &after_r[..c_pos];
+    let col = &after_r[c_pos + 1..];
+    if is_digits(row) && is_digits(col) {
+        Some((row.to_string(), col.to_string()))
+    } else {
+        None
+    }
+}
+
+fn parse_a1(s: &str) -> Option<(String, String)> {
+    // Matches: <A-Z>+<digits>+
+    let bytes = s.as_bytes();
+    let mut i = 0usize;
+    while i < bytes.len() && bytes[i].is_ascii_uppercase() {
+        i += 1;
+    }
+    if i == 0 || i == bytes.len() {
+        return None;
+    }
+    let col = &s[..i];
+    let row = &s[i..];
+    if is_upper_letters(col) && is_digits(row) {
+        Some((col.to_string(), row.to_string()))
+    } else {
+        None
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.lines();
+
+    let first = it.next().unwrap_or("");
+    let mut n: usize = first.trim().parse::<usize>().unwrap_or(0);
+
+    let mut lines: Vec<String> = Vec::with_capacity(n);
+    while n > 0 {
+        lines.push(it.next().unwrap_or("").to_string());
+        n -= 1;
+    }
+
+    let mut out = String::new();
+    for line in lines {
+        if let Some((row, col)) = parse_rc(&line) {
+            let col_num: i32 = col.parse().unwrap_or(0);
+            out.push_str(&to_base26(col_num));
+            out.push_str(&row);
+            out.push('\n');
+        } else if let Some((col, row)) = parse_a1(&line) {
+            out.push('R');
+            out.push_str(&row);
+            out.push('C');
+            out.push_str(&to_decimal(&col).to_string());
+            out.push('\n');
+        } else {
+            out.push_str("Format not valid\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+/**
+ *
+ * @author FZ
+ */
+public class Rnd271B {
+    Scanner in = new Scanner(System.in);
+    private Rnd271B() throws IOException {
+        int n = in.nextInt();
+        int[] num = ns(n);
+        int[] acc = new int[n];
+        acc[0] = num[0];
+        for(int i = 1; i < n; i++)
+            acc[i] = num[i] + acc[i - 1];
+        int m = in.nextInt();
+        int[] query = ns(m);
+        for(int i = 0; i < m; i++) {
+            int res = searchInsert(acc, query[i]);
+            outln(res + 1);
+        }
+        
+            
+    }
+    public int searchInsert(int[] A, int target) {
+        int len = A.length;
+        int beg = 0;
+        int end = len - 1;
+        while(beg <= end) {
+            if(beg == end) {
+                if(target <= A[beg])
+                    return beg;
+                else if(target > A[beg])
+                    return beg + 1;
+                
+            }
+            if(beg == end - 1) {
+                if(target <= A[beg])
+                    return beg;
+                else if(target <= A[end])
+                    return end;
+                else
+                    return end + 1;
+            }
+            int mid = beg + (end - beg) / 2;
+            if(A[mid] == target)
+                return mid;
+            else if(target < A[mid])
+                end = mid - 1;
+            else
+                beg = mid + 1;
+            
+        }
+        return -1;
+    }
+    
+    private int[] ns(int n) {
+        int[] a = new int[n];
+        for(int i = 0; i < n; i++) {
+            a[i] = in.nextInt();
+        }
+        return a;
+    }
+    private static void outln(Object x) {
+        System.out.println(x);
+    }
+    private static void out(Object x) {
+        System.out.print(x);
+    }
+    public static void main(String[] args) throws IOException {
+        new Rnd271B();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn ns(scan: &mut Scanner, n: usize) -> Vec<i32> {
+    let mut a = vec![0i32; n];
+    for i in 0..n {
+        a[i] = scan.next_i32();
+    }
+    a
+}
+
+fn search_insert(a: &Vec<i32>, target: i32) -> i32 {
+    let len = a.len() as i32;
+    let mut beg: i32 = 0;
+    let mut end: i32 = len - 1;
+    while beg <= end {
+        if beg == end {
+            let b = beg as usize;
+            if target <= a[b] {
+                return beg;
+            } else if target > a[b] {
+                return beg + 1;
+            }
+        }
+        if beg == end - 1 {
+            let b = beg as usize;
+            let e = end as usize;
+            if target <= a[b] {
+                return beg;
+            } else if target <= a[e] {
+                return end;
+            } else {
+                return end + 1;
+            }
+        }
+        let mid = beg + (end - beg) / 2;
+        let m = mid as usize;
+        if a[m] == target {
+            return mid;
+        } else if target < a[m] {
+            end = mid - 1;
+        } else {
+            beg = mid + 1;
+        }
+    }
+    -1
+}
+
+fn main() {
+    let mut scan = Scanner::new();
+
+    let n = scan.next_i32() as usize;
+    let num = ns(&mut scan, n);
+
+    let mut acc = vec![0i32; n];
+    if n > 0 {
+        acc[0] = num[0];
+        for i in 1..n {
+            acc[i] = num[i] + acc[i - 1];
+        }
+    }
+
+    let m = scan.next_i32() as usize;
+    let query = ns(&mut scan, m);
+
+    let mut out = String::new();
+    for i in 0..m {
+        let res = search_insert(&acc, query[i]);
+        out.push_str(&(res + 1).to_string());
+        out.push('\n');
+    }
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

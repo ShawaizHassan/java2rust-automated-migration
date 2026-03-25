@@ -1,0 +1,350 @@
+INDEX: 300 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// 作者：杨成瑞先生
+import java.io.*;
+import java.util.*;
+
+public class curriculum {
+
+	static class FastScanner {
+
+        static final int DEFAULT_BUFF = 1024, EOF = -1, INT_MIN = 48, INT_MAX = 57;
+        static final byte NEG = 45;
+        static final int[] ints = new int[58];
+
+        static {
+            int value = 0;
+            for (int i = 48; i < 58; i++) {
+                ints[i] = value++;
+            }
+        }
+
+        InputStream stream;
+
+        byte[] buff;
+        int buffPtr;
+
+        public FastScanner(InputStream stream) {
+            this.stream = stream;
+            this.buff = new byte[DEFAULT_BUFF];
+            this.buffPtr = -1;
+        }
+
+        public int nextInt() throws IOException {
+            int val = 0;
+            int sign = readNonDigits();
+            while (isDigit(buff[buffPtr]) && buff[buffPtr] != EOF) {
+                val = (val << 3) + (val << 1) + ints[buff[buffPtr]];
+                buffPtr++;
+                if (buffPtr == buff.length) {
+                    updateBuff();
+                }
+            }
+            return val*sign;
+        }
+
+        private int readNonDigits() throws IOException {
+            if (buffPtr == -1 || buffPtr == buff.length) {
+                updateBuff();
+            }
+            if (buff[buffPtr] == EOF) {
+                throw new IOException("End of stream reached");
+            }
+            int signByte = -1;
+            while (!isDigit(buff[buffPtr])) {
+                signByte = buff[buffPtr];
+                buffPtr++;
+                if (buffPtr >= buff.length) {
+                    updateBuff();
+                }
+                if (buff[buffPtr] == EOF) {
+                    throw new IOException("End of stream reached");
+                }
+            }
+            if(signByte == NEG) return -1;
+            return 1;
+        }
+
+        public void close() throws IOException {
+            stream.close();
+        }
+
+        private boolean isDigit(int b) {
+            return b >= INT_MIN && b <= INT_MAX;
+        }
+
+        private void updateBuff() throws IOException {
+            buffPtr = 0;
+            stream.read(buff);
+        }
+    }
+
+	public static void main(String[] args) throws IOException {
+		FastScanner sc = new FastScanner(System.in);
+        int n = sc.nextInt();
+        int[] games = new int[n];
+        for(int i=0;i<n;i++) {
+            games[i] = sc.nextInt();
+        }
+        int max = 0;
+        for(int i=0;i<=n;i++) {
+            int current = 0;
+            for(int j=0;j<i;j++) {
+                if(games[j] == 0) {
+                    current++;
+                }
+            }
+            for(int k=i;k<n;k++) {
+                if(games[k] == 1) {
+                    current++;
+                }
+            }
+            max = Math.max(max, current);
+        }
+        System.out.println(max);
+	}
+
+}
+
+// 6
+// 0 1 0 0 1 0
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.Scanner;
+
+public class pokemonArmy {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        for(int t=sc.nextInt();t>0;t--){
+            int n=sc.nextInt();sc.nextInt();
+            long sum=0;boolean flag=false;int found=0;int buff=0;
+            for(int i=1;i<=n;i++){
+                int num=sc.nextInt();
+                if(i==num&&!flag)continue;
+                else {
+                    flag=true;
+                    if(found==0){buff=num;found=-1;}
+                    else if(found==-1){if(num>buff)buff=num;else if(num<buff){sum+=buff;found=1;buff=num;}}
+                    else {if(num<buff)buff=num;else if(num>buff){sum-=buff;found=-1;buff=num;}}
+
+                 }
+                if(found==-1&&i==n)sum+=buff;
+            }
+            if(!flag)System.out.println(n);
+            else System.out.println(sum);
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32();
+        sc.next_i32(); // ignored, same as Java code
+
+        let mut sum: i64 = 0;
+        let mut flag = false;
+        let mut found: i32 = 0;
+        let mut buff: i32 = 0;
+
+        for i in 1..=n {
+            let num = sc.next_i32();
+            if i == num && !flag {
+                continue;
+            } else {
+                flag = true;
+                if found == 0 {
+                    buff = num;
+                    found = -1;
+                } else if found == -1 {
+                    if num > buff {
+                        buff = num;
+                    } else if num < buff {
+                        sum += buff as i64;
+                        found = 1;
+                        buff = num;
+                    }
+                } else {
+                    if num < buff {
+                        buff = num;
+                    } else if num > buff {
+                        sum -= buff as i64;
+                        found = -1;
+                        buff = num;
+                    }
+                }
+            }
+            if found == -1 && i == n {
+                sum += buff as i64;
+            }
+        }
+
+        if !flag {
+            out.push_str(&format!("{}\n", n));
+        } else {
+            out.push_str(&format!("{}\n", sum));
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class con123_B {
+
+    public static void main( final String[] args ) throws IOException {
+        final BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
+        final String[] parts = br.readLine().split( " " );
+        final int n = Integer.parseInt( parts[ 0 ] );
+        final int m = Integer.parseInt( parts[ 1 ] );
+        System.out.println( solve( n, m ) );
+    }
+
+    public static String solve( final int n, final int m ) {
+        final int[] seq = new int[n];
+        int f, l; // used;
+        seq[ 0 ] = m / 2;
+        f = seq[ 0 ];
+        l = f;
+        int idx = 1;
+        if ( m % 2 == 0 ) {
+            --seq[ 0 ];
+            --f;
+            if ( n > 1 )
+                seq[ 1 ] = seq[ 0 ] + 1;
+            l = seq[ 0 ] + 1;
+            ++idx;
+        }
+        while ( idx < n ) {
+            seq[ idx++ ] = --f;
+            if ( idx < n ) seq[ idx++ ] = ++l;
+        }
+
+        final StringBuilder buff = new StringBuilder();
+        for ( int i = 0; i < n; ++i ) {
+            buff.append( seq[ i % m ] + 1 ).append( '\n' );
+        }
+        return buff.toString();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn solve(n: i32, m: i32) -> String {
+    let n_usize = n as usize;
+    let m_usize = m as usize;
+
+    let mut seq = vec![0i32; n_usize];
+    let mut f: i32;
+    let mut l: i32;
+
+    seq[0] = m / 2;
+    f = seq[0];
+    l = f;
+    let mut idx: usize = 1;
+
+    if m % 2 == 0 {
+        seq[0] -= 1;
+        f -= 1;
+        if n > 1 {
+            seq[1] = seq[0] + 1;
+        }
+        l = seq[0] + 1;
+        idx += 1;
+    }
+
+    while idx < n_usize {
+        f -= 1;
+        seq[idx] = f;
+        idx += 1;
+        if idx < n_usize {
+            l += 1;
+            seq[idx] = l;
+            idx += 1;
+        }
+    }
+
+    let mut out = String::new();
+    for i in 0..n_usize {
+        let v = seq[i % m_usize] + 1;
+        out.push_str(&v.to_string());
+        out.push('\n');
+    }
+    out
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let n: i32 = it.next().unwrap().parse().unwrap();
+    let m: i32 = it.next().unwrap().parse().unwrap();
+    let ans = solve(n, m);
+    print!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,473 @@
+INDEX: 197 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+
+public class A1008 {
+    public static void main(String [] args) /*throws Exception*/ {
+        InputStream inputReader = System.in;
+        OutputStream outputReader = System.out;
+        InputReader in = new InputReader(inputReader);//new InputReader(new FileInputStream(new File("input.txt")));new InputReader(inputReader);
+        PrintWriter out = new PrintWriter(outputReader);//new PrintWriter(new FileOutputStream(new File("output.txt")));
+        Algorithm solver = new Algorithm();
+        solver.solve(in, out);
+        out.close();
+    }
+}
+
+class Algorithm {
+    void solve(InputReader ir, PrintWriter pw) {
+
+        int x = ir.nextInt(), k = ir.nextInt();
+        int min = Integer.MAX_VALUE;
+
+        for (int i = 1; i < k; i++) {
+            int f = Integer.MAX_VALUE, q = x / i;
+
+            if (x % i == 0) f = q * k + i;
+
+            min = Math.min(f, min);
+        }
+
+        pw.print(min);
+
+    }
+
+    private static void mergeSort(int[] array) {
+        if(array.length == 1)
+            return;
+        int[] first = new int[array.length / 2];
+        int[] second = new int[array.length - first.length];
+        System.arraycopy(array, 0, first, 0, first.length);
+        System.arraycopy(array, first.length, second, 0, second.length);
+
+        mergeSort(first);
+        mergeSort(second);
+
+        merge(first, second, array);
+    }
+
+    private static void merge(int[] first, int[] second, int[] result) {
+        int iFirst = 0;
+        int iSecond = 0;
+        int j = 0;
+
+        while (iFirst < first.length && iSecond < second.length) {
+            if (first[iFirst] < second[iSecond]) {
+                result[j] = first[iFirst];
+                iFirst++;
+            }
+            else {
+                result[j] = second[iSecond];
+                iSecond++;
+            }
+            j++;
+        }
+        System.arraycopy(first, iFirst, result, j, first.length - iFirst);
+        System.arraycopy(second, iSecond, result, j, second.length - iSecond);
+    }
+
+}
+
+class InputReader {
+    private BufferedReader reader;
+    private StringTokenizer tokenizer;
+
+    InputReader(InputStream stream) {
+        reader = new BufferedReader(new InputStreamReader(stream), 32768);
+        tokenizer = null;
+    }
+
+    String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+
+    String nextLine(){
+        String fullLine;
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                fullLine = reader.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return fullLine;
+        }
+        return null;
+    }
+
+    String [] toArray() {
+        return nextLine().split(" ");
+    }
+
+    int nextInt() {
+        return Integer.parseInt(next());
+    }
+    double nextDouble() {
+        return Double.parseDouble(next());
+    }
+    long nextLong() {
+        return Long.parseLong(next());
+    }
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class JavaApplication {
+    static int[] stuFirst = new int[100009];
+    static int[] stuSecond = new int[100009];
+    static int n;
+    
+    public static void advancingStudent(ArrayList<Integer> first, ArrayList<Integer> second, int k) {
+        for (int i = 0; i < k; i++) {
+            stuFirst[i] = 1;
+            stuSecond[i] = 1;
+        }
+        int count = 0;
+        int iFirst = k;
+        int iSecond = k;
+        int resStu = n - 2*k;
+        while (count < resStu) {
+            if (first.get(iFirst) < second.get(iSecond)) {
+                stuFirst[iFirst] = 1;
+                iFirst++;
+            } else {
+                stuSecond[iSecond] = 1;
+                iSecond++;
+            }
+            count++;
+        }
+    }
+    
+    public static void main(String[] args){
+//        File file = new File("input.txt");
+        Scanner scan = new Scanner(System.in);
+        
+        ArrayList<Integer> first = new ArrayList<>();
+        ArrayList<Integer> second = new ArrayList<>();
+        
+        n = scan.nextInt();
+        for (int i = 0; i < n; i++) {
+            first.add(scan.nextInt());
+            second.add(scan.nextInt());
+        }
+        advancingStudent(first, second, 0);
+        advancingStudent(first, second, n / 2);
+        for (int i = 0; i < n; i++) {
+            System.out.print(stuFirst[i]);   
+        }
+        System.out.println();
+        for (int i = 0; i < n; i++) {
+            System.out.print(stuSecond[i]);
+        }
+    }
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn advancing_student(
+    first: &Vec<i32>,
+    second: &Vec<i32>,
+    k: usize,
+    n: usize,
+    stu_first: &mut Vec<i32>,
+    stu_second: &mut Vec<i32>,
+) {
+    for i in 0..k {
+        stu_first[i] = 1;
+        stu_second[i] = 1;
+    }
+    let mut count: usize = 0;
+    let mut i_first: usize = k;
+    let mut i_second: usize = k;
+    let res_stu: usize = n - 2 * k;
+    while count < res_stu {
+        if first[i_first] < second[i_second] {
+            stu_first[i_first] = 1;
+            i_first += 1;
+        } else {
+            stu_second[i_second] = 1;
+            i_second += 1;
+        }
+        count += 1;
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(x) => x.parse::<usize>().unwrap(),
+        None => return,
+    };
+
+    let mut first: Vec<i32> = Vec::with_capacity(n);
+    let mut second: Vec<i32> = Vec::with_capacity(n);
+
+    for _ in 0..n {
+        let a = it.next().unwrap().parse::<i32>().unwrap();
+        let b = it.next().unwrap().parse::<i32>().unwrap();
+        first.push(a);
+        second.push(b);
+    }
+
+    let mut stu_first = vec![0i32; 100009];
+    let mut stu_second = vec![0i32; 100009];
+
+    advancing_student(&first, &second, 0, n, &mut stu_first, &mut stu_second);
+    advancing_student(&first, &second, n / 2, n, &mut stu_first, &mut stu_second);
+
+    let mut out = String::new();
+    for i in 0..n {
+        out.push(if stu_first[i] == 0 { '0' } else { '1' });
+    }
+    out.push('\n');
+    for i in 0..n {
+        out.push(if stu_second[i] == 0 { '0' } else { '1' });
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+
+public class EducationalRound5A {
+	static IR in = new IR(System.in);
+    static char num1[];
+    static char num2[];
+    
+    public static void res(){
+    	int ptr = 0; int ptr2 = 0;
+    	
+    	while(ptr<num1.length&&num1[ptr]=='0') ptr++;
+    	while(ptr2<num2.length&&num2[ptr2]=='0')ptr2++;
+    	int dig1 = num1.length-ptr+1;
+    	int dig2 = num2.length-ptr2+1;
+    	if(dig1>dig2){
+    		System.out.println(">");
+    		return;
+    	}
+    	if(dig2>dig1){
+    		System.out.println("<");
+    		return;
+    	}
+    	
+    	
+    	while(ptr<num1.length&&ptr2<num2.length&&num1[ptr]==num2[ptr2]){
+    		
+    			ptr++; ptr2++;
+    		
+    	}
+    	if(ptr>=num1.length&&ptr2>=num2.length) System.out.println("=");
+    	else if(ptr2>=num2.length)System.out.println(">");
+    	else if (ptr>=num1.length) System.out.println("<");
+    	else if((num1[ptr]-'0')>(num2[ptr2]-'0'))System.out.println(">");
+    	else System.out.println("<");
+    	
+    }
+
+	public static void main(String[]args)throws Throwable{
+     num1 = in.next().toCharArray();
+     num2 = in.next().toCharArray();
+   res();
+	}
+
+
+
+	static class Pair{
+		int first;
+		int second;
+		public Pair(int first,int second){
+			this.first = first;
+			this.second = second;
+		}
+	}
+
+
+	static	class IR {
+		public BufferedReader reader;
+		public StringTokenizer tokenizer;
+
+		public IR(InputStream stream) {
+			reader = new BufferedReader(new InputStreamReader(stream), 32768);
+			tokenizer = null;
+		}
+
+		public String next() {
+			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+				try {
+					tokenizer = new StringTokenizer(reader.readLine());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			return tokenizer.nextToken();
+		}
+
+		public int j() {
+			return Integer.parseInt(next());
+		}
+		public long ll(){
+			return Long.parseLong(next());
+		}
+
+
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+static mut NUM1: Vec<u8> = Vec::new();
+static mut NUM2: Vec<u8> = Vec::new();
+
+fn res() {
+    let (num1, num2) = unsafe { (&NUM1, &NUM2) };
+
+    let mut ptr: usize = 0;
+    let mut ptr2: usize = 0;
+
+    while ptr < num1.len() && num1[ptr] == b'0' {
+        ptr += 1;
+    }
+    while ptr2 < num2.len() && num2[ptr2] == b'0' {
+        ptr2 += 1;
+    }
+
+    let dig1: i32 = (num1.len() as i32) - (ptr as i32) + 1;
+    let dig2: i32 = (num2.len() as i32) - (ptr2 as i32) + 1;
+
+    if dig1 > dig2 {
+        println!(">");
+        return;
+    }
+    if dig2 > dig1 {
+        println!("<");
+        return;
+    }
+
+    while ptr < num1.len() && ptr2 < num2.len() && num1[ptr] == num2[ptr2] {
+        ptr += 1;
+        ptr2 += 1;
+    }
+
+    if ptr >= num1.len() && ptr2 >= num2.len() {
+        println!("=");
+    } else if ptr2 >= num2.len() {
+        println!(">");
+    } else if ptr >= num1.len() {
+        println!("<");
+    } else if (num1[ptr] - b'0') > (num2[ptr2] - b'0') {
+        println!(">");
+    } else {
+        println!("<");
+    }
+}
+
+struct IR {
+    data: Vec<u8>,
+    idx: usize,
+}
+
+impl IR {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            data: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next(&mut self) -> String {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.data[start..self.idx].to_vec()).unwrap()
+    }
+
+    #[allow(dead_code)]
+    fn j(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+
+    #[allow(dead_code)]
+    fn ll(&mut self) -> i64 {
+        self.next().parse::<i64>().unwrap()
+    }
+}
+
+#[allow(dead_code)]
+struct Pair {
+    first: i32,
+    second: i32,
+}
+
+#[allow(dead_code)]
+impl Pair {
+    fn new(first: i32, second: i32) -> Self {
+        Self { first, second }
+    }
+}
+
+fn main() {
+    let mut inr = IR::new();
+    let s1 = inr.next();
+    let s2 = inr.next();
+    unsafe {
+        NUM1 = s1.into_bytes();
+        NUM2 = s2.into_bytes();
+    }
+    res();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

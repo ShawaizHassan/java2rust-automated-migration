@@ -1,0 +1,318 @@
+INDEX: 319 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class BPetrAndACombinationLock {
+    static class Solution {
+        int[]mat = {1, -1};
+        //Boolean[][]dp;
+        Map<String, Boolean> map;
+        public void find(int[] arr) {
+            map = new HashMap();
+            boolean res = possible(arr, 0, 0);
+            System.out.println(res==true? "YES" : "NO");
+        }
+
+        boolean possible(int[] arr, int index, int sum) {
+            if(index == arr.length) {
+                if(sum%360 == 0) {
+                    return true;
+                }
+                return false;
+            }
+
+            String key = index + "/" + sum;
+
+            if(map.containsKey(key)) return map.get(key);
+            for(int i=0; i<2; i++) {
+                if(possible(arr, index+1, sum+(arr[index]*mat[i]))) {
+                    map.put(key, true);
+                    return true;
+                }
+            }
+            map.put(key, false);
+            return false;
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0; i<n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        sol.find(arr);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+public class MyFile {
+
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		int n;
+		long sum = 0l;
+		boolean found;
+		while(sc.hasNextInt())
+		{
+			found=false;
+			List<Integer> ans = new ArrayList<Integer>();
+			n = sc.nextInt();
+			int min = Math.min(9, n);
+			for(int i=min;i>=1;i--)
+			{
+				Map<List<Integer>,Integer> r = showList(n,i);
+				ans.clear();
+			    for(Map.Entry<List<Integer>,Integer> map: r.entrySet())
+			    {
+			    	ans.addAll(map.getKey());
+			    	//System.out.println(map.getKey()+" "+map.getValue());
+			    	if((n-map.getValue())==0)
+			    	{
+			    		found=true;
+			    	}
+			    }
+			    if(found)break;
+				
+			}
+			System.out.println(ans.size());
+			System.out.print(ans.get(0));
+			for(int i=1;i<ans.size();i++)
+			{
+				System.out.print(" "+ans.get(i));
+			}
+			System.out.println();
+		}
+	}
+	public static Map<List<Integer>,Integer> showList(int number,int key)
+	{
+		Integer sum=0;
+		List<Integer> arr = new ArrayList<Integer>();
+		while((number-key)>=0)
+		{
+			sum+=key;
+			number = number-key;
+			arr.add(key);
+		}
+		Map<List<Integer>,Integer> hashMap = new HashMap<List<Integer>,Integer>();
+		hashMap.put(arr, sum);
+		return hashMap;
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+use std::collections::HashMap;
+
+fn show_list(mut number: i32, key: i32) -> HashMap<Vec<i32>, i32> {
+    let mut sum: i32 = 0;
+    let mut arr: Vec<i32> = Vec::new();
+    while number - key >= 0 {
+        sum += key;
+        number -= key;
+        arr.push(key);
+    }
+    let mut hash_map: HashMap<Vec<i32>, i32> = HashMap::new();
+    hash_map.insert(arr, sum);
+    hash_map
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let mut out = String::new();
+
+    while let Some(tok) = it.next() {
+        let n: i32 = match tok.parse() {
+            Ok(v) => v,
+            Err(_) => break,
+        };
+
+        let mut found = false;
+        let mut ans: Vec<i32> = Vec::new();
+
+        let min = std::cmp::min(9, n);
+        for i in (1..=min).rev() {
+            let r = show_list(n, i);
+            ans.clear();
+            for (k, v) in r.iter() {
+                ans.extend_from_slice(k);
+                if (n - *v) == 0 {
+                    found = true;
+                }
+            }
+            if found {
+                break;
+            }
+        }
+
+        out.push_str(&format!("{}\n", ans.len()));
+        if !ans.is_empty() {
+            out.push_str(&format!("{}", ans[0]));
+            for idx in 1..ans.len() {
+                out.push_str(&format!(" {}", ans[idx]));
+            }
+        }
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+//package fourninetysixDiv3;
+import java.util.HashMap;
+import java.util.Scanner;
+public class Median_Segments_general {
+
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+		int n = s.nextInt();
+		int m = s.nextInt();
+		int[] arr = new int[n];
+		for (int i = 0; i < n; i++) {
+			arr[i] = s.nextInt();
+		}
+		System.out.println(func(n, m, arr)-func(n, m+1, arr));
+	}
+	public static long func(int n,int m,int[] arr) {
+		HashMap<Long, Integer> map = new HashMap<>();
+		map.put((long) 0, 1);
+		long sum = 0;
+		long res = 0;
+		long add=0;
+		for(int i=0;i<n;i++) {
+			if(arr[i]<m) {
+				sum--;
+				if(map.containsKey(sum)) {
+					add-=map.get(sum);
+				}
+			}
+			else {
+				if(map.containsKey(sum)) {
+					add+=map.get(sum);
+				}
+				sum++;
+			}
+			res+=add;
+			if(map.containsKey(sum)) {
+				map.put(sum, map.get(sum)+1);
+			}
+			else {
+				map.put(sum,1);
+			}
+		}
+		return res;
+	}
+}
+
+```
+Translated Rust:
+```
+use std::collections::HashMap;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn func(n: usize, m: i32, arr: &[i32]) -> i64 {
+    let mut map: HashMap<i64, i32> = HashMap::new();
+    map.insert(0i64, 1);
+
+    let mut sum: i64 = 0;
+    let mut res: i64 = 0;
+    let mut add: i64 = 0;
+
+    for i in 0..n {
+        if arr[i] < m {
+            sum -= 1;
+            if let Some(v) = map.get(&sum) {
+                add -= *v as i64;
+            }
+        } else {
+            if let Some(v) = map.get(&sum) {
+                add += *v as i64;
+            }
+            sum += 1;
+        }
+        res += add;
+
+        let entry = map.entry(sum).or_insert(0);
+        *entry += 1;
+    }
+
+    res
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n_i32 = sc.next_i32();
+    let m = sc.next_i32();
+    let n: usize = n_i32 as usize;
+
+    let mut arr = vec![0i32; n];
+    for i in 0..n {
+        arr[i] = sc.next_i32();
+    }
+
+    let ans = func(n, m, &arr) - func(n, m + 1, &arr);
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

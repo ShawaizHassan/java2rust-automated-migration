@@ -1,0 +1,218 @@
+INDEX: 114 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// A : Is your horseshoe on the other hoof?
+
+import java.util.Scanner;
+
+public class A {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int cnt = 0;
+        boolean f;
+        int[] values = new int[4];
+        for (int i = 0; i < 4; i++) {
+            values[i] = in.nextInt();
+            f = false;
+            for (int j = 0; j < i; j++) {
+                if (values[i] == values[j]) {
+                    f = true;
+                }
+            }
+            if (f) {
+                cnt++;
+            }
+        }
+        System.out.println(cnt);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int q = scanner.nextInt();
+        int n;
+        int[] values;
+        for (int i = 0; i < q; i++) {
+            n = scanner.nextInt();
+            values = new int[n];
+            for (int j = 0; j < n; j++) {
+                values[j] = scanner.nextInt();
+            }
+            System.out.println(solve(values));
+        }
+    }
+
+    private static byte solve(int[] values) {
+        Arrays.sort(values);
+        int prev = values[0];
+        for (int i = 1; i < values.length; i++) {
+            if (prev + 1 == values[i]) {
+                return 2;
+            }
+            prev = values[i];
+        }
+        return 1;
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn solve(values: &mut Vec<i32>) -> i32 {
+    values.sort();
+    let mut prev = values[0];
+    for &v in values.iter().skip(1) {
+        if prev + 1 == v {
+            return 2;
+        }
+        prev = v;
+    }
+    1
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let q = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..q {
+        let n = sc.next_i32() as usize;
+        let mut values: Vec<i32> = Vec::with_capacity(n);
+        for _ in 0..n {
+            values.push(sc.next_i32());
+        }
+        let ans = solve(&mut values);
+        out.push_str(&format!("{}\n", ans));
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.*;
+public class A315
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        int n=sc.nextInt();
+
+		int []f=new int[n];
+		int []s=new int[n];
+		for (int i = 0; i < n; i++) {
+			f[i]=sc.nextInt();
+			s[i]=sc.nextInt();
+
+		}
+		int cnt=n;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if(f[i]==s[j] && i!=j){
+					cnt--;
+					break;
+				}
+			}
+		}
+
+		System.out.println(cnt);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut f: Vec<i32> = vec![0; n];
+    let mut s: Vec<i32> = vec![0; n];
+
+    for i in 0..n {
+        f[i] = it.next().unwrap().parse().unwrap();
+        s[i] = it.next().unwrap().parse().unwrap();
+    }
+
+    let mut cnt: i32 = n as i32;
+    for i in 0..n {
+        for j in 0..n {
+            if f[i] == s[j] && i != j {
+                cnt -= 1;
+                break;
+            }
+        }
+    }
+
+    println!("{}", cnt);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,220 @@
+INDEX: 350 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class LuckyYear {
+
+	public static void main(String[] args) {
+		
+		Scanner scan = new Scanner(System.in);
+		
+		long input = 0;
+		long output = 0;
+		
+		input = scan.nextInt();
+		
+		System.out.println(nextLuckyYear(input));
+
+	}
+
+	public static long nextLuckyYear(long input) {
+		long multiplier = 1;
+		long result = 0;
+		long copy = input;
+
+		while (copy >= 10) {
+			copy /= 10;
+			multiplier *= 10; 
+		}
+
+		result = copy + 1;
+
+		result *= multiplier;
+
+		return result - input;
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class CodeForces {
+    private final static Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+
+    private static long solve(int x, int y, int k) {
+        //get k coals
+        long sticksNeededForCoal = (long) y * (long) k;
+        long tradesForCoal = (long)((sticksNeededForCoal * 1.0 / (x-1)) + 0.5) + k;
+
+        long left = (x-1) * (tradesForCoal - k);
+
+        while(left < sticksNeededForCoal){
+            tradesForCoal++;
+            left += (x-1);
+        }
+        left -= sticksNeededForCoal;
+
+        //get sticksLeft sticks
+        long sticksNeeded = k - 1 - left;
+        long tradesForSticks = (long)((sticksNeeded * 1.0 / (x-1)) + 0.5);
+        long result = (x-1) * tradesForSticks;
+
+        while(result < sticksNeeded){
+            tradesForSticks++;
+            result += (x-1);
+        }
+
+        return tradesForCoal + tradesForSticks;
+    }
+
+    public static void main(String[] args) {
+        int t = input.nextInt();
+        for(int i=0; i<t; i++){
+            int x = input.nextInt();
+            int y = input.nextInt();
+            int k = input.nextInt();
+
+            System.out.println(solve(x, y, k));
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn solve(x: i64, y: i64, k: i64) -> i64 {
+    // get k coals
+    let sticks_needed_for_coal = y * k;
+    let mut trades_for_coal =
+        ((sticks_needed_for_coal as f64 / (x - 1) as f64) + 0.5) as i64 + k;
+
+    let mut left = (x - 1) * (trades_for_coal - k);
+
+    while left < sticks_needed_for_coal {
+        trades_for_coal += 1;
+        left += x - 1;
+    }
+    left -= sticks_needed_for_coal;
+
+    // get sticksLeft sticks
+    let sticks_needed = k - 1 - left;
+    let mut trades_for_sticks =
+        ((sticks_needed as f64 / (x - 1) as f64) + 0.5) as i64;
+    let mut result = (x - 1) * trades_for_sticks;
+
+    while result < sticks_needed {
+        trades_for_sticks += 1;
+        result += x - 1;
+    }
+
+    trades_for_coal + trades_for_sticks
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..t {
+        let x: i64 = it.next().unwrap().parse().unwrap();
+        let y: i64 = it.next().unwrap().parse().unwrap();
+        let k: i64 = it.next().unwrap().parse().unwrap();
+        let ans = solve(x, y, k);
+        out.push_str(&format!("{}\n", ans));
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+
+public class VanyAndCards {
+
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt();
+        int x = input.nextInt();
+        input.nextLine();
+        int sum = 0;
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            sum += input.nextInt();
+        }
+
+        sum = Math.abs(sum);
+        result = sum / x;
+        if (sum % x == 0) {
+            //do nothing
+        }
+        else {
+            result++;
+        }
+        System.out.println(result);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let x: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut sum: i32 = 0;
+    for _ in 0..n {
+        let v: i32 = it.next().unwrap().parse().unwrap();
+        sum = sum.wrapping_add(v);
+    }
+
+    let sum = sum.abs();
+    let mut result = sum / x;
+    if sum % x != 0 {
+        result += 1;
+    }
+    println!("{}", result);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

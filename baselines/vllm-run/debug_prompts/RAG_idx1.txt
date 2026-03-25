@@ -1,0 +1,386 @@
+INDEX: 1 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.List;
+
+public class CyclicPermutations { // Template for CF
+    public static class ListComparator implements Comparator<List<Integer>> {
+
+        @Override
+        public int compare(List<Integer> l1, List<Integer> l2) {
+            for (int i = 0; i < l1.size(); ++i) {
+                if (l1.get(i).compareTo(l2.get(i)) != 0) {
+                    return l1.get(i).compareTo(l2.get(i));
+                }
+            }
+            return 0;
+        }
+    }
+
+    public static class Pair {
+        int first;
+        int second;
+
+        public Pair(int first, int second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        public int getFirst() {
+            return first;
+        }
+
+        public int getSecond() {
+            return second;
+        }
+
+        @Override
+        public String toString() {
+            return first + " " + second;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        // Check for int overflow!!!!
+        // Should you use a long to store the sum or smthn?
+        BufferedReader f = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+
+        long n = Integer.parseInt(f.readLine());
+        long bad = 1;
+        long mod = 1000000007;
+        for (int j = 0; j < n - 1; j++) {
+            bad *= 2;
+            bad %= mod;
+        }
+        long prod = 1;
+        for (long j = n; j > 0; j--) {
+            prod *= j;
+            prod %= mod;
+        }
+        if (prod - bad >= 0) {
+            out.println(prod - bad);
+        } else {
+            out.println(mod + prod - bad);
+        }
+        out.close();
+    }
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		Scanner in = new Scanner(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskC solver = new TaskC();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskC {
+    public class Person{
+        String first;
+        String last;
+        public Person(String first, String last){
+            this.first = first;
+            this.last = last;
+        }
+    }
+
+    public void solve(int testNumber, Scanner in, PrintWriter out) {
+        int n = in.nextInt();
+        Person[] pa = new Person[n];
+        for (int i = 0; i < pa.length; i++) {
+            String f = in.next();
+            String l = in.next();
+            if (f.compareTo(l) < 0) pa[i] = new Person(f, l);
+            else pa[i] = new Person(l, f);
+        }
+        int[] ord = new int[n];
+        for (int i = 0; i < ord.length; i++) {
+            ord[i] = in.nextInt();
+        }
+        String cur = pa[ord[0]-1].first;
+        for (int x = 1; x < n; x++) {
+            int i = ord[x]-1;
+            String first = pa[i].first;
+            String second = pa[i].last;
+            if (first.compareTo(cur) > 0) {
+                cur = first;
+            } else if (second.compareTo(cur) > 0) {
+                cur = second;
+            } else {
+                out.print("NO");
+                return;
+            }
+        }
+        out.print("YES");
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+#[derive(Clone)]
+struct Person {
+    first: String,
+    last: String,
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n = sc.next_i32() as usize;
+    let mut pa: Vec<Person> = Vec::with_capacity(n);
+
+    for _ in 0..n {
+        let f = sc.next();
+        let l = sc.next();
+        if f < l {
+            pa.push(Person { first: f, last: l });
+        } else {
+            pa.push(Person { first: l, last: f });
+        }
+    }
+
+    let mut ord: Vec<usize> = Vec::with_capacity(n);
+    for _ in 0..n {
+        ord.push((sc.next_i32() - 1) as usize);
+    }
+
+    let mut cur = pa[ord[0]].first.clone();
+    for x in 1..n {
+        let i = ord[x];
+        let first = &pa[i].first;
+        let second = &pa[i].last;
+
+        if first.as_str() > cur.as_str() {
+            cur = first.clone();
+        } else if second.as_str() > cur.as_str() {
+            cur = second.clone();
+        } else {
+            print!("NO");
+            return;
+        }
+    }
+
+    print!("YES");
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+public class Main {
+    
+    static class Pair
+    {
+        int first, second;
+        Pair(int x, int y)
+        {
+            this.first = x;
+            this.second = y;
+        }
+        public String toString(Pair p)
+        {
+            return "("+p.first+","+p.second+")";
+        }
+    }
+    
+    static class comp implements Comparator<Pair>
+    {
+        public int compare(Pair p1, Pair p2)
+        {
+            return p1.first-p2.first;
+        }
+    }
+    
+    public static void main(String args[]) {
+      
+      Scanner sc = new Scanner(System.in);
+      PrintWriter w = new PrintWriter(System.out);
+      
+      int t = sc.nextInt();
+      while(t-->0)
+      {
+          int n = sc.nextInt();
+          int a[] = new int[n];
+          int b[] = new int[n];
+          Pair p[] = new Pair[n];
+          for(int i = 0; i < n ; i++)
+          {
+              a[i] = sc.nextInt();
+          }
+          for(int i = 0; i < n ; i++)
+          {
+              b[i] = sc.nextInt();
+              p[i] = new Pair(a[i], b[i]);
+          }
+          Arrays.sort(p, new comp());
+          int time = 0;
+          for(int i = n-1; i >= 0; i--)
+          {
+              if(p[i].first < (time + p[i].second))
+              {
+                  time = Math.max(p[i].first, time);
+                  break;
+              }
+              else
+              {
+                  time += p[i].second;
+              }
+          }
+          w.println(time);
+      }
+      w.close();
+    }
+}
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+#[derive(Clone)]
+struct Pair {
+    first: i32,
+    second: i32,
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut out = String::new();
+
+    let mut t = sc.next_i32();
+    while t > 0 {
+        t -= 1;
+
+        let n_i32 = sc.next_i32();
+        let n = n_i32 as usize;
+
+        let mut a = vec![0i32; n];
+        let mut p: Vec<Pair> = Vec::with_capacity(n);
+
+        for i in 0..n {
+            a[i] = sc.next_i32();
+        }
+        for i in 0..n {
+            let b = sc.next_i32();
+            p.push(Pair { first: a[i], second: b });
+        }
+
+        p.sort_by(|x, y| x.first.cmp(&y.first));
+
+        let mut time: i32 = 0;
+        for i in (0..n).rev() {
+            let first = p[i].first;
+            let second = p[i].second;
+
+            if first < time + second {
+                time = if first > time { first } else { time };
+                break;
+            } else {
+                time += second;
+            }
+        }
+
+        out.push_str(&format!("{}\n", time));
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

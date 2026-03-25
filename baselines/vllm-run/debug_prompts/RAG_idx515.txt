@@ -1,0 +1,517 @@
+INDEX: 515 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.io.BufferedWriter;
+import java.util.InputMismatchException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        OutputWriter out = new OutputWriter(outputStream);
+        TaskC solver = new TaskC();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskC {
+        public int cv;
+        public int ck;
+        public int cs;
+        public int[][] freq;
+        public ArrayList<Integer>[] pos;
+        public int[][][][] dp;
+
+        public void solve(int testNumber, InputReader in, OutputWriter out) {
+            int n = in.nextInt();
+            char[] c = in.next().toCharArray();
+            cv = 0;
+            ck = 0;
+            cs = 0;
+            freq = new int[n + 1][3];
+            pos = new ArrayList[3];
+            for (int i = 0; i < 3; i++) pos[i] = new ArrayList<>();
+            int idx = 0;
+            for (char x : c) {
+                System.arraycopy(freq[idx], 0, freq[idx + 1], 0, 3);
+                idx++;
+                if (x == 'V') {
+                    freq[idx][0]++;
+                    cv++;
+                    pos[0].add(idx);
+                } else if (x == 'K') {
+                    freq[idx][1]++;
+                    ck++;
+                    pos[1].add(idx);
+                } else {
+                    freq[idx][2]++;
+                    cs++;
+                    pos[2].add(idx);
+                }
+            }
+            dp = new int[cv + 1][ck + 1][cs + 1][3];
+            for (int[][][] x : dp) for (int[][] y : x) for (int[] z : y) Arrays.fill(z, -1);
+            out.println(dfs(0, 0, 0, 2));
+        }
+
+        public int dfs(int tv, int tk, int ts, int last) {
+            if (tv == cv && tk == ck && ts == cs) {
+                return 0;
+            }
+            if (dp[tv][tk][ts][last] != -1) return dp[tv][tk][ts][last];
+            int ret = 1 << 29;
+            if (tv < cv) {
+                int p = pos[0].get(tv);
+                int move = Math.max(freq[p][0] - tv, 0) + Math.max(freq[p][1] - tk, 0) + Math.max(freq[p][2] - ts, 0) - 1;
+                ret = Math.min(ret, dfs(tv + 1, tk, ts, 0) + move);
+            }
+            if (tk < ck && last != 0) {
+                int p = pos[1].get(tk);
+                int move = Math.max(freq[p][0] - tv, 0) + Math.max(freq[p][1] - tk, 0) + Math.max(freq[p][2] - ts, 0) - 1;
+                ret = Math.min(ret, dfs(tv, tk + 1, ts, 1) + move);
+            }
+            if (ts < cs) {
+                int p = pos[2].get(ts);
+                int move = Math.max(freq[p][0] - tv, 0) + Math.max(freq[p][1] - tk, 0) + Math.max(freq[p][2] - ts, 0) - 1;
+                ret = Math.min(ret, dfs(tv, tk, ts + 1, 2) + move);
+            }
+            return dp[tv][tk][ts][last] = ret;
+        }
+
+    }
+
+    static class InputReader {
+        private InputStream stream;
+        private byte[] buf = new byte[1024];
+        private int curChar;
+        private int numChars;
+
+        public InputReader(InputStream stream) {
+            this.stream = stream;
+        }
+
+        public int read() {
+            if (this.numChars == -1) {
+                throw new InputMismatchException();
+            } else {
+                if (this.curChar >= this.numChars) {
+                    this.curChar = 0;
+
+                    try {
+                        this.numChars = this.stream.read(this.buf);
+                    } catch (IOException var2) {
+                        throw new InputMismatchException();
+                    }
+
+                    if (this.numChars <= 0) {
+                        return -1;
+                    }
+                }
+
+                return this.buf[this.curChar++];
+            }
+        }
+
+        public int nextInt() {
+            int c;
+            for (c = this.read(); isSpaceChar(c); c = this.read()) {
+                ;
+            }
+
+            byte sgn = 1;
+            if (c == 45) {
+                sgn = -1;
+                c = this.read();
+            }
+
+            int res = 0;
+
+            while (c >= 48 && c <= 57) {
+                res *= 10;
+                res += c - 48;
+                c = this.read();
+                if (isSpaceChar(c)) {
+                    return res * sgn;
+                }
+            }
+
+            throw new InputMismatchException();
+        }
+
+        public String next() {
+            int c;
+            while (isSpaceChar(c = this.read())) {
+                ;
+            }
+
+            StringBuilder result = new StringBuilder();
+            result.appendCodePoint(c);
+
+            while (!isSpaceChar(c = this.read())) {
+                result.appendCodePoint(c);
+            }
+
+            return result.toString();
+        }
+
+        public static boolean isSpaceChar(int c) {
+            return c == 32 || c == 10 || c == 13 || c == 9 || c == -1;
+        }
+
+    }
+
+    static class OutputWriter {
+        private final PrintWriter writer;
+
+        public OutputWriter(OutputStream outputStream) {
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+        }
+
+        public OutputWriter(Writer writer) {
+            this.writer = new PrintWriter(writer);
+        }
+
+        public void close() {
+            writer.close();
+        }
+
+        public void println(int i) {
+            writer.println(i);
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.Collections;
+import java.util.ArrayList;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author mwistrom
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskB solver = new TaskB();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskB {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            int n = in.nextInt();
+            int f = in.nextInt();
+
+            class Pair {
+                int k;
+                int l;
+
+                Pair(int k, int l) {
+                    this.k = k;
+                    this.l = l;
+                }
+            }
+
+            ArrayList<Pair> al = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                al.add(new Pair(in.nextInt(), in.nextInt()));
+            }
+            Collections.sort(al, (p1, p2) -> {
+                int x1 = Math.min(2 * p1.k, p1.l) - Math.min(p1.k, p1.l);
+                int x2 = Math.min(2 * p2.k, p2.l) - Math.min(p2.k, p2.l);
+                if (x1 < x2)
+                    return 1;
+                if (x1 > x2)
+                    return -1;
+
+                return 0;
+            });
+
+            long sum = 0;
+
+            for (int i = 0; i < f; i++) {
+                Pair a = al.get(i);
+                sum += Math.min(2 * a.k, a.l);
+            }
+            for (int i = f; i < n; i++) {
+                Pair a = al.get(i);
+                sum += Math.min(a.k, a.l);
+            }
+            out.println(sum);
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+#[derive(Clone, Copy)]
+struct Pair {
+    k: i32,
+    l: i32,
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let f = sc.next_i32() as usize;
+
+    let mut al: Vec<Pair> = Vec::with_capacity(n);
+    for _ in 0..n {
+        let k = sc.next_i32();
+        let l = sc.next_i32();
+        al.push(Pair { k, l });
+    }
+
+    al.sort_by(|p1, p2| {
+        let x1 = std::cmp::min(2 * p1.k, p1.l) - std::cmp::min(p1.k, p1.l);
+        let x2 = std::cmp::min(2 * p2.k, p2.l) - std::cmp::min(p2.k, p2.l);
+        if x1 < x2 {
+            Ordering::Greater
+        } else if x1 > x2 {
+            Ordering::Less
+        } else {
+            Ordering::Equal
+        }
+    });
+
+    let mut sum: i64 = 0;
+    for i in 0..f {
+        let a = al[i];
+        sum += std::cmp::min((2 * a.k) as i64, a.l as i64);
+    }
+    for i in f..n {
+        let a = al[i];
+        sum += std::cmp::min(a.k as i64, a.l as i64);
+    }
+
+    print!("{sum}\n");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

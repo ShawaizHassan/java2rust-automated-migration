@@ -1,0 +1,422 @@
+INDEX: 270 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+import static java.lang.Math.*;
+
+public class Main {
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner(System.in);
+        PrintWriter pw = new PrintWriter(System.out);
+        int n = sc.nextInt();
+        int[] r = new int[n];
+        int[]b  = new int[n];
+        int cntB = 0;
+        int cntR = 0;
+        for (int i = 0; i < n; i++)
+            r[i] = sc.  nextInt();
+        for (int i = 0; i < n; i++)
+            b[i] = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            if(r[i] + b[i] == 2)
+                continue;
+            if(r[i] == 1)
+                cntR++;
+            if(b[i] == 1)
+                cntB++;
+        }
+        if (cntR == 0)
+            pw.print("-1");
+        else
+            pw.print((cntB) / cntR + 1);
+        pw.close();
+    }
+
+    public static boolean isVowel(char a) {
+        return a == 'a' || a == 'e' || a == 'u' || a == 'o' || a == 'y';
+    }
+
+    public static long binPow(long a, int n) {
+        long p = a;
+        long res = 1;
+        while (n > 0) {
+            if (n % 2 == 1)
+                res *= p;
+            p *= p;
+            n /= 2;
+        }
+        return res;
+    }
+
+    public static int gcd(int a, int b) {
+        if (a == 0 || b == 0)
+            return a + b;
+        return gcd(b % a, a);
+    }
+
+    public static long gcd(long a, long b) {
+        if (a == 0 || b == 0)
+            return a + b;
+        return gcd(b % a, a);
+    }
+}
+
+class FastScanner {
+    static BufferedReader br;
+    static StringTokenizer st = new StringTokenizer("");
+
+    public FastScanner(InputStream inputStream) {
+        br = new BufferedReader(new InputStreamReader(inputStream));
+    }
+
+    public FastScanner(String fileName) throws FileNotFoundException {
+        br = new BufferedReader(new FileReader(fileName));
+    }
+
+    public boolean hasNext() {
+        try {
+            while (!st.hasMoreTokens())
+                st = new StringTokenizer(br.readLine());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public double nextDouble() {
+        return Double.parseDouble(next());
+    }
+
+    public long nextLong() {
+        return Long.parseLong(next());
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+    public String next() {
+        hasNext();
+        return st.nextToken();
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+import static java.lang.Math.*;
+
+public class Main {
+    static char[][] table;
+
+    public static void main(String[] args) throws IOException {
+        FastScanner sc = new FastScanner(System.in);
+        PrintWriter pw = new PrintWriter(System.out);
+        int n = sc.nextInt();
+        int[] w = new int[n];
+        int[] h = new int[n];
+        TreeSet<Pair> max = new TreeSet<>(new PairComp());
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            w[i] = sc.nextInt();
+            h[i] = sc.nextInt();
+            sum += w[i];
+            max.add(new Pair(h[i], i));
+        }
+        for (int i = 0; i < n; i++) {
+            max.remove(new Pair(h[i], i));
+            pw.print((long) (sum - w[i]) * max.last().a + " ");
+            max.add(new Pair(h[i], i));
+        }
+        pw.close();
+    }
+}
+
+class Pair {
+    int a, b;
+
+    public Pair(int a, int b) {
+        this.a = a;
+        this.b = b;
+    }
+}
+
+class PairComp implements Comparator<Pair> {
+    public int compare(Pair o1, Pair o2) {
+        return Integer.compare(o1.a, o2.a) * 2 + Integer.compare(o1.b, o2.b);
+    }
+}
+
+class FastScanner {
+    BufferedReader br;
+    StringTokenizer st = new StringTokenizer("");
+
+    public FastScanner(InputStream inputStream) throws FileNotFoundException {
+        br = new BufferedReader(new InputStreamReader(inputStream));
+    }
+
+    public FastScanner(String file) throws FileNotFoundException {
+        br = new BufferedReader(new FileReader(file));
+    }
+
+    public String next() throws IOException {
+        while (!st.hasMoreTokens())
+            st = new StringTokenizer(br.readLine());
+        return st.nextToken();
+    }
+
+    public int nextInt() throws IOException {
+        return Integer.parseInt(next());
+    }
+
+    public double nextDouble() throws IOException {
+        return Double.parseDouble(next());
+    }
+
+    public long nextLong() throws IOException {
+        return Long.parseLong(next());
+    }
+}
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::collections::BTreeSet;
+use std::io::{self, Read, Write};
+
+#[derive(Clone, Copy, Debug)]
+struct Pair {
+    a: i32,
+    b: i32,
+}
+
+impl PartialEq for Pair {
+    fn eq(&self, other: &Self) -> bool {
+        self.a == other.a && self.b == other.b
+    }
+}
+impl Eq for Pair {}
+
+impl PartialOrd for Pair {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Pair {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let ca = self.a.cmp(&other.a) as i32;
+        let cb = self.b.cmp(&other.b) as i32;
+        let v = ca * 2 + cb;
+        if v < 0 {
+            Ordering::Less
+        } else if v > 0 {
+            Ordering::Greater
+        } else {
+            Ordering::Equal
+        }
+    }
+}
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut w = vec![0i32; n];
+    let mut h = vec![0i32; n];
+
+    let mut max_set: BTreeSet<Pair> = BTreeSet::new();
+    let mut sum: i32 = 0;
+
+    for i in 0..n {
+        w[i] = sc.next_i32();
+        h[i] = sc.next_i32();
+        sum += w[i];
+        max_set.insert(Pair { a: h[i], b: i as i32 });
+    }
+
+    let mut out = String::new();
+    for i in 0..n {
+        max_set.remove(&Pair { a: h[i], b: i as i32 });
+        let last = *max_set.iter().next_back().unwrap();
+        let val: i64 = (sum as i64 - w[i] as i64) * last.a as i64;
+        out.push_str(&val.to_string());
+        out.push(' ');
+        max_set.insert(Pair { a: h[i], b: i as i32 });
+    }
+
+    let mut stdout = io::BufWriter::new(io::stdout());
+    stdout.write_all(out.as_bytes()).unwrap();
+}
+```
+
+Java:
+```
+//Atcoder
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+	static class FastScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastScanner() {
+            try {
+                br = new BufferedReader(new InputStreamReader(System.in));
+                st = new StringTokenizer(br.readLine());
+            } catch (Exception e){e.printStackTrace();}
+        }
+
+        public String next() {
+            if (st.hasMoreTokens()) return st.nextToken();
+            try {st = new StringTokenizer(br.readLine());}
+            catch (Exception e) {e.printStackTrace();}
+            return st.nextToken();
+        }
+
+        public int nextInt() {return Integer.parseInt(next());}
+
+        public long nextLong() {return Long.parseLong(next());}
+
+        public double nextDouble() {return Double.parseDouble(next());}
+
+        public String nextLine() {
+            String line = "";
+            if(st.hasMoreTokens()) line = st.nextToken();
+            else try {return br.readLine();}catch(IOException e){e.printStackTrace();}
+            while(st.hasMoreTokens()) line += " "+st.nextToken();
+            return line;
+        }
+    }
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner();
+        PrintWriter pw = new PrintWriter(System.out);
+
+        int n = sc.nextInt();
+        Integer[] a = new Integer[n];
+        for(int i=0;i<n;i++) a[i] = sc.nextInt();
+        Arrays.sort(a);
+
+        int ans = n;
+        for(int i=0,j=n/2;i<n/2&&j<n;j++) {
+            if(a[i] * 2 <= a[j]) {
+                i++;
+                ans--;
+            }
+        }
+    
+        pw.println(ans);
+        pw.close();
+    }  
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+
+    let n = sc.next_i32() as usize;
+    let mut a: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        a.push(sc.next_i32());
+    }
+    a.sort();
+
+    let mut ans = n as i32;
+    let mut i: usize = 0;
+    let mut j: usize = n / 2;
+    while i < n / 2 && j < n {
+        if (a[i] as i64) * 2 <= a[j] as i64 {
+            i += 1;
+            ans -= 1;
+        }
+        j += 1;
+    }
+
+    print!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

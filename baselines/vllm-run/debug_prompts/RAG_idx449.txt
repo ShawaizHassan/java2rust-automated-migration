@@ -1,0 +1,339 @@
+INDEX: 449 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+/* 
+
+*/
+
+import java.io.*;
+import java.util.*;
+public class Maxcut
+{
+	public static void main(String args[])throws IOException
+	{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n =Integer.parseInt(st.nextToken());
+		int b = Integer.parseInt(st.nextToken());
+		int arr[] = new int[n];
+		st = new StringTokenizer(br.readLine());
+		int val[] = new int[n];
+		for(int i=0;i<n;i++){
+			arr[i] = Integer.parseInt(st.nextToken());
+			if(arr[i]%2==0)
+				val[i]=-1;
+			else
+				val[i]=1;
+		}
+		
+		int sum=0;
+		ArrayList<Integer>cost = new ArrayList<Integer>();
+		for(int i=0;i<n-1;i++)
+		{
+			sum+=val[i];
+			if(sum==0)
+			{
+				cost.add((arr[i+1]-arr[i])>0?(arr[i+1]-arr[i]):-(arr[i+1]-arr[i]));
+
+
+			}
+		}
+		Collections.sort(cost);
+		int tcost=0; int maxp=0;
+		for(Integer i : cost)
+		{
+			if(tcost+i<=b)
+			{
+				tcost+=i;
+				maxp++;
+				//System.out.println(tcost+ " "+ maxp);
+
+			}
+		}
+		System.out.println(maxp);
+		//System.out.println(tcost);
+
+
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+
+import java.io.* ;
+import java.util.StringTokenizer;
+
+public class Codeforces{
+    public static boolean valid(int target, int[] arr1, int[] arr2){
+        long val = 0;
+        for(int i=0; i<arr1.length; i++){
+            if(arr1[i]>target)
+                val += arr2[i];
+        }
+        return val <= target;
+    }
+    public static void main(String[] args) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+        int t = Integer.parseInt(in.readLine());
+        int[] output = new int[t];
+        for (int ts = 0; ts < t; ts++) {
+            int n = Integer.parseInt(in.readLine());
+            int[] a = new int[n], b = new int[n];
+            StringTokenizer st = new StringTokenizer(in.readLine());
+            for (int i = 0; i < n; i++) {
+                a[i] = Integer.parseInt(st.nextToken());
+            }
+            st = new StringTokenizer(in.readLine());
+            for (int i = 0; i < n; i++) {
+                b[i] = Integer.parseInt(st.nextToken());
+            }
+            int l = 0, r = Integer.MAX_VALUE;
+            while (l + 1 < r) {
+                int mid = l + (r - l) / 2;
+                if (valid(mid, a, b))
+                    r = mid;
+                else
+                    l = mid;
+            }
+            output[ts] = r;
+        }
+            for(int ot: output)System.out.println(ot);
+        }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn valid(target: i32, arr1: &Vec<i32>, arr2: &Vec<i32>) -> bool {
+    let mut val: i64 = 0;
+    for i in 0..arr1.len() {
+        if arr1[i] > target {
+            val += arr2[i] as i64;
+        }
+    }
+    val <= target as i64
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32() as usize;
+    let mut output: Vec<i32> = vec![0; t];
+
+    for ts in 0..t {
+        let n = sc.next_i32() as usize;
+        let mut a: Vec<i32> = vec![0; n];
+        let mut b: Vec<i32> = vec![0; n];
+
+        for i in 0..n {
+            a[i] = sc.next_i32();
+        }
+        for i in 0..n {
+            b[i] = sc.next_i32();
+        }
+
+        let mut l: i32 = 0;
+        let mut r: i32 = i32::MAX;
+
+        while l + 1 < r {
+            let mid: i32 = l + (r - l) / 2;
+            if valid(mid, &a, &b) {
+                r = mid;
+            } else {
+                l = mid;
+            }
+        }
+        output[ts] = r;
+    }
+
+    let mut out = String::new();
+    for v in output {
+        out.push_str(&format!("{}\n", v));
+    }
+    print!("{}", out);
+}
+```
+
+Java:
+```
+
+
+import java.io.* ;
+import java.util.StringTokenizer;
+
+public class Codeforces{
+    public static boolean valid(int target, int[] arr1, int[] arr2){
+        long val = 0;
+        for(int i=0; i<arr1.length; i++){
+            if(arr1[i]>target)
+                val += arr2[i];
+        }
+        return val <= target;
+    }
+    public static void main(String[] args) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+        int t = Integer.parseInt(in.readLine());
+        int[] output = new int[t];
+        for (int ts = 0; ts < t; ts++) {
+            int n = Integer.parseInt(in.readLine());
+            int[] a = new int[n], b = new int[n];
+            StringTokenizer st = new StringTokenizer(in.readLine());
+            int l = 0, r = 1;
+            for (int i = 0; i < n; i++) {
+                a[i] = Integer.parseInt(st.nextToken());
+                r = Math.max(r, a[i]);
+            }
+            r ++;
+            st = new StringTokenizer(in.readLine());
+            for (int i = 0; i < n; i++) {
+                b[i] = Integer.parseInt(st.nextToken());
+            }
+            
+            while (l + 1 < r) {
+                int mid = l + (r - l) / 2;
+                if (valid(mid, a, b))
+                    r = mid;
+                else
+                    l = mid;
+            }
+            output[ts] = r;
+        }
+            for(int ot: output)System.out.println(ot);
+        }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn valid(target: i32, arr1: &[i32], arr2: &[i32]) -> bool {
+    let mut val: i64 = 0;
+    for i in 0..arr1.len() {
+        if arr1[i] > target {
+            val += arr2[i] as i64;
+        }
+    }
+    val <= target as i64
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32() as usize;
+    let mut output: Vec<i32> = vec![0; t];
+
+    for ts in 0..t {
+        let n = sc.next_i32() as usize;
+        let mut a: Vec<i32> = vec![0; n];
+        let mut b: Vec<i32> = vec![0; n];
+
+        let mut l: i32 = 0;
+        let mut r: i32 = 1;
+
+        for i in 0..n {
+            a[i] = sc.next_i32();
+            if a[i] > r {
+                r = a[i];
+            }
+        }
+        r += 1;
+
+        for i in 0..n {
+            b[i] = sc.next_i32();
+        }
+
+        while l + 1 < r {
+            let mid = l + (r - l) / 2;
+            if valid(mid, &a, &b) {
+                r = mid;
+            } else {
+                l = mid;
+            }
+        }
+        output[ts] = r;
+    }
+
+    let mut out = String::new();
+    for v in output {
+        out.push_str(&format!("{}\n", v));
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

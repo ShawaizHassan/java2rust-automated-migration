@@ -1,0 +1,205 @@
+INDEX: 47 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+import java.lang.*;
+import java.util.stream.*;
+import java.util.stream.Collectors.*;
+
+import static java.util.stream.Collectors.*;
+
+public class codeforces {
+    public static void main(String[] args) throws Exception {
+        try {
+             InputStreamReader isr = new InputStreamReader(System.in);
+             BufferedReader br = new BufferedReader(isr); 
+             int len=Integer.parseInt(br.readLine());
+             String inp=br.readLine();
+             int count=0;
+             StringBuffer naya = new StringBuffer(inp);
+             while(naya.indexOf("xxx")!=-1){
+                 int ndx=naya.indexOf("xxx");
+                 naya.deleteCharAt(ndx);
+                 count++;
+             }
+             System.out.println(count);
+       } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.lang.*;
+import java.util.stream.*;
+import java.util.stream.Collectors.*;
+
+import static java.util.stream.Collectors.*;
+
+public class codeforces {
+    public static void main(String[] args) throws Exception {
+        try {
+             InputStreamReader isr = new InputStreamReader(System.in);
+             BufferedReader br = new BufferedReader(isr); 
+             int len=Integer.parseInt(br.readLine());
+             String inp=br.readLine();
+             int countz=0,counta=0;
+             for(int i=0;i<len;i++){
+                 if(inp.charAt(i)=='n') counta++;
+                 if(inp.charAt(i)=='z') countz++;
+             }
+             //System.out.println(counta"--");
+             for(int i=0;i<counta;i++){
+                 System.out.print("1 ");
+             }
+             for(int i=0;i<countz;i++){
+                 System.out.print("0 ");
+             }
+             
+       } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let len: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let inp = it.next().unwrap_or("");
+
+    let mut countz: i32 = 0;
+    let mut counta: i32 = 0;
+
+    for ch in inp.chars().take(len) {
+        if ch == 'n' {
+            counta += 1;
+        }
+        if ch == 'z' {
+            countz += 1;
+        }
+    }
+
+    let mut out = String::new();
+    for _ in 0..counta {
+        out.push_str("1 ");
+    }
+    for _ in 0..countz {
+        out.push_str("0 ");
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class T4 {
+
+    public static void main(String[] args) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+                long n = Long.parseLong(br.readLine());
+                List<Long> a = Arrays.stream(br.readLine().split(" ")).map(Long::parseLong).sorted().collect(Collectors.toList());
+                solve(n, a);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void solve(long n, List<Long> a) {
+        if (n<=2) {
+            System.out.println("0");
+            for (int i = 0; i < a.size(); i++) {
+                System.out.print(a.get(i) + " ");
+            }
+        } else {
+            System.out.println((n-1)/2);
+            for (int i = 0; i < a.size()-1; i+=2) {
+                System.out.print(a.get(i+1) + " " + a.get(i) + " ");
+            }
+            if (n%2==1) {
+                System.out.print(a.get(a.size()-1));
+            }
+        }
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i64 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut a: Vec<i64> = Vec::new();
+    for _ in 0..(n.max(0) as usize) {
+        if let Some(v) = it.next() {
+            a.push(v.parse().unwrap());
+        }
+    }
+    a.sort();
+
+    if n <= 2 {
+        print!("0\n");
+        for v in &a {
+            print!("{} ", v);
+        }
+    } else {
+        println!("{}", (n - 1) / 2);
+        let mut i: usize = 0;
+        while i + 1 < a.len() {
+            print!("{} {} ", a[i + 1], a[i]);
+            i += 2;
+        }
+        if n % 2 == 1 {
+            print!("{}", a[a.len() - 1]);
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

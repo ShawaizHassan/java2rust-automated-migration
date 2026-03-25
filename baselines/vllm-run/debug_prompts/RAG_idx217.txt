@@ -1,0 +1,389 @@
+INDEX: 217 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class comp {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		int sum = 0;
+		boolean flag1 = true;
+		boolean flag2 = true;
+		boolean flag3 = true;
+		boolean flag4 = true;
+		boolean flag5 = true;
+		boolean flag6 = true;
+		boolean flag7 = true;
+		boolean flag8 = true;
+
+		for (int i = 0; i < 8; i++) {
+
+			String s = sc.nextLine();
+			boolean flag = true;
+			for (int k = 0; k < 8 && flag == true; k++) {
+				if (s.charAt(k) != 'B') {
+					flag = false;
+				}
+				if (s.charAt(k) == 'B' && k == 7) {
+					sum++;
+
+				}
+
+			}
+
+			for (int j = 1; j <= 8; j++) {
+				if (s.charAt((j - 1)) != 'B') {
+					if (j == 1) {
+						flag1 = false;
+					} else if (j == 2) {
+						flag2 = false;
+					} else if (j == 3) {
+						flag3 = false;
+					} else if (j == 4) {
+						flag4 = false;
+					} else if (j == 5) {
+						flag5 = false;
+					} else if (j == 6) {
+						flag6 = false;
+					} else if (j == 7) {
+						flag7 = false;
+					} else if (j == 8) {
+						flag8 = false;
+					}
+				}
+
+			}
+
+		}
+		if (flag1 == true) {
+			sum++;
+		}
+		if (flag2 == true) {
+			sum++;
+		}
+		if (flag3 == true) {
+			sum++;
+		}
+		if (flag4 == true) {
+			sum++;
+		}
+
+		if (flag5 == true) {
+			sum++;
+		}
+		if (flag6 == true) {
+			sum++;
+		}
+		if (flag7 == true) {
+			sum++;
+		}
+		if (flag8 == true) {
+			sum++;
+		}
+		if (sum == 16) {
+			System.out.println(8);
+		} else {
+			System.out.println(sum);
+		}
+
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+
+import java.util.Scanner;
+
+public class Disturbed {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int n = s.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++)
+            arr[i] = s.nextInt();
+
+        int k = 0;
+        boolean flag = false;
+        boolean flag2 = false;
+        if(arr[0]==1)
+            flag = true;
+        for(int i=1;i<n;i++){
+            if(arr[i]==0){
+                if(flag)
+                    flag2 = true;
+                else
+                    flag2 = false;
+
+                flag = false;
+
+            }else{
+                if(flag2){
+                    k++;
+                    flag=false;
+                    flag2 = false;
+                }else{
+                    flag =  true;
+                    flag2= false;
+                }
+            }
+        }
+
+        System.out.println(k);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut arr: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        if let Some(v) = it.next() {
+            arr.push(v.parse().unwrap());
+        } else {
+            arr.push(0);
+        }
+    }
+
+    let mut k: i32 = 0;
+    let mut flag = false;
+    let mut flag2 = false;
+
+    if n > 0 && arr[0] == 1 {
+        flag = true;
+    }
+
+    for i in 1..n {
+        if arr[i] == 0 {
+            if flag {
+                flag2 = true;
+            } else {
+                flag2 = false;
+            }
+            flag = false;
+        } else {
+            if flag2 {
+                k += 1;
+                flag = false;
+                flag2 = false;
+            } else {
+                flag = true;
+                flag2 = false;
+            }
+        }
+    }
+
+    println!("{}", k);
+}
+```
+
+Java:
+```
+import java.util.*;
+/**
+ *
+ * @author Pruthvi
+ */
+
+public class JavaApplication74 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int t=sc.nextInt();
+        while(t--!=0)
+            
+        {   boolean flag=true;
+            int n=sc.nextInt();
+            int a[]=new int[n];
+            int mid=(n-1)/2;
+            int sum=0;
+            for(int i=0;i<n;i++)
+            {
+                a[i]=sc.nextInt();
+            }
+            if(n%2==0)
+            {
+              //  System.out.println("temp");
+                for (int i = 0; i <= mid; i++) {
+                    if (a[i] < sum) {
+                        flag = false;
+                    }
+                    sum++;
+                }
+                sum--;
+                //System.out.println("a"+a[mid]+" a+1"+a[mid+1]);
+                if(a[mid]==a[mid+1] && a[mid]==sum)
+                    flag=false;
+                for (int i = mid + 1; i < n; i++) {
+                    if (a[i] < sum) {
+                        flag = false;
+                    }
+                    sum--;
+                }
+            }
+            else
+            {
+                for (int i = 0; i <= mid; i++) {
+                    if (a[i] < sum) {
+                        flag = false;
+                    }
+                    sum++;
+                }
+                sum--;
+                for (int i = mid; i < n; i++) {
+                    if (a[i] < sum) {
+                        flag = false;
+                    }
+                    sum--;
+                }
+                
+            }
+            if(flag==true)
+                System.out.println("YES");
+            else
+                System.out.println("NO");
+                    
+          
+           
+           
+            
+            }
+        }
+ }
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    let mut tt = t;
+    while tt != 0 {
+        tt -= 1;
+
+        let mut flag = true;
+        let n = sc.next_i32() as usize;
+        let mut a = vec![0i32; n];
+        let mid = ((n as i32) - 1) / 2;
+        let mut sum = 0i32;
+
+        for i in 0..n {
+            a[i] = sc.next_i32();
+        }
+
+        if n % 2 == 0 {
+            for i in 0..=(mid as usize) {
+                if a[i] < sum {
+                    flag = false;
+                }
+                sum += 1;
+            }
+            sum -= 1;
+
+            let mid_us = mid as usize;
+            if a[mid_us] == a[mid_us + 1] && a[mid_us] == sum {
+                flag = false;
+            }
+
+            for i in (mid as usize + 1)..n {
+                if a[i] < sum {
+                    flag = false;
+                }
+                sum -= 1;
+            }
+        } else {
+            for i in 0..=(mid as usize) {
+                if a[i] < sum {
+                    flag = false;
+                }
+                sum += 1;
+            }
+            sum -= 1;
+
+            for i in (mid as usize)..n {
+                if a[i] < sum {
+                    flag = false;
+                }
+                sum -= 1;
+            }
+        }
+
+        if flag {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

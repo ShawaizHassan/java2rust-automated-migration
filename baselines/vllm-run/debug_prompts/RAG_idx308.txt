@@ -1,0 +1,384 @@
+INDEX: 308 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+public class Rock_Paper_Scissors {
+    public static long mod = 1000000007;
+
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner();
+        int n = sc.nextInt();
+        long a[] = sc.readArrayl(3);
+        long b[] = sc.readArrayl(3);
+        long max = 0;
+        max = Math.min(a[0], b[1]) + Math.min(a[1], b[2]) + Math.min(a[2], b[0]);
+        long min = 0;
+        min += (a[0] > (b[0] + b[2]) ? -(b[0] + b[2]) + a[0] : 0);
+        min += (a[1] > (b[0] + b[1]) ? -(b[0] + b[1]) + a[1] : 0);
+        min += (a[2] > (b[1] + b[2]) ? -(b[1] + b[2]) + a[2] : 0);
+        System.out.println(min + " " + max);
+
+    }
+
+    static final Random random = new Random();
+
+    static void sort(int[] a) {
+        int n = a.length;
+        for (int i = 0; i < n; i++) {
+            int val = random.nextInt(n);
+            int cur = a[i];
+            a[i] = a[val];
+            a[val] = cur;
+        }
+        Arrays.sort(a);
+    }
+
+    static void sortl(long[] a) {
+        int n = a.length;
+        for (int i = 0; i < n; i++) {
+            int val = random.nextInt(n);
+            long cur = a[i];
+            a[i] = a[val];
+            a[val] = cur;
+        }
+        Arrays.sort(a);
+    }
+
+    static class FastScanner {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer("");
+
+        String next() {
+            while (st == null || !st.hasMoreTokens()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        int[] readArray(int n) {
+            int[] a = new int[n];
+            for (int i = 0; i < n; i++)
+                a[i] = nextInt();
+            return a;
+        }
+
+        long[] readArrayl(int n) {
+            long[] a = new long[n];
+            for (int i = 0; i < n; i++)
+                a[i] = nextLong();
+            return a;
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+    }
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+//Coded By Visnunathan
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.lang.*;
+
+public class codeforces {
+    // static int[] arr;
+    // static int n,k;
+    public static void main(String[] args) {
+        FastScanner sc=new FastScanner();
+        // int T=sc.nextInt();
+        // for (int tt=0; tt<T; tt++) {
+            int n = sc.nextInt();
+            //arr = sc.readArray(n);
+            int x;
+            long[] freq = new long[100005];
+            for(int i=0; i<n; i++) {
+                x = sc.nextInt();
+                freq[x]++;
+            }
+            long[] dp = new long[100005];
+            dp[1] = freq[1];
+            dp[2] = Math.max(2*freq[2],dp[1]);
+            for(int i=3; i<100001; i++) {
+                dp[i] = Math.max(dp[i-1],dp[i-2]+i*freq[i]);
+            }
+            System.out.println(dp[100000]);
+    }
+
+    static final Random random=new Random();
+    
+    static void ruffleSort(int[] a) {
+        int n=a.length;//shuffle, then sort 
+        for (int i=0; i<n; i++) {
+            int oi=random.nextInt(n), temp=a[oi];
+            a[oi]=a[i]; a[i]=temp;
+        }
+        Arrays.sort(a);
+    }
+    
+    static class FastScanner {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer("");
+        String next() {
+            while (!st.hasMoreTokens())
+                try {
+                    st=new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return st.nextToken();
+        }
+        
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+        int[] readArray(int n) {
+            int[] a=new int[n];
+            for (int i=0; i<n; i++) a[i]=nextInt();
+            return a;
+        }
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+    }
+
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut freq = vec![0i64; 100005];
+    for _ in 0..n {
+        let x = sc.next_i32();
+        if x >= 0 && (x as usize) < freq.len() {
+            freq[x as usize] += 1;
+        }
+    }
+
+    let mut dp = vec![0i64; 100005];
+    dp[1] = freq[1];
+    dp[2] = std::cmp::max(2 * freq[2], dp[1]);
+    for i in 3..100001usize {
+        dp[i] = std::cmp::max(dp[i - 1], dp[i - 2] + (i as i64) * freq[i]);
+    }
+
+    println!("{}", dp[100000]);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class X {
+
+	public static void main(String[] args) {
+		FastScanner in=new FastScanner();
+		PrintWriter out=new PrintWriter(System.out);
+		int t=in.nextInt();
+		while(t-->0)
+		solve(in,out);
+		out.close();
+	}
+   
+
+    static void solve(FastScanner in,PrintWriter out){
+      int N=in.nextInt();
+    
+      double val = N * N - 4.0 * N; 
+  
+    // Not possible 
+    if (val < 0) { 
+        out.println("N"); 
+        return; 
+    } 
+  
+   
+    double a = (N + Math.sqrt(val)) / 2.0; 
+    double b = (N - Math.sqrt(val)) / 2.0; 
+     out.println("Y "+a+" "+b);
+    }                      
+    
+
+ 
+	static class FastScanner {
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st=new StringTokenizer("");
+		String next() {
+			while (!st.hasMoreTokens())
+				try {
+					st=new StringTokenizer(br.readLine());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			return st.nextToken();
+		}
+		
+		int nextInt() {
+			return Integer.parseInt(next());
+		}
+		int[] readArray(int n) {
+			int[] a=new int[n];
+			for (int i=0; i<n; i++) a[i]=nextInt();
+			return a;
+		}
+		
+	
+
+		long nextLong() {
+			return Long.parseLong(next());
+		}
+}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+fn solve(in_sc: &mut FastScanner, out: &mut String) {
+    let n: i32 = in_sc.next_i32();
+    let nf = n as f64;
+
+    let val = nf * nf - 4.0 * nf;
+
+    if val < 0.0 {
+        out.push_str("N\n");
+        return;
+    }
+
+    let root = val.sqrt();
+    let a = (nf + root) / 2.0;
+    let b = (nf - root) / 2.0;
+
+    out.push_str("Y ");
+    out.push_str(&format!("{} {}", a, b));
+    out.push('\n');
+}
+
+fn main() {
+    let mut in_sc = FastScanner::new();
+    let t = in_sc.next_i32();
+    let mut out = String::new();
+    for _ in 0..t {
+        solve(&mut in_sc, &mut out);
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

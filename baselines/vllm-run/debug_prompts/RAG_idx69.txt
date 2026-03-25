@@ -1,0 +1,331 @@
+INDEX: 69 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+/**
+ * Created by iainws on 27/06/15.
+ */
+
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.InputStream;
+
+public class KyoyaPhotoBooks {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReaderKyoyaPhotoBooks in = new InputReaderKyoyaPhotoBooks(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskKyoyaPhotoBooks solver = new TaskKyoyaPhotoBooks();
+        solver.solve(1, in, out);
+        out.close();
+    }
+}
+
+class TaskKyoyaPhotoBooks {
+    public void solve(int taskNumber, InputReaderKyoyaPhotoBooks in, PrintWriter out) {
+        String s = in.next();
+        int cnt = 0;
+        for(int i = 0; i <= s.length(); ++i){
+            for(int j = 0; j < 26; ++j){
+                cnt++;
+            }
+        }
+        System.out.println(cnt - s.length());
+    }
+}
+
+class InputReaderKyoyaPhotoBooks {
+    public BufferedReader reader;
+    public StringTokenizer tokenizer;
+
+    public InputReaderKyoyaPhotoBooks(InputStream stream) {
+        reader = new BufferedReader(new InputStreamReader(stream), 32768);
+        tokenizer = null;
+    }
+
+    public String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author balbasaur
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskD solver = new TaskD();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskD {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        int n = in.nextInt();
+        int[] a = new int[n];
+        for (int i = 0;i < n; ++i)
+            a[i] = in.nextInt();
+        int cnt = 0 ;
+        for (int i = 0; i < n; ++i)
+            for (int j = i + 1; j < n; ++j)
+                if (a[i] > a[j])cnt++;
+        int ans = cnt*2;
+        if (cnt % 2 == 1)
+            ans--;
+        out.print(ans);
+    }
+}
+
+class InputReader {
+    public BufferedReader reader;
+    public StringTokenizer tokenizer;
+
+    public InputReader(InputStream stream) {
+        reader = new BufferedReader(new InputStreamReader(stream));
+        tokenizer = null;
+    }
+
+    public String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut a: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        let v: i32 = it.next().unwrap().parse().unwrap();
+        a.push(v);
+    }
+
+    let mut cnt: i64 = 0;
+    for i in 0..n {
+        for j in (i + 1)..n {
+            if a[i] > a[j] {
+                cnt += 1;
+            }
+        }
+    }
+
+    let mut ans: i64 = cnt * 2;
+    if cnt % 2 == 1 {
+        ans -= 1;
+    }
+
+    print!("{}", ans);
+}
+```
+
+Java:
+```
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.TreeSet;
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskA solver = new TaskA();
+        solver.solve(1, in, out);
+        out.close();
+    }
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        int n = in.nextInt();
+        int[] cnt = new int[n+1];
+        for(int i = 0; i < n-1; ++i){
+            cnt[in.nextInt()]++;
+        }
+        for(int i = 1; i <= n; ++i){
+            if(cnt[i] == 0){
+                out.println(i);
+                return;
+            }
+        }
+    }
+}
+
+
+class InputReader {
+    public BufferedReader reader;
+    public StringTokenizer tokenizer;
+
+    public InputReader(InputStream stream) {
+        reader = new BufferedReader(new InputStreamReader(stream), 32768);
+        tokenizer = null;
+    }
+
+    public String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+    public long nextLong() {
+        return Long.parseLong(next());
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let mut cnt = vec![0i32; n + 1];
+
+    for _ in 0..(n.saturating_sub(1)) {
+        let x = sc.next_i32() as usize;
+        if x <= n {
+            cnt[x] += 1;
+        }
+    }
+
+    let mut out = String::new();
+    for i in 1..=n {
+        if cnt[i] == 0 {
+            out.push_str(&format!("{}\n", i));
+            break;
+        }
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

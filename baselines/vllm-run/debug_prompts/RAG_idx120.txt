@@ -1,0 +1,371 @@
+INDEX: 120 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.lang.*;
+public class Main {
+
+    static int[] arr ;
+    static int[] index;
+    static int[] ans ;
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        String a = sc.next();
+        String b = sc.next();
+        int la = a.length(), lb = b.length();
+        arr = new int[la];
+        index = new int[10];
+        ans = new int[la];
+        long A = Long.parseLong(a);
+        //System.out.println(A);
+        long B = Long.parseLong(b);
+        /*if(A==B) {
+            System.out.println(A);
+            return;
+        }*/
+        for (int i = 0; i < la; i++, A /= 10) {
+            arr[i] = (int)(A % 10);
+            //System.out.println(arr[i]);
+            index[arr[i]]++;
+        }
+        int pos = 0;
+        boolean flag=false, match = true;
+        if (la < lb) {
+            rev_order(0);
+
+            for (int i = 0; i < la; i++) {
+                System.out.print(ans[i]);
+            }
+            //System.out.println(Arrays.toString(ans));
+        }
+
+        else if (la == lb) {
+            int i;
+            label:
+            for (i = 0; i < lb; i++) {
+                int temp = Character.getNumericValue(b.charAt(i));
+                //System.out.println(temp);
+                if (!match) break label;
+                flag = false;
+                for (int j = temp; j >= 0; j--) {
+                    if (index[j] > 0) {
+                        ans[i] = j;
+                        index[j]--;
+                        flag = true;
+                        if (j < temp) {
+                            match = false;
+                        }
+                        break;
+                    }
+                }
+                if (!flag) {
+                    break label;
+                }
+            }
+
+            if (!match && i < lb) {
+                rev_order(i);
+            }
+
+            else if(!flag){
+                //System.out.println(i);
+                for(i--; i>=0; i--){
+                    int t = hasLt(i);
+                    if(t==0) {
+                        rev_order(i+1);
+                        break;
+                    }
+                }
+            }
+
+            for (int x = 0; x < la; x++) {
+                System.out.print(ans[x]);
+            }
+
+        }
+        //System.out.println(Arrays.toString(ans));
+    }
+
+
+     static void rev_order(int n){
+        int p=n;
+        for(int i=9;i>=0;i--){
+            for(int j=index[i];j>0;j--){
+                ans[p++]=i;
+            }
+        }
+    }
+
+    static int hasLt(int n){
+        int temp=ans[n];
+        index[ans[n]]++;
+       // System.out.println(n+" "+temp+" "+index[ans[n]]+" "+index[temp-1]);
+        for (int i = temp - 1; i >= 0; i--) {
+            if (index[i] > 0) {
+                ans[n] = i;
+                index[i]--;
+                return 0;
+            }
+        }
+        return -1;
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+/**
+ * @author OleGG
+ */
+public class Task173A {
+
+    private static int gcd(int a, int b) {
+        if (b == 0) {
+            return a;
+        }
+        if (a < b) {
+            return gcd(b, a);
+        }
+        return gcd(b, a % b);
+    }
+
+    public static void main(String[] args) throws Throwable{
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        char[] a = sc.next().toCharArray();
+        char[] b = sc.next().toCharArray();
+
+        int la = a.length;
+        int lb = b.length;
+        int cycleLen = la * lb / gcd(la, lb);
+
+        int[][] r1 = new int[256][256];
+        int[][] r2 = new int[256][256];
+        for (int i = 0; i < 256; ++i) {
+            Arrays.fill(r1[i], 0);
+            Arrays.fill(r2[i], 0);
+        }
+        r1['R']['S'] = 1;
+        r1['S']['P'] = 1;
+        r1['P']['R'] = 1;
+
+        r2['S']['R'] = 1;
+        r2['P']['S'] = 1;
+        r2['R']['P'] = 1;
+
+        int res1 = 0, res2 = 0;
+
+        for (int i = 0; i < cycleLen; ++i) {
+            res1 += r1[a[i % la]][b[i % lb]];
+            res2 += r2[a[i % la]][b[i % lb]];
+        }
+
+        res1 *= n / cycleLen;
+        res2 *= n / cycleLen;
+
+        for (int i = 0; i < n % cycleLen; ++i) {
+            res1 += r1[a[i % la]][b[i % lb]];
+            res2 += r2[a[i % la]][b[i % lb]];
+        }
+
+        System.out.println(res2 + " " + res1);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn gcd(mut a: i32, mut b: i32) -> i32 {
+    while b != 0 {
+        let t = a % b;
+        a = b;
+        b = t;
+    }
+    a.abs()
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i64 = it.next().unwrap().parse::<i64>().unwrap();
+    let a_str = it.next().unwrap().as_bytes().to_vec();
+    let b_str = it.next().unwrap().as_bytes().to_vec();
+
+    let la = a_str.len() as i32;
+    let lb = b_str.len() as i32;
+
+    let g = gcd(la, lb) as i64;
+    let cycle_len: i64 = (la as i64) * (lb as i64) / g;
+
+    let mut r1 = [[0i64; 256]; 256];
+    let mut r2 = [[0i64; 256]; 256];
+
+    r1[b'R' as usize][b'S' as usize] = 1;
+    r1[b'S' as usize][b'P' as usize] = 1;
+    r1[b'P' as usize][b'R' as usize] = 1;
+
+    r2[b'S' as usize][b'R' as usize] = 1;
+    r2[b'P' as usize][b'S' as usize] = 1;
+    r2[b'R' as usize][b'P' as usize] = 1;
+
+    let la_usize = a_str.len();
+    let lb_usize = b_str.len();
+
+    let mut res1: i64 = 0;
+    let mut res2: i64 = 0;
+
+    for i in 0..cycle_len {
+        let ai = a_str[(i as usize) % la_usize] as usize;
+        let bi = b_str[(i as usize) % lb_usize] as usize;
+        res1 += r1[ai][bi];
+        res2 += r2[ai][bi];
+    }
+
+    let full = n / cycle_len;
+    res1 *= full;
+    res2 *= full;
+
+    for i in 0..(n % cycle_len) {
+        let ai = a_str[(i as usize) % la_usize] as usize;
+        let bi = b_str[(i as usize) % lb_usize] as usize;
+        res1 += r1[ai][bi];
+        res2 += r2[ai][bi];
+    }
+
+    println!("{} {}", res2, res1);
+}
+```
+
+Java:
+```
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            int[] arr = new int[30];
+            for (int j = 0; j < n; j++) {
+                String s = sc.next();
+                for (int i = 0; i < s.length(); i++) {
+                    int index = s.charAt(i) - 97;
+                    arr[index]++;
+                }
+            }
+            int flag = 0;
+            for (int i = 0; i < 27; i++) {
+                if (arr[i] != 0) {
+                    if (arr[i] % n != 0) {
+                        flag = 1;
+                        break;
+                    }
+                }
+            }
+            if (flag == 1) {
+                System.out.println("NO");
+            } else {
+                System.out.println("YES");
+            }
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next<T: std::str::FromStr>(&mut self) -> T {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        std::str::from_utf8(&self.input[start..self.idx])
+            .unwrap()
+            .parse::<T>()
+            .ok()
+            .unwrap()
+    }
+    fn next_string(&mut self) -> String {
+        self.next::<String>()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t: i32 = sc.next();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n: i32 = sc.next();
+        let mut arr = vec![0i32; 30];
+
+        for _ in 0..n {
+            let s = sc.next_string();
+            for &b in s.as_bytes() {
+                let index = (b - b'a') as usize;
+                if index < arr.len() {
+                    arr[index] += 1;
+                }
+            }
+        }
+
+        let mut flag = 0i32;
+        for i in 0..27usize {
+            if arr[i] != 0 && arr[i] % n != 0 {
+                flag = 1;
+                break;
+            }
+        }
+
+        if flag == 1 {
+            out.push_str("NO\n");
+        } else {
+            out.push_str("YES\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,332 @@
+INDEX: 90 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.lang.Math.*;
+
+
+
+public class Main {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        Scanner cin = new Scanner(new BufferedInputStream(System.in));
+        PrintWriter cout = new PrintWriter(new BufferedOutputStream(System.out));
+        Task work = new Task(cin, cout);
+        work.solve();
+        cout.flush();
+    }
+
+}
+class Task{
+    Scanner cin;
+    PrintWriter cout;
+    final int maxn = 400005;
+    final int MOD = 1000000007;
+    int []dp = new int[maxn];
+    int r, g;
+    public Task(Scanner cin, PrintWriter cout) {        
+        // TODO Auto-generated constructor stub     
+        this.cin = cin;
+        this.cout = cout;
+        r = cin.nextInt();
+        g = cin.nextInt();
+    }
+    public void read() {
+        r = cin.nextInt();
+        g = cin.nextInt();
+    }
+    int GetHeight(){
+        for (int i = 1; ; i++){
+            if (i * (i + 1) / 2 > r + g){
+                return i-1;
+            }
+        }
+    }
+    public void solve(){
+        int h = GetHeight();
+        int res = 0;
+        dp[0] = 1;
+        for (int i = 1; i <= h; i++){
+            for (int j = r; j >= 0; j--){
+                dp[i+j] = (dp[i+j] + dp[j]) % MOD;
+            }
+        }
+        for (int i = Math.max(h*(h+1)/2 - g, 0); i <= r; i++){
+            res = (res + dp[i]) % MOD;
+        }
+        cout.println(res);
+    }   
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class Task18B {
+    public static void main(String[] args) {
+        Scanner cin = new Scanner(System.in);
+        PrintWriter cout = new PrintWriter(System.out);
+        long n = cin.nextInt(), d = cin.nextInt(), m = cin.nextInt(), l = cin.nextInt();
+        for (int i = 0; i < n; i++) {
+            if (up((i + 1) * m, d) - down(i * m + l, d) >= 0) {
+                cout.println(down(i * m + l, d) * d);
+                cout.close();
+                return;
+            }
+        }
+        cout.println(down((n - 1) * m + l, d) * d);
+        cout.close();
+    }
+
+    public static long down(long sum, long devider) {
+        return sum / devider + 1;
+    }
+
+    public static long up(long sum, long devider) {
+        long result = sum / devider ;
+        if (sum % devider == 0) {
+            result -= 1;
+        }
+        return result;
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn down(sum: i64, divider: i64) -> i64 {
+    sum / divider + 1
+}
+
+fn up(sum: i64, divider: i64) -> i64 {
+    let mut result = sum / divider;
+    if sum % divider == 0 {
+        result -= 1;
+    }
+    result
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i64 = it.next().unwrap().parse::<i32>().unwrap() as i64;
+    let d: i64 = it.next().unwrap().parse::<i32>().unwrap() as i64;
+    let m: i64 = it.next().unwrap().parse::<i32>().unwrap() as i64;
+    let l: i64 = it.next().unwrap().parse::<i32>().unwrap() as i64;
+
+    let mut out = String::new();
+
+    for i in 0..n {
+        let left = up((i + 1) * m, d);
+        let right = down(i * m + l, d);
+        if left - right >= 0 {
+            out.push_str(&(right * d).to_string());
+            out.push('\n');
+            print!("{out}");
+            return;
+        }
+    }
+
+    let ans = down((n - 1) * m + l, d) * d;
+    out.push_str(&ans.to_string());
+    out.push('\n');
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+
+public class Main {
+
+    static final int MAXN = 128;
+    static int[][] dir = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+    char[][] g = new char[MAXN][MAXN];
+    boolean[][] vist = new boolean[MAXN][MAXN];
+    boolean[] res = new boolean[MAXN];
+    int n, m;
+    
+    boolean check(int x, int y) {
+        return x >= 0 && y >= 0 && x < n && y < m;
+    }
+    
+    void dfs(int x, int y) {
+        if (!check(x, y) || vist[x][y]) return;
+        if (g[x][y] == '.') return;
+        res[g[x][y]-'A'] = true;
+    }
+    
+    public void run() {
+        n = cin.nextInt();
+        m = cin.nextInt();
+        char ch = cin.next().charAt(0);
+        for (int i = 0; i < n; ++i) {
+            g[i] = cin.next().toCharArray();
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (g[i][j] == ch) {
+                    for (int k = 0; k < 4; ++k) {
+                        dfs(i + dir[k][0], j + dir[k][1]);
+                    }
+                }
+            }
+        }
+        int ans = -1; res[ch-'A'] = true;
+        for (int i = 0; i < 26; ++i) {
+            if (res[i]) ++ans;
+        }
+        out.println(ans);
+    }
+
+    public static void main(String[] args) throws IOException {
+        Main sloved = new Main();
+        sloved.run();
+        sloved.out.close();
+    }
+
+    Scanner cin = new Scanner(System.in);
+    PrintWriter out = new PrintWriter(System.out);
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+const MAXN: usize = 128;
+const DIR: [(i32, i32); 4] = [(1, 0), (0, 1), (-1, 0), (0, -1)];
+
+struct Main {
+    g: [[u8; MAXN]; MAXN],
+    vist: [[bool; MAXN]; MAXN],
+    res: [bool; MAXN],
+    n: i32,
+    m: i32,
+}
+
+impl Main {
+    fn new() -> Self {
+        Self {
+            g: [[0u8; MAXN]; MAXN],
+            vist: [[false; MAXN]; MAXN],
+            res: [false; MAXN],
+            n: 0,
+            m: 0,
+        }
+    }
+
+    fn check(&self, x: i32, y: i32) -> bool {
+        x >= 0 && y >= 0 && x < self.n && y < self.m
+    }
+
+    fn dfs(&mut self, x: i32, y: i32) {
+        if !self.check(x, y) {
+            return;
+        }
+        let ux = x as usize;
+        let uy = y as usize;
+        if self.vist[ux][uy] {
+            return;
+        }
+        if self.g[ux][uy] == b'.' {
+            return;
+        }
+        let idx = (self.g[ux][uy] - b'A') as usize;
+        self.res[idx] = true;
+    }
+
+    fn run(&mut self, sc: &mut Scanner) {
+        self.n = sc.next_i32();
+        self.m = sc.next_i32();
+        let ch_s = sc.next();
+        let ch = ch_s.as_bytes()[0];
+
+        for i in 0..self.n as usize {
+            let row = sc.next();
+            let bytes = row.as_bytes();
+            for j in 0..self.m as usize {
+                self.g[i][j] = bytes[j];
+            }
+        }
+
+        for i in 0..self.n as usize {
+            for j in 0..self.m as usize {
+                if self.g[i][j] == ch {
+                    for (dx, dy) in DIR.iter() {
+                        self.dfs(i as i32 + *dx, j as i32 + *dy);
+                    }
+                }
+            }
+        }
+
+        let mut ans: i32 = -1;
+        self.res[(ch - b'A') as usize] = true;
+        for i in 0..26usize {
+            if self.res[i] {
+                ans += 1;
+            }
+        }
+        print!("{}", ans);
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut m = Main::new();
+    m.run(&mut sc);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

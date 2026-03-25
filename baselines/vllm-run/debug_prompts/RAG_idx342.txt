@@ -1,0 +1,177 @@
+INDEX: 342 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class Tournament {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner scn = new Scanner(System.in);
+        int T = scn.nextInt();
+        while (T-- > 0)
+        {
+        	int N = scn.nextInt();
+        	System.out.println( (int)Math.pow(2, N) - 1);
+        	
+        }
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner scn= new Scanner(System.in);
+		int t = scn.nextInt();
+		while(t-->0){
+			int n= scn.nextInt();
+			int g =scn.nextInt();
+			int b= scn.nextInt();
+			System.out.println(res(n,g,b));
+		}
+
+	}
+	public static long  res(int n ,int g ,int b){
+		  int val = (n+1)/2;
+		   long ans =0;
+		   
+		   ans+=(long)(val);
+		   
+		   ans+=(long)(Math.ceil(val*1.0/g)-1)*(long)b;
+		  
+		  
+		   return Math.max(ans, n);
+	}
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn res(n: i32, g: i32, b: i32) -> i64 {
+    let val: i32 = (n + 1) / 2;
+    let mut ans: i64 = 0;
+    ans += val as i64;
+
+    let ceil_div = (val as i64 + g as i64 - 1) / g as i64;
+    ans += (ceil_div - 1) * b as i64;
+
+    std::cmp::max(ans, n as i64)
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..t {
+        let n: i32 = it.next().unwrap().parse().unwrap();
+        let g: i32 = it.next().unwrap().parse().unwrap();
+        let b: i32 = it.next().unwrap().parse().unwrap();
+        out.push_str(&format!("{}\n", res(n, g, b)));
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+
+import java.util.*;
+public class MinutesBeforeNewYear {
+	public static Scanner scn = new Scanner(System.in);
+
+	public static void main(String[] args) {
+		int t = scn.nextInt();
+		while(t-->0) {
+			int h = scn.nextInt();
+			int m = scn.nextInt();
+			int ans = ((23-h)*60)+(60-m) ;
+			System.out.println(ans);
+		}
+
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let h = sc.next_i32();
+        let m = sc.next_i32();
+        let ans = (23 - h) * 60 + (60 - m);
+        out.push_str(&ans.to_string());
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

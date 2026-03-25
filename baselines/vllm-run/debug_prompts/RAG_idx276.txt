@@ -1,0 +1,241 @@
+INDEX: 276 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+/**
+ * Hello world!
+ */
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.next();
+        int start = 0;
+        int score = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int charIndex = s.charAt(i) - 97;
+            int walk = Math.abs(start - charIndex);
+
+
+            if(walk < 13){
+                score += walk;
+            }else{
+                score += 26 - walk;
+            }
+            start = charIndex;
+        }
+        System.out.println(score);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class c{
+
+public static void main (String[] args) throws Exception
+{
+
+Scanner sc=new Scanner(System.in);
+int score=0;
+int[] arr1={500,1000,1500,2000,2500};
+int[] arr2=new int[5];
+
+for(int i=0; i<5;i++){
+arr2[i]=sc.nextInt();
+}
+
+for(int j=0;j<5;j++){
+score+=Math.max(0.3*arr1[j],(((1.0)*(250-arr2[j]))/250)*arr1[j]-50*sc.nextInt());
+}
+score+=sc.nextInt()*100;
+score-=sc.nextInt()*50;
+System.out.println(score);
+}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let mut score: i32 = 0;
+    let arr1: [i32; 5] = [500, 1000, 1500, 2000, 2500];
+    let mut arr2: [i32; 5] = [0; 5];
+
+    for i in 0..5 {
+        arr2[i] = it.next().unwrap().parse::<i32>().unwrap();
+    }
+
+    for j in 0..5 {
+        let w = it.next().unwrap().parse::<i32>().unwrap();
+
+        let opt1 = 0.3f64 * (arr1[j] as f64);
+        let opt2 = (((250.0f64 - (arr2[j] as f64)) / 250.0f64) * (arr1[j] as f64)) - 50.0f64 * (w as f64);
+
+        let add = opt1.max(opt2) as i32; // Java += truncates toward zero via compound assignment
+        score += add;
+    }
+
+    let hs = it.next().unwrap().parse::<i32>().unwrap();
+    score += hs * 100;
+
+    let hu = it.next().unwrap().parse::<i32>().unwrap();
+    score -= hu * 50;
+
+    println!("{}", score);
+}
+```
+
+Java:
+```
+
+	
+	import java.util.Scanner;
+	
+	public class Main {
+	
+	public static void main(String args[])
+	{
+		Scanner scan=new Scanner(System.in);
+		int n=scan.nextInt();
+		String eg=scan.next();
+		eg+='R';
+//		System.out.println(eg.length());
+		int temp=0;
+		char prev='L';
+		int score=0;
+		for(int i=0;i<eg.length();i++)
+		{
+			char now=eg.charAt(i);
+//			System.out.println(now);
+			if(now=='.')
+				{
+				temp++;
+				continue;
+				}
+			if(prev=='R' && now=='L')
+			{
+				if(temp%2==1) {
+				score++;
+				}
+				
+				prev=now;
+				
+				temp=0;
+			}
+			else if(prev=='L' && now=='R')
+			{
+				
+				score+=temp;
+				prev=now;
+				
+//				System.out.println(temp+" aded at "+i);
+				temp=0;
+			}
+			else if(prev=='R' && now=='R')
+			{
+				temp=0;
+				
+			}
+			else if(prev=='L' && now=='L') {
+				temp=0;
+				
+			}
+				
+			
+			
+			
+			
+		}
+		System.out.println(score);
+	}
+	}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.next_string().parse::<i32>().unwrap()
+    }
+    fn next_string(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut scan = Scanner::new();
+    let _n: i32 = scan.next_i32();
+    let mut eg = scan.next_string();
+    eg.push('R');
+
+    let mut temp: i32 = 0;
+    let mut prev: u8 = b'L';
+    let mut score: i32 = 0;
+
+    let bytes = eg.as_bytes();
+    for &now in bytes.iter() {
+        if now == b'.' {
+            temp += 1;
+            continue;
+        }
+        if prev == b'R' && now == b'L' {
+            if temp % 2 == 1 {
+                score += 1;
+            }
+            prev = now;
+            temp = 0;
+        } else if prev == b'L' && now == b'R' {
+            score += temp;
+            prev = now;
+            temp = 0;
+        } else if prev == b'R' && now == b'R' {
+            temp = 0;
+        } else if prev == b'L' && now == b'L' {
+            temp = 0;
+        }
+    }
+
+    println!("{}", score);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,235 @@
+INDEX: 326 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class StringTyping {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		int n = scan.nextInt();
+		String s = scan.next();
+		int ans = 0;
+		boolean bal = false;
+		for(int i = n-1; i >= 0; i += 0){
+			if(i % 2 == 1 && !bal){
+				int mid = i/2;
+				String a = s.substring(0, mid+1);
+				String b = s.substring(mid+1, i+1);
+				if(a.equals(b)){
+				    bal = true;
+					ans++;
+					i /= 2;
+					continue;
+				}
+			}
+			ans++;
+			i--;
+		}
+		System.out.println(ans);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+public class codeforc {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+
+
+        int n = s.nextInt();
+        Integer[] a = new Integer[n];
+        Integer[] b = new Integer[n];
+
+        for (int i = 0; i < n; i++) {
+            a[i] = s.nextInt();
+        }
+        for (int i = 0; i < n; i++) {
+            b[i] = a[i] - s.nextInt();
+        }
+
+        Arrays.sort(b);
+        long ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (b[i] <= 0) {
+                continue;
+            }
+
+            int low = 0;
+            int high = i - 1;
+            while (low <= high) {
+                int mid = low + (high - low) / 2;
+                if (b[mid] + b[i] > 0) {
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            }
+            ans += i - low;
+        }
+
+        System.out.println(ans);
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut a: Vec<i32> = vec![0; n];
+    let mut b: Vec<i32> = vec![0; n];
+
+    for i in 0..n {
+        a[i] = sc.next_i32();
+    }
+    for i in 0..n {
+        let x = sc.next_i32();
+        b[i] = a[i] - x;
+    }
+
+    b.sort();
+
+    let mut ans: i64 = 0;
+    for i in 0..n {
+        if b[i] <= 0 {
+            continue;
+        }
+        let mut low: i32 = 0;
+        let mut high: i32 = i as i32 - 1;
+
+        while low <= high {
+            let mid = low + (high - low) / 2;
+            if b[mid as usize] + b[i] > 0 {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        ans += (i as i64) - (low as i64);
+    }
+
+    print!("{}", ans);
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+
+public class Main{
+
+	public static void main(String[] args) 
+	{
+		Scanner scan = new Scanner(System.in);
+		int n = scan.nextInt();
+		while(n-->0)
+		{
+			String s = scan.next(), t = scan.next();
+			boolean b = false;
+			for(int i=0;i<s.length();i++)
+			{
+				if(t.contains(s.substring(i,i+1)))
+				{
+					b=true;
+					break;
+				}
+			}
+			System.out.println(b?"YES":"NO");
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+
+    for _ in 0..n {
+        let s = it.next().unwrap_or("");
+        let t = it.next().unwrap_or("");
+
+        let mut found = false;
+        for ch in s.chars() {
+            if t.contains(ch) {
+                found = true;
+                break;
+            }
+        }
+
+        if found {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

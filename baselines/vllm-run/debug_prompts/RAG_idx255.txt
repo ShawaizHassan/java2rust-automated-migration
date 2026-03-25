@@ -1,0 +1,250 @@
+INDEX: 255 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.lang.*;
+public class Main
+{
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		
+		    List<Character> l = new ArrayList<>();
+		    String s = sc.next();
+		    if(s.charAt(0)>52&&s.charAt(0)<57){
+		        char c = (char)(57 - (int)s.charAt(0) + 48);
+		        System.out.print(c);
+		    }
+		    else System.out.print(s.charAt(0));;
+		    for(int i=1;i<s.length();i++){
+		        if(s.charAt(i)>52){
+		        char c = (char)(57 - (int)s.charAt(i) + 48);
+		        System.out.print(c);
+		    } 
+		    else System.out.print(s.charAt(i));
+		    }
+		    System.out.println();
+		
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Lexicographicallymaximum {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Scanner input = new Scanner(System.in);
+		PrintWriter out = new PrintWriter(System.out);
+		String s = input.next();
+		String z = "";
+		int j=-1;
+		//int i=0;
+		ArrayList<Character> list = new ArrayList<Character>();
+		
+		char curr = s.charAt(s.length()-1);
+		list.add(curr);
+		for(int i=s.length()-2;i>=0;i--){
+			if(s.charAt(i)>=curr){
+				list.add(s.charAt(i));
+				curr = s.charAt(i);
+			}
+		//	System.out.println(z);
+			
+		}
+		for(int i=list.size()-1;i>=0;i--)out.print(list.get(i));
+	//out.println(z);
+	out.flush();
+	out.close();
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let s = match it.next() {
+        Some(v) => v.to_string(),
+        None => return,
+    };
+
+    let chars: Vec<char> = s.chars().collect();
+    if chars.is_empty() {
+        return;
+    }
+
+    let mut list: Vec<char> = Vec::new();
+    let mut curr = chars[chars.len() - 1];
+    list.push(curr);
+
+    for i in (0..chars.len().saturating_sub(1)).rev() {
+        if chars[i] >= curr {
+            list.push(chars[i]);
+            curr = chars[i];
+        }
+    }
+
+    let mut out = String::new();
+    for i in (0..list.len()).rev() {
+        out.push(list[i]);
+    }
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.*;
+public class Main {
+    public static boolean bad(String s) {
+        TreeSet<Character> set = new TreeSet<>();
+        for (char c : s.toCharArray()) {
+            set.add(c);
+        }
+        if (set.size() == 1) {
+            return true;
+        }
+        if (set.size() > 2) {
+            return false;
+        }
+        char[] list = new char[]{set.first(), set.last()};
+        int[] cnt = new int[2];
+        for (char c : s.toCharArray()) {
+            if (c == list[0]) {
+                cnt[0]++;
+            } else {
+                cnt[1]++;
+            }
+        }
+        if (cnt[0] == 1 || cnt[1] == 1) {
+            return true;
+        }
+        return false;
+    }
+    public static boolean palindrome(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            char a = s.charAt(i);
+            char b = s.charAt(s.length() - i - 1);
+            if (a != b) return false;
+        }
+        return true;
+    }
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String s = in.next();
+        if (bad(s)) {
+            System.out.println("Impossible");
+        } else {
+            for (int i = 0; i < s.length() - 1; i++) {
+                String a = s.substring(0, i + 1);
+                String b = s.substring(i + 1);
+                String comb = b + a;
+                if (palindrome(comb) && !comb.equals(s)) {
+                    System.out.println(1);
+                    return;
+                }
+            }
+            System.out.println(2);
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn bad(s: &[u8]) -> bool {
+    let mut min_c: u8 = 255;
+    let mut max_c: u8 = 0;
+    for &c in s {
+        if c < min_c {
+            min_c = c;
+        }
+        if c > max_c {
+            max_c = c;
+        }
+    }
+    if min_c == max_c {
+        return true;
+    }
+    for &c in s {
+        if c != min_c && c != max_c {
+            return false;
+        }
+    }
+    let mut cnt0 = 0i32;
+    let mut cnt1 = 0i32;
+    for &c in s {
+        if c == min_c {
+            cnt0 += 1;
+        } else {
+            cnt1 += 1;
+        }
+    }
+    cnt0 == 1 || cnt1 == 1
+}
+
+fn palindrome(s: &[u8]) -> bool {
+    let n = s.len();
+    for i in 0..n {
+        if s[i] != s[n - i - 1] {
+            return false;
+        }
+    }
+    true
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let s_str = match input.split_whitespace().next() {
+        Some(x) => x,
+        None => return,
+    };
+    let s = s_str.as_bytes();
+
+    if bad(s) {
+        print!("Impossible");
+        return;
+    }
+
+    let n = s.len();
+    for i in 0..(n - 1) {
+        let mut comb: Vec<u8> = Vec::with_capacity(n);
+        comb.extend_from_slice(&s[i + 1..]);
+        comb.extend_from_slice(&s[..i + 1]);
+        if palindrome(&comb) && comb.as_slice() != s {
+            print!("1");
+            return;
+        }
+    }
+    print!("2");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

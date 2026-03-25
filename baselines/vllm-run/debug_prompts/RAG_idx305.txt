@@ -1,0 +1,212 @@
+INDEX: 305 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.lang.Math;
+import java.util.*;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner newSc = new Scanner(System.in);
+        int a = newSc.nextInt();
+        int b = newSc.nextInt();
+        if(a == b)
+            System.out.println(0);
+        int n = Math.max(a, b) - (Math.min(a, b) + Math.abs(a - b) / 2);
+        if(a % 2 == b % 2)
+            System.out.println(n * (n + 1));
+        else
+            System.out.println(n * n);
+
+    }
+    }
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner newSc = new Scanner(System.in);
+        int n = newSc.nextInt();
+        ArrayList<Integer> list = fib(n);
+        for(int i = 0;i < n; i += 1){
+            if(list.contains(i + 1) || i == 1)
+                System.out.printf("%c", 'O');
+            else
+                System.out.printf("%c", 'o');
+        }
+    }
+    private static ArrayList<Integer> fib(int n){
+        int a = 1, b = 1;
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(1);
+        while(a + b <= n){
+            list.add(a + b);
+            int temp = b;
+            b = a + b;
+            a = temp;
+        }
+        return list;
+    }
+    }
+
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn fib(n: i32) -> Vec<i32> {
+    let mut a: i32 = 1;
+    let mut b: i32 = 1;
+    let mut list: Vec<i32> = Vec::new();
+    list.push(1);
+    list.push(1);
+    while a + b <= n {
+        list.push(a + b);
+        let temp = b;
+        b = a + b;
+        a = temp;
+    }
+    list
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let list = fib(n);
+
+    for i in 0..(n as usize) {
+        let idx = (i as i32) + 1;
+        if list.contains(&idx) || i == 1 {
+            print!("O");
+        } else {
+            print!("o");
+        }
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner newSc = new Scanner(System.in);
+        int n = newSc.nextInt();
+        int m = newSc.nextInt();
+        ArrayList<Integer> list1 = new ArrayList<>();
+        ArrayList<Integer> list2 = new ArrayList<>();
+        for(int i = 0; i < n; i += 1)
+            list1.add(newSc.nextInt());
+        int j = 0;
+        int ans = 0;
+        for(int i = 0; i < m; i += 1) {
+            list2.add(newSc.nextInt());
+        }
+        for(int i = 0; i < n; i += 1){
+            if(list2.get(j) >= list1.get(i)) {
+                ans += 1;
+                if(j == m - 1)
+                    break;
+                j += 1;
+            }
+        }
+        System.out.println(ans);
+    }
+    }
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut s = String::new();
+        io::stdin().read_to_string(&mut s).unwrap();
+        Self { input: s.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32() as usize;
+
+    let mut list1: Vec<i32> = Vec::new();
+    let mut list2: Vec<i32> = Vec::new();
+
+    for _ in 0..n {
+        list1.push(sc.next_i32());
+    }
+
+    let mut j: usize = 0;
+    let mut ans: i32 = 0;
+
+    for _ in 0..m {
+        list2.push(sc.next_i32());
+    }
+
+    for i in 0..n {
+        if list2[j] >= list1[i] {
+            ans += 1;
+            if j == m - 1 {
+                break;
+            }
+            j += 1;
+        }
+    }
+
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,264 @@
+INDEX: 348 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class SummerCamp {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		int n=scan.nextInt();
+		scan.nextLine();
+		String a="";
+		for(int i=1;i<=n;i++)
+		{
+			a+=i;
+		}
+		System.out.println(a.charAt(n-1));
+
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+        Scanner scan=new Scanner(System.in);
+        int t=scan.nextInt();
+        while(t-->0)
+        {
+            int n=scan.nextInt();
+
+            int[] arr = new int[26];
+
+            for(int i=0;i<n;i++)
+            {
+                String st=scan.next();
+                for(int j=0;j<st.length();++j)
+                    arr[st.charAt(j)-'a']++;
+            }
+            int i;
+            for(i=0;i<26;i++)
+                if(arr[i]%n!=0)
+                    break;
+            if(i==26)
+                System.out.println("YES");
+            else
+                System.out.println("NO");
+        }
+
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i32;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+
+    fn next_string(&mut self) -> String {
+        self.skip_whitespace();
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32() as usize;
+        let mut arr = [0i32; 26];
+
+        for _ in 0..n {
+            let st = sc.next_string();
+            for &b in st.as_bytes() {
+                let idx = (b - b'a') as usize;
+                arr[idx] += 1;
+            }
+        }
+
+        let mut ok = true;
+        for i in 0..26 {
+            if (arr[i] as usize) % n != 0 {
+                ok = false;
+                break;
+            }
+        }
+
+        if ok {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+//2
+
+import java.util.Scanner;
+public class Main {
+	public static void main(String[] args) {
+		Scanner scan=new Scanner(System.in);
+		String x;
+		String o="";
+		int t=scan.nextInt();
+		for(int i=0; i<=t; i++)
+{	
+		x=scan.nextLine();
+		int n=x.length();
+		if(n>10)
+		{
+			o=o+(x.charAt(0)) + (n-2) + (x.charAt(n-1))+"\n";
+		}
+		else {
+			o+=x+"\n";
+		}
+	}
+System.out.println(o);	
+}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut s = String::new();
+        io::stdin().read_to_string(&mut s).unwrap();
+        Self { input: s.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_line(&mut self) -> String {
+        if self.idx >= self.input.len() {
+            return String::new();
+        }
+        // Read until '\n' (like Java Scanner.nextLine())
+        let start = self.idx;
+        while self.idx < self.input.len() && self.input[self.idx] != b'\n' {
+            self.idx += 1;
+        }
+        let end = self.idx;
+        if self.idx < self.input.len() && self.input[self.idx] == b'\n' {
+            self.idx += 1;
+        }
+        // Strip trailing '\r' (Windows line endings) similar to typical handling
+        let mut slice = &self.input[start..end];
+        if !slice.is_empty() && slice[slice.len() - 1] == b'\r' {
+            slice = &slice[..slice.len() - 1];
+        }
+        String::from_utf8_lossy(slice).into_owned()
+    }
+}
+
+fn main() {
+    let mut scan = Scanner::new();
+    let t: i32 = scan.next_i32();
+
+    let mut o = String::new();
+    for _i in 0..=(t as i32) {
+        let x = scan.next_line();
+        let n = x.len();
+        if n > 10 {
+            let bytes = x.as_bytes();
+            o.push(bytes[0] as char);
+            o.push_str(&(n as i32 - 2).to_string());
+            o.push(bytes[n - 1] as char);
+            o.push('\n');
+        } else {
+            o.push_str(&x);
+            o.push('\n');
+        }
+    }
+    print!("{}", o);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

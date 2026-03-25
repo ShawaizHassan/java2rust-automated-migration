@@ -1,0 +1,477 @@
+INDEX: 393 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public class AbilityToConvert {
+    public static InputReader in;
+    public static PrintWriter out;
+
+    public static final int myMotivation = 0;
+    public static final int MOD = (int) (1e9 + 7);
+    public static final long INF = (long) (2e18);
+    
+    public static int len, n;
+    public static char[] num;
+    public static long[] memo;
+    public static void main(String[] args) {
+	in = new InputReader(System.in);
+	out = new PrintWriter(System.out);
+	
+	n = in.nextInt();
+	len = Integer.toString(n).length();	
+	num = ("$" + in.readString()).toCharArray();
+	
+	memo = new long[num.length];
+	Arrays.fill(memo, -1);
+	memo[0] = 0;
+	solve(num.length - 1);
+	out.println(memo[num.length - 1]);
+	
+	out.close();
+    }
+    
+    public static void solve(int idx) {
+	if(idx < 0 || memo[idx] != -1) {
+	    return;
+	}
+	solve(idx - 1);
+	long result = INF;
+	for (int size = 1; size <= Math.min(len, idx); size++) {
+	    long curr = Long.parseLong(new String(num, idx - size + 1, size));
+	    solve(idx - size);
+	    if(curr >= n || (size > 1 && num[idx - size + 1] == '0')) {
+		continue;
+	    }
+	    result = Math.min(result, add(mul(memo[idx - size], n), curr)); 
+	}
+	memo[idx] = result;
+    }
+    
+    public static long add(long a, long b) {
+	return Math.min(a + b, INF);
+    }
+    
+    public static long mul(long a, long b) {
+	if(a == 0 || b == 0) {
+	    return 0;
+	}
+	long m = a*b;
+	if(m%a == 0 && m%b == 0) {
+	    return Math.min(m, INF);
+	}
+	return INF;
+    }
+
+    static class Node implements Comparable<Node> {
+	int next;
+	int dist;
+
+	public Node(int u, int v) {
+	    this.next = u;
+	    this.dist = v;
+	}
+
+	public void print() {
+	    out.println(next + " " + dist + " ");
+	}
+
+	public int compareTo(Node that) {
+	    return Integer.compare(this.next, that.next);
+	}
+    }
+
+    static class InputReader {
+
+	private InputStream stream;
+	private byte[] buf = new byte[8192];
+	private int curChar, snumChars;
+	private SpaceCharFilter filter;
+
+	public InputReader(InputStream stream) {
+	    this.stream = stream;
+	}
+
+	public int snext() {
+	    if (snumChars == -1)
+		throw new InputMismatchException();
+	    if (curChar >= snumChars) {
+		curChar = 0;
+		try {
+		    snumChars = stream.read(buf);
+		} catch (IOException e) {
+		    throw new InputMismatchException();
+		}
+		if (snumChars <= 0)
+		    return -1;
+	    }
+	    return buf[curChar++];
+	}
+
+	public int nextInt() {
+	    int c = snext();
+	    while (isSpaceChar(c))
+		c = snext();
+	    int sgn = 1;
+	    if (c == '-') {
+		sgn = -1;
+		c = snext();
+	    }
+	    int res = 0;
+	    do {
+		if (c < '0' || c > '9')
+		    throw new InputMismatchException();
+		res *= 10;
+		res += c - '0';
+		c = snext();
+	    } while (!isSpaceChar(c));
+	    return res * sgn;
+	}
+
+	public long nextLong() {
+	    int c = snext();
+	    while (isSpaceChar(c))
+		c = snext();
+	    int sgn = 1;
+	    if (c == '-') {
+		sgn = -1;
+		c = snext();
+	    }
+	    long res = 0;
+	    do {
+		if (c < '0' || c > '9')
+		    throw new InputMismatchException();
+		res *= 10;
+		res += c - '0';
+		c = snext();
+	    } while (!isSpaceChar(c));
+	    return res * sgn;
+	}
+
+	public int[] nextIntArray(int n) {
+	    int a[] = new int[n];
+	    for (int i = 0; i < n; i++)
+		a[i] = nextInt();
+	    return a;
+	}
+
+	public String readString() {
+	    int c = snext();
+	    while (isSpaceChar(c))
+		c = snext();
+	    StringBuilder res = new StringBuilder();
+	    do {
+		res.appendCodePoint(c);
+		c = snext();
+	    } while (!isSpaceChar(c));
+	    return res.toString();
+	}
+
+	public boolean isSpaceChar(int c) {
+	    if (filter != null)
+		return filter.isSpaceChar(c);
+	    return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+	}
+
+	public interface SpaceCharFilter {
+	    public boolean isSpaceChar(int ch);
+	}
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+public class Train {
+    static class InputReader {
+        BufferedReader reader;
+        StringTokenizer tokenizer;
+
+        public InputReader(InputStream stream) {
+            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            tokenizer = null;
+        }
+
+        String next() {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            return tokenizer.nextToken();
+        }
+
+        public int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        public long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        public double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+    }
+
+
+    static InputReader kb = new InputReader(System.in);
+    static PrintWriter pw = new PrintWriter(System.out);
+
+    public static void main(String[] args) {
+        int n= kb.nextInt();
+        while(n>0){
+            int c = kb.nextInt();
+            int[] a = new int[c];
+            for(int i=0;i<c;i++){
+                a[i]=kb.nextInt();
+            }
+            Arrays.sort(a);
+            int res=0;
+            for(int i=1;i<=c;i++){
+                if(a[i-1]<=i){
+                    res=i;
+                    //System.out.println(a[i-1]);
+                }
+            }
+           System.out.println(res+1);
+            n--;
+        }
+
+}
+            }
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    let mut n = t;
+    while n > 0 {
+        let c = sc.next_i32() as usize;
+        let mut a: Vec<i32> = Vec::with_capacity(c);
+        for _ in 0..c {
+            a.push(sc.next_i32());
+        }
+        a.sort();
+
+        let mut res: i32 = 0;
+        for i in 1..=c {
+            if a[i - 1] <= i as i32 {
+                res = i as i32;
+            }
+        }
+        out.push_str(&(res + 1).to_string());
+        out.push('\n');
+
+        n -= 1;
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

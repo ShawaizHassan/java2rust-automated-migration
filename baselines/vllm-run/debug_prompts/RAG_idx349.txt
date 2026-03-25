@@ -1,0 +1,187 @@
+INDEX: 349 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class airplane {
+    public static void main(String args[]) {
+        Scanner in = new Scanner(System.in);
+        int k=in.nextInt();
+        int n=in.nextInt();
+        int s=in.nextInt();
+        int p=in.nextInt();
+
+        int sheet=n/s;
+        if (n%s!=0)
+            sheet++;
+
+        int total=sheet*k;
+
+        int ans=total/p;
+        if (total%p!=0)
+            ans++;
+
+        System.out.println(ans);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+public class CircleLine {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int[] distances = new int[n];
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            distances[i] = in.nextInt();
+            total += distances[i];
+        }
+
+        int s, t;
+        s = in.nextInt();
+        t = in.nextInt();
+
+        int firsttrip, secondtrip;
+        firsttrip = 0;
+        secondtrip = 0;
+        int ans = 0;
+
+        if (s == t) {
+            firsttrip = 0;
+            secondtrip = 100;
+        } else if (s < t) {
+            for (int i = s - 1; i < t-1; i++)
+                firsttrip += distances[i];
+            secondtrip = total - firsttrip;
+        }
+
+        else {
+            for (int i = t - 1; i < s-1; i++)
+                firsttrip += distances[i];
+            secondtrip = total - firsttrip;
+
+        }
+        if (firsttrip < secondtrip)
+            System.out.println(firsttrip);
+        else
+            System.out.println(secondtrip);
+
+    }
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut distances: Vec<i32> = vec![0; n as usize];
+    let mut total: i32 = 0;
+    for i in 0..n as usize {
+        let d: i32 = it.next().unwrap().parse().unwrap();
+        distances[i] = d;
+        total += d;
+    }
+
+    let s: i32 = it.next().unwrap().parse().unwrap();
+    let t: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut firsttrip: i32 = 0;
+    let mut secondtrip: i32 = 0;
+
+    if s == t {
+        firsttrip = 0;
+        secondtrip = 100;
+    } else if s < t {
+        for i in (s - 1)..(t - 1) {
+            firsttrip += distances[i as usize];
+        }
+        secondtrip = total - firsttrip;
+    } else {
+        for i in (t - 1)..(s - 1) {
+            firsttrip += distances[i as usize];
+        }
+        secondtrip = total - firsttrip;
+    }
+
+    if firsttrip < secondtrip {
+        println!("{}", firsttrip);
+    } else {
+        println!("{}", secondtrip);
+    }
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+public class A231 {
+    public static void main(String args[]){
+        Scanner in = new Scanner(System.in);
+        int total=0;
+        int n =  in.nextInt();
+        for(int i = 0; i < n; i++){
+            if((in.nextInt()+in.nextInt()+in.nextInt())>1)
+                total++;
+        }
+        System.out.println(total);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut total: i32 = 0;
+    for _ in 0..n {
+        let a: i32 = it.next().unwrap().parse().unwrap();
+        let b: i32 = it.next().unwrap().parse().unwrap();
+        let c: i32 = it.next().unwrap().parse().unwrap();
+        if a + b + c > 1 {
+            total += 1;
+        }
+    }
+
+    println!("{}", total);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

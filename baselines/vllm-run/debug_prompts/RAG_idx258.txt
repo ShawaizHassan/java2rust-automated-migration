@@ -1,0 +1,339 @@
+INDEX: 258 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+public class buyashovel {
+	public static void main(String args[]) {
+		Scanner scan = new Scanner(System.in);
+		int k = scan.nextInt();
+		int r = scan.nextInt();
+		boolean bol = true;
+		for (int i = 1 ; i <=10 && bol ; i++) {
+			if ((i*k)%10==0) {
+				System.out.println(i);
+				bol=false;
+			}
+			else if (((i*k)-r)%10==0) {
+				System.out.println(i);
+				bol=false;
+			}
+		}
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class CodeTest {
+	
+	public static void main(String[] args) {
+
+		Scanner s = new Scanner(System.in);
+		int t = s.nextInt();
+		int n=0;
+		int x =0;
+		boolean bol=true;
+		for(int i=0;i<t;i++) {
+			n=s.nextInt();
+			x=s.nextInt();
+			Integer a[]=new Integer[n];
+			int b[]=new int[n];
+			for(int j=0;j<n;j++) {
+				a[j]=s.nextInt();
+			}
+			for(int j=0;j<n;j++) {
+				b[j]=s.nextInt();
+			}
+			Arrays.sort(a, Collections.reverseOrder());
+			for(int k=0;k<a.length;k++) {
+				if((a[k]+b[k])>x) {
+					bol=false;
+					break;
+				}
+				else {
+					bol=true;
+				}
+			}
+			
+			if(bol)
+				System.out.println("Yes");
+			else {
+				System.out.println("No");
+			}
+			
+		}
+		
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let t = fs.next_i32();
+    let mut _n = 0i32;
+    let mut _x = 0i32;
+    let mut bol = true;
+
+    let mut out = String::new();
+
+    for _ in 0..t {
+        _n = fs.next_i32();
+        _x = fs.next_i32();
+        let n = _n as usize;
+        let x = _x;
+
+        let mut a: Vec<i32> = Vec::with_capacity(n);
+        let mut b: Vec<i32> = Vec::with_capacity(n);
+
+        for _ in 0..n {
+            a.push(fs.next_i32());
+        }
+        for _ in 0..n {
+            b.push(fs.next_i32());
+        }
+
+        a.sort_by(|p, q| q.cmp(p)); // descending
+
+        for k in 0..a.len() {
+            if a[k] + b[k] > x {
+                bol = false;
+                break;
+            } else {
+                bol = true;
+            }
+        }
+
+        if bol {
+            out.push_str("Yes\n");
+        } else {
+            out.push_str("No\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskB solver = new TaskB();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskB {
+        int count = 0;
+        PrintWriter out;
+
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            this.out = out;
+            int n = in.nextInt();
+            int m = in.nextInt();
+            int[][] mas = new int[n][m];
+
+
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    mas[i][j] = in.nextInt();
+                }
+            }
+
+            runing(mas);
+            if (count == 0) out.println(n);
+            else out.println(count);
+        }
+
+        private void runing(int[][] mas) {
+
+            if (mas.length % 2 == 0) {
+                boolean bol = true;
+                int[][] ar = new int[mas.length / 2][mas[0].length];
+                for (int i = 0; i < mas.length / 2; i++) {
+                    for (int j = 0; j < mas[0].length; j++) {
+
+                        if (mas[i][j] == mas[mas.length - 1 - i][j]) ar[i][j] = mas[i][j];
+                        else {
+                            bol = false;
+                            break;
+                        }
+                    }
+                    if (bol == false) break;
+                }
+                if (bol) {
+                    count = ar.length;
+                    runing(ar);
+                }
+            }
+
+        }
+
+    }
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+struct TaskB {
+    count: i32,
+}
+impl TaskB {
+    fn new() -> Self {
+        Self { count: 0 }
+    }
+
+    fn solve(&mut self, scan: &mut Scanner) -> String {
+        let n = scan.next_i32() as usize;
+        let m = scan.next_i32() as usize;
+        let mut mas = vec![vec![0i32; m]; n];
+        for i in 0..n {
+            for j in 0..m {
+                mas[i][j] = scan.next_i32();
+            }
+        }
+
+        self.runing(&mas);
+
+        if self.count == 0 {
+            format!("{}\n", n)
+        } else {
+            format!("{}\n", self.count)
+        }
+    }
+
+    fn runing(&mut self, mas: &Vec<Vec<i32>>) {
+        let rows = mas.len();
+        if rows % 2 == 0 {
+            let cols = mas[0].len();
+            let mut bol = true;
+            let half = rows / 2;
+            let mut ar = vec![vec![0i32; cols]; half];
+
+            for i in 0..half {
+                for j in 0..cols {
+                    if mas[i][j] == mas[rows - 1 - i][j] {
+                        ar[i][j] = mas[i][j];
+                    } else {
+                        bol = false;
+                        break;
+                    }
+                }
+                if !bol {
+                    break;
+                }
+            }
+
+            if bol {
+                self.count = ar.len() as i32;
+                self.runing(&ar);
+            }
+        }
+    }
+}
+
+fn main() {
+    let mut scan = Scanner::new();
+    let mut solver = TaskB::new();
+    let out = solver.solve(&mut scan);
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

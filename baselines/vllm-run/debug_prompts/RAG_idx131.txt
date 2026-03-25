@@ -1,0 +1,290 @@
+INDEX: 131 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+public class Main
+{
+	public static void main(String[] args) {
+	    Scanner sc=new Scanner(System.in);
+	    int n=sc.nextInt(),k=sc.nextInt();
+	    Vector<Integer> v=new Vector<>();
+	    for(int i=2;i<=n;i++){
+	        if(prime(i))v.add(i);
+	    }
+	    Set<Integer> set=new HashSet<>();
+	    for(int i=0;i<v.size()-1;i++){
+	        set.add(v.get(i)+v.get(i+1)+1);
+	    }
+	    for(Integer i:v){
+	        if(set.contains(i))k--;
+	    }
+	    if(k<=0)System.out.println("YES");
+	    else System.out.println("NO");
+	}
+	
+	static boolean prime(int n){
+	    if(n==2)return true;
+	    if(n%2==0)return false;
+	    for(int i=3;i*i<=n;i+=2){
+	        if(n%i==0)return false;
+	    }
+	    return true;
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.*;
+
+public class Main {
+
+    public static void printAns(Vector<Integer> v) {
+        System.out.println(v.size());
+        for(Integer i : v)
+            System.out.print(i + " ");
+    }
+
+    public  static void checkInvert(Vector<Integer> v, boolean[] a, int i, int j, int k) {
+        if(a[i] != a[j]) {
+            a[i] = !a[i];
+            a[k] = !a[k];
+            v.add(Math.min(i, k) + 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        String s = scanner.next();
+        Vector<Integer> v = new Vector<Integer>();
+
+        boolean a[] = new boolean[n];
+        for(int i = 0; i < n; i++)
+            a[i] = (s.charAt(i) == 'B');
+
+        for(int i = 1; i < n - 1; i++)
+            checkInvert(v, a, i, i - 1, i + 1);
+        for(int i = n - 2; i > 0; i--)
+            checkInvert(v, a, i, i + 1, i - 1);
+
+        boolean ans = true;
+        for(int i = 1; i < n; i++)
+            if(a[i] != a[i - 1])
+                ans = false;
+        if(ans)
+            printAns(v);
+        else
+            System.out.println(-1);
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn check_invert(v: &mut Vec<i32>, a: &mut [bool], i: usize, j: usize, k: usize) {
+    if a[i] != a[j] {
+        a[i] = !a[i];
+        a[k] = !a[k];
+        let pos = std::cmp::min(i, k) as i32 + 1;
+        v.push(pos);
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+    let s = it.next().unwrap_or("");
+
+    let mut v: Vec<i32> = Vec::new();
+    let mut a: Vec<bool> = vec![false; n];
+
+    for (i, ch) in s.bytes().take(n).enumerate() {
+        a[i] = ch == b'B';
+    }
+
+    if n >= 3 {
+        for i in 1..(n - 1) {
+            check_invert(&mut v, &mut a, i, i - 1, i + 1);
+        }
+        for i in (1..=(n - 2)).rev() {
+            check_invert(&mut v, &mut a, i, i + 1, i - 1);
+        }
+    }
+
+    let mut ans = true;
+    for i in 1..n {
+        if a[i] != a[i - 1] {
+            ans = false;
+            break;
+        }
+    }
+
+    if ans {
+        let mut out = String::new();
+        out.push_str(&format!("{}\n", v.len()));
+        for x in v {
+            out.push_str(&format!("{} ", x));
+        }
+        print!("{}", out);
+    } else {
+        println!("-1");
+    }
+}
+```
+
+Java:
+```
+
+
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.Vector;
+
+public class Main {
+      
+       
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
+      int n =sc.nextInt();
+      int[]array = new int[n];
+      Vector<Integer>v = new Vector<Integer>();
+      for(int i = 0 ; i < n ;++i)array[i]=sc.nextInt();
+      
+        boolean f=false,f2=false;
+        
+      for(int i = 1 ; i <array.length;++i)
+      {
+         
+                  if(array[i-1]<array[i]&&!f)
+                  {
+
+                      v.add(i);
+                      v.add(i+1);
+                      f=true;
+                    
+                  }
+                  if(array[i-1]>array[i]&&!f2)
+                  {
+                      
+                      v.add(i);
+                      v.add(i+1);
+                      f2=true;
+                  }
+        
+        
+      }
+     
+      if(!f||!f2)
+      {
+           System.out.println(0);
+         
+      }
+      else{
+          System.out.println(3);
+         
+          System.out.print(v.elementAt(0)+" "+v.elementAt(2)+" "+v.elementAt(3));
+      }
+      
+    }
+    
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    data: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { data: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.data.len() && self.data[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.data.len() && self.data[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.data.len() && !self.data[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.data[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+    let n = sc.next_i32() as usize;
+    let mut array = vec![0i32; n];
+    for i in 0..n {
+        array[i] = sc.next_i32();
+    }
+
+    let mut v: Vec<i32> = Vec::new();
+    let mut f = false;
+    let mut f2 = false;
+
+    for i in 1..array.len() {
+        if array[i - 1] < array[i] && !f {
+            v.push(i as i32);
+            v.push((i + 1) as i32);
+            f = true;
+        }
+        if array[i - 1] > array[i] && !f2 {
+            v.push(i as i32);
+            v.push((i + 1) as i32);
+            f2 = true;
+        }
+    }
+
+    if !f || !f2 {
+        print!("0\n");
+    } else {
+        print!("3\n");
+        print!("{} {} {}", v[0], v[2], v[3]);
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

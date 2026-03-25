@@ -1,0 +1,466 @@
+INDEX: 219 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Main {
+	static class Reader
+    {
+        final private int BUFFER_SIZE = 1 << 16;
+        private DataInputStream din;
+        private byte[] buffer;
+        private int bufferPointer, bytesRead;
+ 
+        public Reader()
+        {
+            din = new DataInputStream(System.in);
+            buffer = new byte[BUFFER_SIZE];
+            bufferPointer = bytesRead = 0;
+        }
+ 
+        public Reader(String file_name) throws IOException
+        {
+            din = new DataInputStream(new FileInputStream(file_name));
+            buffer = new byte[BUFFER_SIZE];
+            bufferPointer = bytesRead = 0;
+        }
+ 
+        public String readLine() throws IOException
+        {
+            byte[] buf = new byte[64]; // line length
+            int cnt = 0, c;
+            while ((c = read()) != -1)
+            {
+                if (c == '\n')
+                    break;
+                buf[cnt++] = (byte) c;
+            }
+            return new String(buf, 0, cnt);
+        }
+ 
+        public int nextInt() throws IOException
+        {
+            int ret = 0;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+            do
+            {
+                ret = ret * 10 + c - '0';
+            }  while ((c = read()) >= '0' && c <= '9');
+ 
+            if (neg)
+                return -ret;
+            return ret;
+        }
+ 
+        public long nextLong() throws IOException
+        {
+            long ret = 0;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+            do {
+                ret = ret * 10 + c - '0';
+            }
+            while ((c = read()) >= '0' && c <= '9');
+            if (neg)
+                return -ret;
+            return ret;
+        }
+ 
+        public double nextDouble() throws IOException
+        {
+            double ret = 0, div = 1;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+ 
+            do {
+                ret = ret * 10 + c - '0';
+            }
+            while ((c = read()) >= '0' && c <= '9');
+ 
+            if (c == '.')
+            {
+                while ((c = read()) >= '0' && c <= '9')
+                {
+                    ret += (c - '0') / (div *= 10);
+                }
+            }
+ 
+            if (neg)
+                return -ret;
+            return ret;
+        }
+ 
+        private void fillBuffer() throws IOException
+        {
+            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+            if (bytesRead == -1)
+                buffer[0] = -1;
+        }
+ 
+        private byte read() throws IOException
+        {
+            if (bufferPointer == bytesRead)
+                fillBuffer();
+            return buffer[bufferPointer++];
+        }
+ 
+        public void close() throws IOException
+        {
+            if (din == null)
+                return;
+            din.close();
+        }
+    }
+	
+	static class time implements Comparable<time>{
+		int l,r;
+		time(int x,int y){
+			l=x;
+			r=y;
+		}
+		@Override
+		public int compareTo(time ob){
+			int diff = this.l-ob.l;
+			if(diff!=0)
+				return diff;
+			return this.r-ob.r;
+		}
+	}
+	public static void main(String args[])throws IOException{
+		Reader in=new Reader();
+		long n=in.nextLong();
+		long m=in.nextLong();
+		if(m>=n){
+			System.out.println(n);
+			System.exit(0);
+		}
+		n -= m;
+		long l = 0, r = (long)2e9;
+		while (l < r) {
+			long med = (l + r) / 2;
+			long val = med * (med+1) / 2;
+			if (val >= n) {
+				r = med;
+			} else {
+				l = med+1;
+			}
+		}
+		System.out.println(l+m);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ * @author Vadim
+ */
+public class Main {
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		TaskA solver = new TaskA();
+		solver.solve(1, in, out);
+		out.close();
+	}
+}
+
+class TaskA {
+    public void solve(int testNumber, InputReader in, PrintWriter out) {
+        long n = in.nextInt();
+        long sum = 0;
+        for (int i = 0; i < n-1; i++) {
+            sum += in.nextInt();            
+        }
+        out.println(n*(n+1)/2 - sum);
+    }
+}
+
+class InputReader  extends BufferedReader {
+    public InputReader(InputStream st) {
+        super(new InputStreamReader(st));
+    }
+
+    public int nextInt() {
+        try {
+            int c = read();
+
+            while (isWhiteSpace(c)) {
+                c = read();
+            }
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int ret = 0;
+            while (c >= 0 && !isWhiteSpace(c)) {
+                if (c < '0' || c > '9') {
+                    throw new RuntimeException();
+                }
+                ret = ret * 10 + c - '0';
+                c = read();
+            }
+            return ret * sgn;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String readLine() {
+        try {
+            return super.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    static boolean isWhiteSpace(int c) {
+        return c >= 0 && c <= 32;
+    }
+
+
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct InputReader {
+    buf: Vec<u8>,
+    idx: usize,
+}
+
+impl InputReader {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { buf: input.into_bytes(), idx: 0 }
+    }
+
+    fn is_whitespace(c: u8) -> bool {
+        c <= 32
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.buf.len() && Self::is_whitespace(self.buf[self.idx]) {
+            self.idx += 1;
+        }
+        let mut sgn: i32 = 1;
+        if self.idx < self.buf.len() && self.buf[self.idx] == b'-' {
+            sgn = -1;
+            self.idx += 1;
+        }
+        let mut ret: i32 = 0;
+        while self.idx < self.buf.len() && !Self::is_whitespace(self.buf[self.idx]) {
+            let c = self.buf[self.idx];
+            if c < b'0' || c > b'9' {
+                panic!("Invalid character");
+            }
+            ret = ret * 10 + (c - b'0') as i32;
+            self.idx += 1;
+        }
+        ret * sgn
+    }
+}
+
+fn main() {
+    let mut input = InputReader::new();
+    let n = input.next_i32() as i64;
+    let mut sum: i64 = 0;
+    for _ in 0..(n - 1) {
+        sum += input.next_i32() as i64;
+    }
+    let ans = n * (n + 1) / 2 - sum;
+
+    let mut out = io::BufWriter::new(io::stdout());
+    writeln!(out, "{}", ans).unwrap();
+}
+```
+
+Java:
+```
+import java.io.*;
+
+/**
+ * All-Ukrainian School Olympiad in Informatics, D
+ * @author Roman Kosenko <madkite@gmail.com>
+ */
+public class Points {
+	public static void main(String[] args) throws IOException {
+		FastScanner scanner = new FastScanner(!Boolean.parseBoolean(System.getProperty("ONLINE_JUDGE")) ? new FileInputStream("input.txt") : System.in);
+		int n = scanner.nextInt();
+		long sx = 0, sy = 0, s2 = 0;
+		for(int i = n; i > 0; i--) {
+			int x = scanner.nextInt(), y = scanner.nextInt();
+			sx += x; s2 += x * x;
+			sy += y; s2 += y * y;
+		}
+		System.out.println(n * s2 - sx * sx - sy * sy);
+	}
+	static class FastScanner {
+		private final InputStream is;
+		private byte[] data = new byte[0x2000];
+		private int next, size;
+		public FastScanner(InputStream is) {
+			this.is = is;
+		}
+		private boolean read() throws IOException {
+			size = is.read(data);
+			if(size == 0) {
+				int i = is.read();
+				if(i < 0)
+					return false;
+				data[0] = (byte)i;
+				size = 1;
+			} else if(size < 0)
+				return false;
+			next = 0;
+			return true;
+		}
+		public int nextInt() throws IOException {
+			int r; boolean negative = false;
+			do {
+				if(next >= size && !read())
+					throw new EOFException();
+				negative |= (r = data[next++]) == '-';
+			} while(r < '0' || r > '9');
+			r -= '0';
+			for(int d; (next < size || read()) && '0' <= (d = data[next++]) && d <= '9';)
+				r = r * 10 + d - '0';
+			return negative ? -r : r;
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::fs::File;
+use std::io::{self, Read};
+
+struct FastScanner {
+    data: Vec<u8>,
+    idx: usize,
+}
+
+impl FastScanner {
+    fn new(mut input: Box<dyn Read>) -> Self {
+        let mut data = Vec::new();
+        input.read_to_end(&mut data).unwrap();
+        Self { data, idx: 0 }
+    }
+
+    fn next_int(&mut self) -> i32 {
+        let mut negative = false;
+        loop {
+            if self.idx >= self.data.len() {
+                panic!("EOF");
+            }
+            let b = self.data[self.idx];
+            self.idx += 1;
+            if b == b'-' {
+                negative = true;
+                continue;
+            }
+            if b >= b'0' && b <= b'9' {
+                let mut r: i32 = (b - b'0') as i32;
+                while self.idx < self.data.len() {
+                    let d = self.data[self.idx];
+                    if d >= b'0' && d <= b'9' {
+                        self.idx += 1;
+                        r = r * 10 + (d - b'0') as i32;
+                    } else {
+                        self.idx += 1;
+                        break;
+                    }
+                }
+                return if negative { -r } else { r };
+            }
+        }
+    }
+}
+
+fn main() {
+    let online = std::env::var("ONLINE_JUDGE")
+        .ok()
+        .map(|v| v == "true")
+        .unwrap_or(false);
+
+    let input: Box<dyn Read> = if !online {
+        Box::new(File::open("input.txt").unwrap())
+    } else {
+        Box::new(io::stdin())
+    };
+
+    let mut scanner = FastScanner::new(input);
+
+    let n: i32 = scanner.next_int();
+    let mut sx: i64 = 0;
+    let mut sy: i64 = 0;
+    let mut s2: i64 = 0;
+
+    for _ in (1..=n).rev() {
+        let x: i32 = scanner.next_int();
+        let y: i32 = scanner.next_int();
+        let xi = x as i64;
+        let yi = y as i64;
+        sx += xi;
+        s2 += xi * xi;
+        sy += yi;
+        s2 += yi * yi;
+    }
+
+    let nn = n as i64;
+    let ans = nn * s2 - sx * sx - sy * sy;
+    println!("{}", ans);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

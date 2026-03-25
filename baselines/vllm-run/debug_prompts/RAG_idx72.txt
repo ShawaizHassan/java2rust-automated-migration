@@ -1,0 +1,404 @@
+INDEX: 72 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class File1{
+	public static void main(String[] args){
+		Scanner in = new Scanner(System.in);
+		int n = in.nextInt();
+		int x1 = in.nextInt();
+		int y1 = in.nextInt();
+		int x2 = in.nextInt();
+		int y2 = in.nextInt();
+		if(x1==0&&x2==0)
+			System.out.println(Math.abs(y2-y1));
+		else if(x1==0&&x2==n)
+			System.out.println(n+Math.min(y1+y2,2*n-y1-y2));
+		else if(x1==0&&y2==0)
+			System.out.println(y1+x2);
+		else if(x1==0&&y2==n)
+			System.out.println(n-y1+x2);
+		else if(x1==n&&x2==n)
+			System.out.println(Math.abs(y2-y1));
+		else if(x1==n&&x2==0)
+			System.out.println(n+Math.min(y1+y2, 2*n-y1-y2));
+		else if(x1==n&&y2==0)
+			System.out.println(n-x2+y1);
+		else if(x1==n&&y2==n)
+			System.out.println(2*n-y1-x2);
+		else if(y1==0&&y2==0)
+			System.out.println(Math.abs(x2-x1));
+		else if(y1==0&&y2==n)
+			System.out.println(n+Math.min(x1+x2,2*n-x1-x2));
+		else if(y1==0&&x2==0)
+			System.out.println(y2+x1);
+		else if(y1==0&&x2==n)
+			System.out.println(n-x1+y2);
+		else if(x2==0)
+			System.out.println(n-y2+x1);
+		else if(x2==n)
+			System.out.println(2*n-y2-x1);
+		else if(y2==n)
+			System.out.println(Math.abs(x2-x1));
+		else System.out.println(n+Math.min(2*n-x1-x2,x1+x2));
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+public class NSolution
+{
+	public static void main(String[] args) throws IOException
+	{
+		Scanner sc=new Scanner(System.in);
+		int n=sc.nextInt();int m=sc.nextInt();int q=-1;int qc=-1;int[][]a=new int[n][m];
+		for(int x=0;x<n;x++)
+		{
+			for(int y=0;y<m;y++)
+			{
+				a[x][y]=sc.nextInt();
+				if(y!=0&&a[x][y]!=a[x][0])
+				{
+					q=x;qc=y;
+				}
+			}
+		}
+		if(q==-1)
+		{
+			int temp=0;
+			for(int x=0;x<n;x++)
+			{
+				temp^=a[x][0];
+			}
+			if(temp>0)
+			{
+				System.out.println("TAK");
+				for(int x=0;x<n;x++)
+				{
+					System.out.print(1+" ");
+				}
+			}
+			else
+			{
+				System.out.println("NIE");
+			}
+		}
+		else
+		{
+			int temp=0;
+			for(int x=0;x<n;x++)
+			{
+				if(x==q) {continue;}
+				temp^=a[x][0];
+			}
+			if((temp^a[q][0])>0)
+			{
+				System.out.println("TAK");
+				for(int x=0;x<n;x++)
+				{
+					System.out.print(1+" ");
+				}
+			}
+			else
+			{
+				System.out.println("TAK");
+				for(int x=0;x<n;x++)
+				{
+					if(x==q)
+					{System.out.print(qc+1+" ");}
+					else
+					{System.out.print(1+" ");}
+				}
+			}
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32() as usize;
+
+    let mut q: i32 = -1;
+    let mut qc: i32 = -1;
+    let mut a = vec![vec![0i32; m]; n];
+
+    for x in 0..n {
+        for y in 0..m {
+            a[x][y] = sc.next_i32();
+            if y != 0 && a[x][y] != a[x][0] {
+                q = x as i32;
+                qc = y as i32;
+            }
+        }
+    }
+
+    let mut out = String::new();
+
+    if q == -1 {
+        let mut temp = 0i32;
+        for x in 0..n {
+            temp ^= a[x][0];
+        }
+        if temp > 0 {
+            out.push_str("TAK\n");
+            for _ in 0..n {
+                out.push_str("1 ");
+            }
+        } else {
+            out.push_str("NIE\n");
+        }
+    } else {
+        let q_usize = q as usize;
+        let mut temp = 0i32;
+        for x in 0..n {
+            if x == q_usize {
+                continue;
+            }
+            temp ^= a[x][0];
+        }
+        if (temp ^ a[q_usize][0]) > 0 {
+            out.push_str("TAK\n");
+            for _ in 0..n {
+                out.push_str("1 ");
+            }
+        } else {
+            out.push_str("TAK\n");
+            for x in 0..n {
+                if x == q_usize {
+                    out.push_str(&(qc + 1).to_string());
+                    out.push(' ');
+                } else {
+                    out.push_str("1 ");
+                }
+            }
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.*;
+public class XOR {
+ 
+	public static void main(String[] args)
+	{
+		Scanner sc=new Scanner(System.in);
+		int n= sc.nextInt();
+		int z=sc.nextInt();
+		int[][] thing= new int[n][z];
+		int occurences=0;
+		for(int x=0;x<n;x++)
+		{
+			for(int y=0;y<z;y++)
+			{
+				thing[x][y]=sc.nextInt();
+			}
+		}
+		int value=thing[0][0];
+		for(int x=1;x<n;x++)
+		{
+			value^=thing[x][0];
+		}
+		if(value>0)
+		{
+			System.out.println("TAK");
+			for(int x=0;x<n;x++)
+			{
+				System.out.print("1 ");
+			}
+		}
+		else
+		{
+			boolean found=false;
+			int value2=-1;
+			value=-1;
+			for(int x=0;x<n;x++)
+			{
+				value=thing[x][0];
+				for(int y=0;y<z;y++)
+				{
+					if(thing[x][y]!=value)
+					{
+						value=y;
+						value2=x;
+						found=true;
+						break;
+					}	
+				}
+				if(found)
+				{
+					break;
+				}
+			}
+			if(!found)
+			{
+				System.out.println("NIE");
+			}
+			else
+			{
+				System.out.println("TAK");
+				for(int x=0;x<n;x++)
+				{
+					if(x!=value2)
+					{
+						System.out.print("1 ");
+					}
+					else
+					{
+						System.out.print((value+1) + " ");
+					}
+				}
+			}
+		}
+		
+	}
+ 
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let z = sc.next_i32() as usize;
+
+    let mut thing = vec![vec![0i32; z]; n];
+    let mut _occurences = 0i32;
+
+    for x in 0..n {
+        for y in 0..z {
+            thing[x][y] = sc.next_i32();
+        }
+    }
+
+    let mut value = thing[0][0];
+    for x in 1..n {
+        value ^= thing[x][0];
+    }
+
+    if value > 0 {
+        print!("TAK\n");
+        for _x in 0..n {
+            print!("1 ");
+        }
+    } else {
+        let mut found = false;
+        let mut value2: i32 = -1;
+        value = -1;
+
+        for x in 0..n {
+            value = thing[x][0];
+            for y in 0..z {
+                if thing[x][y] != value {
+                    value = y as i32;
+                    value2 = x as i32;
+                    found = true;
+                    break;
+                }
+            }
+            if found {
+                break;
+            }
+        }
+
+        if !found {
+            print!("NIE\n");
+        } else {
+            print!("TAK\n");
+            for x in 0..n {
+                if x as i32 != value2 {
+                    print!("1 ");
+                } else {
+                    print!("{} ", value + 1);
+                }
+            }
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

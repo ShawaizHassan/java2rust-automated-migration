@@ -1,0 +1,663 @@
+INDEX: 245 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+
+
+import java.math.*;
+public class Solution{
+	public static void main(String[] args) {
+	      TaskA solver = new TaskA();
+	      initFac(1000001);
+	      
+//	      int t = in.nextInt();
+//	      for (int i = 1; i <= t ; i++) {
+//	          solver.solve(i, in, out);
+//	      }     
+//	      
+	      solver.solve(1, in, out);  
+	      
+	      out.flush();
+	    out.close();
+	  }
+	static ArrayList<Integer>[] graph ;static int[]child;static long k; static int m;
+	 static class TaskA {
+	      public void solve(int testNumber, InputReader in, PrintWriter out) {
+	    	  k= in.nextLong();
+	    	 long pow=fpow(2,k,Long.MAX_VALUE)-2;
+	    	 long num=fpow(4L,pow,mod)%mod;
+	    	 num*=6L;
+	    	 num%=mod;
+	    	 println(num);
+	      }
+	 }
+	 static int min(int x,int y) {
+		 return Math.min(x, y);
+	 }
+	 
+	 static int max(int x,int y) {
+		 return Math.max(x, y);
+	 }
+	 
+	 static long min(long x,long y) {
+		 return Math.min(x, y);
+	 }
+	 static long max(long x,long y) {
+		 return Math.max(x, y);
+	 }
+	 static int abs(int x,int y) {
+		 return Math.abs(x-y);
+	 }
+	 static long abs(long x,long y) {
+		 return Math.abs(x-y);
+	 }
+	 static void Eularianbfs(int v,int[]cur,int k,ArrayList<Integer>path) {
+		  while (cur[v] < k) {
+		    int u = cur[v]++;
+		    Eularianbfs(u,cur,k,path);
+		    path.add(u);
+		  }
+	}
+
+	 static long fpow(long b, long x, long mod) {
+	        if (x == 0) return 1;
+	        if (x == 1) return b;
+	        if (x % 2 == 0) return fpow(b * b % mod, x / 2, mod) % mod;
+	 
+	        return b * fpow(b * b % mod, x / 2, mod) % mod;
+	    }
+	 static long[] fac;
+	 static long mod = 1_000_000_007;
+	 static void initFac(long n) {
+	        fac = new long[(int)n + 1];
+	        fac[0] = 1;
+	        for (int i = 1; i <= n; i++) {
+	            fac[i] = (fac[i - 1]  * i) % mod;
+	        }
+	    }
+	 static int count(char []arr,char x) {
+		 int c=0;
+		 for(int i=0;i<arr.length;i++) {
+			 if(arr[i]==x) {
+				 c++;
+			 }
+		 }
+		 return c;
+	 }
+	 static int count(int []arr,int x) {
+		 int c=0;
+		 for(int i=0;i<arr.length;i++) {
+			 if(arr[i]==x) {
+				 c++;
+			 }
+		 }
+		 return c;
+	 }
+	  static boolean[]seive(int n){
+			boolean[]b=new boolean[n+1];
+			 for (int i = 2; i <= n; i++)
+		            b[i] = true;
+			 
+			for(int i=2;i*i<=n;i++) {
+				if(b[i]) {
+					for(int j=i*i;j<=n;j+=i) {
+						b[j]=false;
+					}
+				}
+			}
+			return b;
+		}
+	 static int[] query(int l,int r) {
+			System.out.println("? "+l+" "+r);
+			System.out.print ("\n");System.out.flush();
+			int[]arr=new int[r-l+1];
+			for(int i=0;i<r-l+1;i++) {
+				arr[i]=in.nextInt();
+			}
+			return arr;
+		}
+
+	 static long[]presum(long[]arr){
+		 int n= arr.length;
+		 long[]pre=new long[n];
+		 for(int i=0;i<n;i++) {
+			 if(i>0) {
+				 pre[i]=pre[i-1];
+			 }
+			 pre[i]+=arr[i];
+		 }
+		 return pre;
+	 }
+	 static int max(int[]arr) {
+		 int max=Integer.MIN_VALUE;
+		 for(int i=0;i<arr.length;i++) {
+			 max=Math.max(max, arr[i]);
+		 }
+		 return max;
+	 }
+	 static int min(int[]arr) {
+		 int min=Integer.MAX_VALUE;
+		 for(int i=0;i<arr.length;i++) {
+			 min=Math.min(min, arr[i]);
+		 }
+		 return min;
+	 }
+	 static int ceil(int a,int b) {
+		 int ans=a/b;if(a%b!=0) {
+			 ans++;
+		 }
+		 return ans;
+	 }
+	
+	
+	static long sum(int[]arr) {
+		long s=0;
+		for(int x:arr) {
+			s+=x;
+		}
+		return s;
+	}
+	static long sum(long[]arr) {
+		long s=0;
+		for(long x:arr) {
+			s+=x;
+		}
+		return s;
+	}
+	 static int gcd(int a, int b)
+	    {
+	      if (b == 0)
+	        return a;
+	      return gcd(b, a % b);
+	    }
+	 static void sort(int[] a) {
+	        ArrayList<Integer> q = new ArrayList<>();
+	        for (int i : a) q.add(i);
+	        Collections.sort(q);
+	        for (int i = 0; i < a.length; i++) a[i] = q.get(i);
+	    }
+	 static void sort(long[] a) {
+	        ArrayList<Long> q = new ArrayList<>();
+	        for (long i : a) q.add(i);
+	        Collections.sort(q);
+	        for (int i = 0; i < a.length; i++) a[i] = q.get(i);
+	    }
+	 static void println(int[][]arr) {
+		 for(int i=0;i<arr.length;i++) {
+			 for(int j=0;j<arr[0].length;j++) {
+				 print(arr[i][j]+" ");
+			 }
+			 print("\n");
+		 }
+	 }
+	 static void println(long[][]arr) {
+		 for(int i=0;i<arr.length;i++) {
+			 for(int j=0;j<arr[0].length;j++) {
+				 print(arr[i][j]+" ");
+			 }
+			 print("\n");
+		 }
+	 }
+	 static void println(int[]arr){
+		 for(int i=0;i<arr.length;i++) {
+			 print(arr[i]+" ");
+		 }
+		 print("\n");
+	 }
+	 static void println(long[]arr){
+		 for(int i=0;i<arr.length;i++) {
+			 print(arr[i]+" ");
+		 }
+		 print("\n");
+	 }
+	 static void println(char x) {
+		 out.println(x);
+	 }
+	  static long[]input(long n){
+		  long[]arr=new long[(int)n];
+		  for(int i=0;i<n;i++) {
+			  arr[i]=in.nextInt();
+		  }
+		  return arr;
+	  }
+	  static int[]input(int n){
+		  int[]arr=new int[n];
+		  for(int i=0;i<n;i++) {
+			  arr[i]=in.nextInt();
+		  }
+		  return arr;
+	  }
+	  static Character Char(int x) {
+			 return Character.toString((char)x).charAt(0);
+	  }
+	  static int[]input(){
+		  int n= in.nextInt();
+		  int[]arr=new int[(int)n];
+		  for(int i=0;i<n;i++) {
+			  arr[i]=in.nextInt();
+		  }
+		  return arr;
+	  }
+	////////////////////////////////////////////////////////
+	  static class Pair implements Comparable<Pair>{
+		    int  first;
+		    int second;int third;
+		    Pair(int x, int y)
+		    {
+		        this.first = x;
+		        this.second = y;
+		        
+		    }
+		    public int compareTo(Pair p) {
+		    	return Integer.compare(second, p.second);
+		    }
+		}
+	  static void sortS(Pair arr[])
+	    {
+	        Arrays.sort(arr, new Comparator<Pair>() {
+	            @Override public int compare(Pair p1, Pair p2)
+	            {
+	            	if(p1.second==p2.second) {return p1.first-p2.first;}
+	                return (p1.second - p2.second); 
+	                                   
+	            }
+	        });
+	    }
+	  static void sortF(Pair arr[])
+	    {
+	        Arrays.sort(arr, new Comparator<Pair>() {
+	            @Override public int compare(Pair p1, Pair p2)
+	            {
+	            	if(p1.first==p2.first) {return p1.second-p2.second;}
+	                return (p1.first - p2.first); 
+	            }
+	        });
+	    }
+
+    /////////////////////////////////////////////////////////////
+	static InputStream inputStream = System.in;
+    static OutputStream outputStream = System.out;
+    static InputReader in = new InputReader(inputStream);
+    static PrintWriter out = new PrintWriter(outputStream);
+    static void println(long c) {
+    	out.println(c);
+    }
+    static void print(long c) {
+    	out.print(c);
+    }
+    static void print(int c) {
+		 out.print(c);
+	 }
+	 static void println(int x) {
+		 out.println(x);
+	 }
+	 static void print(String s) {
+		 out.print(s);
+	 }
+	 static void println(String s) {
+		 out.println(s);
+	 }
+	 static void println(boolean b) {
+		 out.println(b);
+	 }
+
+  static class InputReader {
+      public BufferedReader reader;
+      public StringTokenizer tokenizer;
+
+      public InputReader(InputStream stream) {
+          reader = new BufferedReader(new InputStreamReader(stream), 32768);
+          tokenizer = null;
+      }
+
+      public String next() {
+          while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+              try {
+                  tokenizer = new StringTokenizer(reader.readLine());
+              } catch (IOException e) {
+                  throw new RuntimeException(e);
+              }
+          }
+          return tokenizer.nextToken();
+      }
+
+      public int nextInt() {
+          return Integer.parseInt(next());
+      }
+      public long nextLong() {
+    	  return Long.parseLong(next());
+      }
+  }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class n020 {
+	static Scanner scan=new Scanner(System.in);
+	public static int[] getarr(int n)
+	{
+		int arr[]=new int[n];
+		for(int i=0;i<n;i++)
+			arr[i]=scan.nextInt();
+		return arr;
+	}
+	public static int getint()
+	{
+		return scan.nextInt();
+	}
+	public static long getlong()
+	{
+		return scan.nextLong();
+	}
+	public static String getString()
+	{
+		return scan.nextLine();
+	}
+	public static void newline()
+	{
+		scan.nextLine();
+	}
+	public static int getMax(int[] arr)
+	{
+		int max=Integer.MIN_VALUE;
+		for(int i=0;i<arr.length;i++)
+			if(max<arr[i])
+				max=arr[i];
+		return max;
+	}
+	public static void printArr(int []arr)
+	{
+		for(int i=0;i<arr.length;i++)
+			System.out.print(arr[i]+" ");
+		System.out.println();
+	}
+	public static void main(String[] args) {
+		int test=getint();
+		while(test-->0)
+		{
+			int n=getint();
+			int org[]=getarr(n);
+			int dup[]=getarr(n);
+			int x=0,count=0,res=0,p=0,q=0;
+			boolean flag=true;
+			for(int i=0;i<n;i++)
+			{
+				if(org[i]!=dup[i] && flag) {
+					p=i;
+					flag=false;
+				}
+			 if(org[i]!=dup[i])
+				{
+					q=i;
+				}
+			}
+			boolean t1=true;
+			int rem=dup[p]-org[p];
+			//System.out.println(rem);
+			//System.out.println(p+" "+q);
+			for(int i=p;i<=q;i++)
+			{
+				
+				if(dup[i]-org[i]!=rem||rem<0)
+				{
+					System.out.println("NO");
+					t1=false;
+					break;
+				}
+			}
+			if(t1)
+			System.out.println("YES");
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn getarr(scan: &mut FastScanner, n: usize) -> Vec<i32> {
+    let mut arr = vec![0i32; n];
+    for i in 0..n {
+        arr[i] = scan.next_i32();
+    }
+    arr
+}
+
+fn main() {
+    let mut scan = FastScanner::new();
+    let test = scan.next_i32();
+    let mut out = String::new();
+
+    let mut t = test;
+    while t > 0 {
+        t -= 1;
+        let n = scan.next_i32() as usize;
+        let org = getarr(&mut scan, n);
+        let dup = getarr(&mut scan, n);
+
+        let mut p: usize = 0;
+        let mut q: usize = 0;
+        let mut flag = true;
+
+        for i in 0..n {
+            if org[i] != dup[i] && flag {
+                p = i;
+                flag = false;
+            }
+            if org[i] != dup[i] {
+                q = i;
+            }
+        }
+
+        let rem = dup[p] - org[p];
+        let mut ok = true;
+
+        for i in p..=q {
+            if dup[i] - org[i] != rem || rem < 0 {
+                out.push_str("NO\n");
+                ok = false;
+                break;
+            }
+        }
+        if ok {
+            out.push_str("YES\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+//package acc;
+import java.util.*;
+
+
+   public  class ACC { 
+//************Main*****************//
+       
+         public static void main(String[] args)
+			 {
+                
+                Scanner in=new Scanner (System.in);
+                int n=in.nextInt();
+                Pair[]arr=new Pair[n];
+                List<Integer> l1=new ArrayList<>();
+                List<Integer> l2=new ArrayList<>();
+                for(int i=1;i<=n;i++){
+                    arr[i-1]=new Pair(in.nextInt(),i);
+                }
+                Arrays.sort(arr);
+                boolean a=true;
+                for(int i=0;i<n;i++){
+                    if(a){
+                        l1.add(arr[i].y);
+                        a=false;
+                    }
+                    else {
+                        l2.add(arr[i].y);
+                        a=true;
+                    }
+                }
+                System.out.println(l1.size());
+                for(int i=0;i<l1.size();i++){
+                    if(i!=0) System.out.print(" ");
+                    System.out.print(l1.get(i));
+                }
+                System.out.println();
+                System.out.println(l2.size());
+                for(int i=0;i<l2.size();i++){
+                    if(i!=0) System.out.print(" ");
+                    System.out.print(l2.get(i));
+                }
+         }
+   }
+    class Pair implements Comparable<Pair>{
+    int x,y;
+    public  Pair(int X,int Y){
+x=X;
+y=Y;
+}
+    @Override
+      public int compareTo(Pair p){
+       return x-p.x;
+}
+  }
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+#[derive(Clone)]
+struct Pair {
+    x: i32,
+    y: i32,
+}
+
+impl Ord for Pair {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.x.cmp(&other.x)
+    }
+}
+
+impl PartialOrd for Pair {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialEq for Pair {
+    fn eq(&self, other: &Self) -> bool {
+        self.x == other.x && self.y == other.y
+    }
+}
+
+impl Eq for Pair {}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut arr: Vec<Pair> = Vec::with_capacity(n);
+    for i in 1..=n {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        arr.push(Pair { x, y: i as i32 });
+    }
+
+    arr.sort();
+
+    let mut l1: Vec<i32> = Vec::new();
+    let mut l2: Vec<i32> = Vec::new();
+    let mut a = true;
+
+    for i in 0..n {
+        if a {
+            l1.push(arr[i].y);
+            a = false;
+        } else {
+            l2.push(arr[i].y);
+            a = true;
+        }
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!("{}\n", l1.len()));
+    for i in 0..l1.len() {
+        if i != 0 {
+            out.push(' ');
+        }
+        out.push_str(&l1[i].to_string());
+    }
+    out.push('\n');
+    out.push_str(&format!("{}\n", l2.len()));
+    for i in 0..l2.len() {
+        if i != 0 {
+            out.push(' ');
+        }
+        out.push_str(&l2[i].to_string());
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

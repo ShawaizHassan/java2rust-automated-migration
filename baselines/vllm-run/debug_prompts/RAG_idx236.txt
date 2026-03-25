@@ -1,0 +1,449 @@
+INDEX: 236 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+import java.lang.Math;
+
+public class solve
+{
+	// Read a String from the standard input using Scanner
+	// public static void main(String[] args)
+	// {
+	// 	Scanner scanner = new Scanner(System.in);
+	// 	ArrayList<Integer> nums = new ArrayList<Integer>();
+	// 	for(String tok : scanner.nextLine().split(" ")){
+	// 		nums.add(Integer.parseInt(tok));
+
+	// 	}
+
+	// 	System.out.println(nums);
+	// 	scanner.close();
+		
+	// }
+	public static void fun(String s){
+
+		char c = s.charAt(0);
+		char num = s.charAt(1);
+
+		int ret = 8;
+		boolean flag = false;
+		if(c == 'a' || c == 'h'){
+			ret -= 3;
+			flag = true;
+		}
+
+		if(num == '1' || num == '8'){
+			if(flag){
+				ret -= 2;
+			}else{
+				ret -= 3;
+			}
+
+		}
+		System.out.println(ret);
+	}
+		
+	public static void main(String[] args){	
+
+
+		FastReader fr = new FastReader();
+		String s = fr.nextLine();
+		fun(s);
+
+	}
+
+
+	static class FastReader 
+	{ 
+	    BufferedReader br; 
+	    StringTokenizer st; 
+ 
+	    public FastReader() {
+	    	br = new BufferedReader(new
+	                 InputStreamReader(System.in)); 
+	    }
+	    String next() { 
+	        while (st == null || !st.hasMoreElements()) { 
+	            try{ 
+	                st = new StringTokenizer(br.readLine()); 
+	            } 
+	            catch (IOException  e) { 
+	                e.printStackTrace(); 
+	            } 
+	        } 
+	        return st.nextToken(); 
+	    } 
+	    int nextInt() { 
+	        return Integer.parseInt(next()); 
+	    } 
+	    long nextLong() { 
+	        return Long.parseLong(next()); 
+	    } 
+	    double nextDouble() { 
+	        return Double.parseDouble(next()); 
+	    } 
+	    String nextLine() { 
+	        String str = ""; 
+	        try{ 
+	            str = br.readLine(); 
+	        } 
+	        catch (IOException e) { 
+	            e.printStackTrace(); 
+	        } 
+	        return str; 
+	    } 
+	} 
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class ar {
+    static class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastReader() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+    public static void main(String[] args) throws java.lang.Exception {
+        FastReader scn = new FastReader();
+int q=scn.nextInt();
+
+for(int i=0;i<q;i++){
+int n = scn.nextInt();
+Set<Integer> odd=new HashSet<>();
+Set<Integer> even=new HashSet<>();
+boolean flag=false;
+for(int j=0;j<n;j++){
+int num=scn.nextInt();
+if(num%2==0){
+if(!flag && odd.contains(num+1)||odd.contains(num-1)){
+    flag=true;
+}
+if(!flag)
+even.add(num);
+}else{
+    if(!flag && even.contains(num+1)||even.contains(num-1)){
+        flag=true;
+    }
+    if(!flag)
+odd.add(num);
+}
+}
+if(flag){
+    System.out.print(2+"\n");
+}else{
+    System.out.print(1+"\n");
+}
+
+}
+    }
+
+}
+
+
+
+
+```
+Translated Rust:
+```
+use std::collections::HashSet;
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut scn = Scanner::new();
+    let q = scn.next_i32();
+
+    let mut out = String::new();
+
+    for _ in 0..q {
+        let n = scn.next_i32();
+
+        let mut odd: HashSet<i32> = HashSet::new();
+        let mut even: HashSet<i32> = HashSet::new();
+        let mut flag = false;
+
+        for _ in 0..n {
+            let num = scn.next_i32();
+            if num % 2 == 0 {
+                if (!flag && odd.contains(&(num + 1))) || odd.contains(&(num - 1)) {
+                    flag = true;
+                }
+                if !flag {
+                    even.insert(num);
+                }
+            } else {
+                if (!flag && even.contains(&(num + 1))) || even.contains(&(num - 1)) {
+                    flag = true;
+                }
+                if !flag {
+                    odd.insert(num);
+                }
+            }
+        }
+
+        if flag {
+            out.push_str("2\n");
+        } else {
+            out.push_str("1\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.lang.*;
+ // import java.text.DecimalFormat;
+  public class test{
+      static class FastReader{
+          BufferedReader br;
+          StringTokenizer st;
+          public FastReader(){
+            br=new BufferedReader(new InputStreamReader(System.in));
+           }
+        public FastReader(String s)throws FileNotFoundException{
+       br=new BufferedReader(new FileReader(new File(s)));
+         }
+       String next(){
+         while(st==null ||!st.hasMoreElements()){
+             try{ 
+                  st=new StringTokenizer(br.readLine()); 
+                   }
+             catch(IOException e){
+                  e.printStackTrace();
+                     }
+              }
+             return st.nextToken();
+          }
+        int nextInt(){
+           return Integer.parseInt(next());
+         }
+        long nextLong(){
+          return Long.parseLong(next());
+           }
+         Double nextDouble(){
+          return Double.parseDouble(next());
+           }
+       String nextLine(){
+          String str="";
+         try{
+            str=br.readLine();
+            }
+         catch(IOException e){
+            e.printStackTrace();
+           }
+         return str;
+       }
+  }
+        final static int N = (int) (1e5 + 10);
+	static char[] a=new char[N];
+	static String s;
+	static int sum;
+  public  static void main(String args[]){
+    FastReader sc=new FastReader();
+         int t=sc.nextInt();
+		while(t>0) {
+			t--;
+			s=sc.next();
+			s="0"+s+"0";
+			boolean flag=true;
+			for(int i=1;i<s.length()-1;i++) {
+				a[i]=s.charAt(i);
+				if(s.charAt(i)=='?') {
+						if(a[i-1]!='a'&&s.charAt(i+1)!='a') a[i]='a';
+						if(a[i-1]!='b'&&s.charAt(i+1)!='b') a[i]='b';
+						if(a[i-1]!='c'&&s.charAt(i+1)!='c') a[i]='c';
+				}
+				else if(s.charAt(i)==s.charAt(i+1)) {
+					flag=false;
+					System.out.println(-1);
+					break;
+				}
+				
+			}
+			if(flag) {
+				for(int i=1;i<s.length()-1;i++) System.out.print(a[i]);
+				System.out.println();
+			}
+			
+		}
+	
+    }
+ }
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const N: usize = 100_000 + 10;
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+
+    fn next(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next().parse::<i32>().unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32() as usize;
+
+    let mut a: Vec<char> = vec!['\0'; N];
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let mut s = sc.next();
+        s = format!("0{}0", s);
+
+        let chars: Vec<char> = s.chars().collect();
+        let n = chars.len();
+        let mut flag = true;
+
+        for i in 1..n - 1 {
+            a[i] = chars[i];
+            if chars[i] == '?' {
+                if a[i - 1] != 'a' && chars[i + 1] != 'a' {
+                    a[i] = 'a';
+                }
+                if a[i - 1] != 'b' && chars[i + 1] != 'b' {
+                    a[i] = 'b';
+                }
+                if a[i - 1] != 'c' && chars[i + 1] != 'c' {
+                    a[i] = 'c';
+                }
+            } else if chars[i] == chars[i + 1] {
+                flag = false;
+                out.push_str("-1\n");
+                break;
+            }
+        }
+
+        if flag {
+            for i in 1..n - 1 {
+                out.push(a[i]);
+            }
+            out.push('\n');
+        }
+    }
+
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

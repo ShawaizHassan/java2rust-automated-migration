@@ -1,0 +1,368 @@
+INDEX: 22 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Main {
+
+    private static int m;
+    private static int b;
+
+    private static long sum(long x, long y) {
+        return (x + 1) * (y + 1) * (x + y) / 2;
+    }
+
+    private static long y(long x) {
+        return (long) (-(double) x / m + b);
+    }
+
+    private static long x(long y) {
+        return m * (b - y);
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        m = in.nextInt();
+        b = in.nextInt();
+
+        long max = 0;
+
+        for (int y = 0; y <= b; ++y) {
+            long s = sum(x(y), y);
+            if (max < s)
+                max = s;
+        }
+
+        System.out.println(max);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class A implements Runnable {
+	private static BufferedReader in;
+	private static PrintWriter out;
+	private static StringTokenizer st;
+	private static Random rnd;
+
+	private long getPair(long x, long y) {
+		return x * Integer.MAX_VALUE + y;
+	}
+
+	private void solve() throws IOException {
+		int n = nextInt();
+		Map<Integer, Integer> byX = new TreeMap<>();
+		Map<Integer, Integer> byY = new TreeMap<>();
+		Map<Long, Integer> cnt = new TreeMap<>();
+		long result = 0;
+		for (int i = 0; i < n; i++) {
+			int x = nextInt(), y = nextInt();
+			result += increment(byX, x);
+			result += increment(byY, y);
+			result -= increment(cnt, getPair(x, y));
+		}
+		out.println(result);
+	}
+
+	private int increment(Map<Long, Integer> m, long i) {
+		Integer b = m.get(i);
+		if (b == null)
+			b = 0;
+		m.put(i, b + 1);
+		return b;
+	}
+
+	private int increment(Map<Integer, Integer> m, int i) {
+		Integer b = m.get(i);
+		if (b == null)
+			b = 0;
+		m.put(i, b + 1);
+		return b;
+	}
+
+	public static void main(String[] args) {
+		new A().run();
+	}
+
+	public void run() {
+		try {
+			in = new BufferedReader(new InputStreamReader(System.in));
+			out = new PrintWriter(System.out);
+
+			rnd = new Random();
+
+			solve();
+
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(42);
+		}
+	}
+
+	private String nextToken() throws IOException {
+		while (st == null || !st.hasMoreTokens()) {
+			String line = in.readLine();
+
+			if (line == null)
+				return null;
+
+			st = new StringTokenizer(line);
+		}
+
+		return st.nextToken();
+	}
+
+	private int nextInt() throws IOException {
+		return Integer.parseInt(nextToken());
+	}
+
+	private long nextLong() throws IOException {
+		return Long.parseLong(nextToken());
+	}
+
+	private double nextDouble() throws IOException {
+		return Double.parseDouble(nextToken());
+	}
+}
+```
+Translated Rust:
+```
+use std::collections::BTreeMap;
+use std::io::{self, Read};
+
+const INT_MAX: i64 = 2_147_483_647;
+
+fn get_pair(x: i64, y: i64) -> i64 {
+    x * INT_MAX + y
+}
+
+fn increment_i32(m: &mut BTreeMap<i32, i32>, key: i32) -> i64 {
+    let prev = *m.get(&key).unwrap_or(&0);
+    m.insert(key, prev + 1);
+    prev as i64
+}
+
+fn increment_i64(m: &mut BTreeMap<i64, i32>, key: i64) -> i64 {
+    let prev = *m.get(&key).unwrap_or(&0);
+    m.insert(key, prev + 1);
+    prev as i64
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut by_x: BTreeMap<i32, i32> = BTreeMap::new();
+    let mut by_y: BTreeMap<i32, i32> = BTreeMap::new();
+    let mut cnt: BTreeMap<i64, i32> = BTreeMap::new();
+
+    let mut result: i64 = 0;
+
+    for _ in 0..n {
+        let x: i32 = it.next().unwrap().parse().unwrap();
+        let y: i32 = it.next().unwrap().parse().unwrap();
+
+        result += increment_i32(&mut by_x, x);
+        result += increment_i32(&mut by_y, y);
+        result -= increment_i64(&mut cnt, get_pair(x as i64, y as i64));
+    }
+
+    print!("{}", result);
+}
+```
+
+Java:
+```
+//package com.company;
+import java.util.*;
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args){
+        int t = scanner.nextInt();
+        for(int i1 = 0 ;i1<t;i1++){
+            long x = scanner.nextInt();
+            long y = scanner.nextInt();
+            long a = scanner.nextInt();
+            long b = scanner.nextInt();
+            long x1  = y-x;
+            long x2 = a+b;
+            if(x1%x2==0){
+                System.out.println(x1/x2);
+            }else {
+                System.out.println(-1);
+            }
+        }
+    }
+    private static Scanner scanner = new Scanner(System.in);
+    private static int max(int[] array ){
+        int min = Integer.MIN_VALUE;
+        for(int i = 0;i< array.length;i++){
+            if(array[i]>min){
+                min = array[i];
+            }
+        }
+        return min;
+    }
+    private static int min(int[] array ){
+        int min = Integer.MAX_VALUE;
+        for(int i = 0;i< array.length;i++){
+            if(array[i]<min){
+                min = array[i];
+            }
+        }
+        return min;
+    }
+    private static void readArray(int[] array){
+        for(int i = 0;i< array.length;i++){
+            array[i] = scanner.nextInt();
+        }
+    }
+    private static void printarray(int[] array){
+        for(int i = 0; i< array.length;i++){
+            System.out.print(array[i]);
+        }
+    }
+    private static int gcd(int a , int b){
+       if(b==0) return  a;
+       else return gcd(b,a%b);
+    }
+    private static int fact(int n){
+        if(n==1) return 1;
+        else return n*fact(n-1);
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if !c.is_ascii_digit() {
+                break;
+            }
+            num = num * 10 + (c - b'0') as i64;
+            self.idx += 1;
+        }
+        sign * num
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        self.next_i64() as i32
+    }
+}
+
+fn max(array: &[i32]) -> i32 {
+    let mut minv = i32::MIN;
+    for &v in array {
+        if v > minv {
+            minv = v;
+        }
+    }
+    minv
+}
+
+fn min(array: &[i32]) -> i32 {
+    let mut minv = i32::MAX;
+    for &v in array {
+        if v < minv {
+            minv = v;
+        }
+    }
+    minv
+}
+
+fn read_array(scanner: &mut Scanner, array: &mut [i32]) {
+    for v in array.iter_mut() {
+        *v = scanner.next_i32();
+    }
+}
+
+fn printarray(array: &[i32]) {
+    for &v in array {
+        print!("{}", v);
+    }
+}
+
+fn gcd(a: i32, b: i32) -> i32 {
+    if b == 0 { a } else { gcd(b, a % b) }
+}
+
+fn fact(n: i32) -> i32 {
+    if n == 1 { 1 } else { n * fact(n - 1) }
+}
+
+fn main() {
+    let mut scanner = Scanner::new();
+    let t = scanner.next_i32();
+    let mut out = String::new();
+    for _ in 0..t {
+        let x = scanner.next_i64();
+        let y = scanner.next_i64();
+        let a = scanner.next_i64();
+        let b = scanner.next_i64();
+        let x1 = y - x;
+        let x2 = a + b;
+        if x1 % x2 == 0 {
+            out.push_str(&(x1 / x2).to_string());
+            out.push('\n');
+        } else {
+            out.push_str("-1\n");
+        }
+    }
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

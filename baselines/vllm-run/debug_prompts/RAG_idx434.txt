@@ -1,0 +1,475 @@
+INDEX: 434 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+
+
+public class Solution {
+    static int max;
+    public static void main (String[] args) throws java.lang.Exception
+	{
+        FastReader fr = new FastReader();
+        int n = fr.nextInt();
+        int k = fr.nextInt();
+        int arr[] = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i] = fr.nextInt();
+        }
+        int even = 0, odd = 0;
+        ArrayList<Integer> al = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            if(i!=0){
+                if(even == odd){
+                    al.add(Math.abs(arr[i]-arr[i-1]));
+                }
+            }
+            if(arr[i]%2 == 0){
+                even++;
+            }
+            else{
+                odd++;
+            }
+        }
+        Collections.sort(al);
+        int count = 0;
+        for(int i=0;i<al.size();i++){
+            int element = al.get(i);
+            if(element<=k){
+                count++;
+                k-=element;
+            }
+            else{
+                break;
+            }
+        }
+        System.out.println(count);
+    }
+
+    
+
+    static int gcd(int a, int b) {
+      if (b == 0) 
+        return a; 
+      return gcd(b, a % b);  
+    } 
+ 
+    static int lcm(int a, int b){
+        int g = gcd(a,b);
+        return a*(b/g);
+    }
+ 
+    static int exponentMod(int A,  int B, int C)  {    
+        if (A == 0)  
+            return 0;  
+        if (B == 0)  
+            return 1;    
+        long y;  
+        if (B % 2 == 0) 
+        {  
+            y = exponentMod(A, B / 2, C);  
+            y = (y * y) % C;  
+        }    
+        else 
+        {  
+            y = A % C;  
+            y = (y * exponentMod(A, B - 1,  C) % C) % C;  
+        }  
+        return (int)((y + C) % C);  
+    }
+ 
+    static class FastReader{ 
+        BufferedReader br; 
+        StringTokenizer st; 
+ 
+        public FastReader() 
+        { 
+            br = new BufferedReader(new
+                     InputStreamReader(System.in)); 
+        } 
+ 
+        String next() 
+        { 
+            while (st == null || !st.hasMoreElements()) 
+            { 
+                try
+                { 
+                    st = new StringTokenizer(br.readLine()); 
+                } 
+                catch (IOException  e) 
+                { 
+                    e.printStackTrace(); 
+                } 
+            } 
+            return st.nextToken(); 
+        } 
+ 
+        int nextInt() 
+        { 
+            return Integer.parseInt(next()); 
+        } 
+ 
+        long nextLong() 
+        { 
+            return Long.parseLong(next()); 
+        } 
+ 
+        double nextDouble() 
+        { 
+            return Double.parseDouble(next()); 
+        } 
+ 
+        String nextLine() 
+        { 
+            String str = ""; 
+            try
+            { 
+                str = br.readLine(); 
+            } 
+            catch (IOException e) 
+            { 
+                e.printStackTrace(); 
+            } 
+            return str; 
+        } 
+    }    
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.*;
+import java.io.*;
+
+public class GCD_Compression {
+
+	static class FastReader {
+		BufferedReader br;
+		StringTokenizer st;
+
+		public FastReader() {
+			br = new BufferedReader(new InputStreamReader(System.in));
+		}
+
+		String next() {
+			while (st == null || !st.hasMoreElements()) {
+				try {
+					st = new StringTokenizer(br.readLine());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return st.nextToken();
+		}
+
+		int nextInt() {
+			return Integer.parseInt(next());
+		}
+
+		long nextLong() {
+			return Long.parseLong(next());
+		}
+
+		double nextDouble() {
+			return Double.parseDouble(next());
+		}
+
+		String nextLine() {
+			String str = "";
+			try {
+				str = br.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return str;
+		}
+
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		FastReader t = new FastReader();
+		PrintWriter o = new PrintWriter(System.out);
+		int test = t.nextInt();
+
+		while (test-- > 0) {
+			List<Integer> odd = new ArrayList<>();
+			List<Integer> even = new ArrayList<>();
+			int n = t.nextInt();
+
+			for (int i = 0; i < 2 * n; ++i) {
+				int x = t.nextInt();
+
+				if ((x & 1) == 1)
+					odd.add(i + 1);
+				else
+					even.add(i + 1);
+			}
+
+			int i = 0, j = 0, count = 0;
+
+			while (count < n - 1) {
+				if (i <= odd.size() - 2) {
+					o.println(odd.get(i) + " " + odd.get(i + 1));
+					i += 2;
+					count++;
+				} else {
+					o.println(even.get(j) + " " + even.get(j + 1));
+					count++;
+					j += 2;
+				}
+			}
+		}
+
+		o.flush();
+		o.close();
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+    let test = fs.next_i32();
+    let mut out = String::new();
+
+    let mut t = test;
+    while t > 0 {
+        t -= 1;
+        let n = fs.next_i32() as usize;
+
+        let mut odd: Vec<usize> = Vec::new();
+        let mut even: Vec<usize> = Vec::new();
+
+        for i in 0..(2 * n) {
+            let x = fs.next_i32();
+            if (x & 1) == 1 {
+                odd.push(i + 1);
+            } else {
+                even.push(i + 1);
+            }
+        }
+
+        let mut i = 0usize;
+        let mut j = 0usize;
+        let mut count = 0usize;
+
+        while count < n - 1 {
+            if i + 1 < odd.len() {
+                out.push_str(&format!("{} {}\n", odd[i], odd[i + 1]));
+                i += 2;
+                count += 1;
+            } else {
+                out.push_str(&format!("{} {}\n", even[j], even[j + 1]));
+                j += 2;
+                count += 1;
+            }
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.io.*;
+import java.math.*;
+public class A
+{
+    static BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st=null;
+    static String next()
+    {
+        while(st==null || !st.hasMoreElements())
+        {
+            try{
+                st=new StringTokenizer(br.readLine());
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return st.nextToken();
+    }
+    static int nextInt()
+    {
+        return Integer.parseInt(next());
+    }
+    static long nextLong()
+    {
+        return Long.parseLong(next());
+    }
+    
+    static double nextDouble(){
+        return Double.parseDouble(next());
+    } 
+   public static void main(String[] args) {
+        try{
+                int n=nextInt();
+				int m=nextInt();
+				int c[];
+				c=new int[n];
+				for(int i=0;i<n;i++)
+				{
+					c[i]=nextInt();
+				}
+				ArrayList<Integer> al=new ArrayList<>();
+				for(int i=0;i<m;i++)
+				{
+					int x=nextInt();
+					al.add(x);
+				}
+				int i=0;
+				int count=0;
+				while(!al.isEmpty() && i<n)
+				{
+					if(count>0)
+					{
+					  i++;
+					}
+					int b=al.get(0);
+					//bw.write(b+" "+c[0]+"\n");
+					al.remove(new Integer(b));
+					while(i<n)
+					{
+						if(b>=c[i])	
+						{
+							count++;
+							break;
+						}
+						  i++;
+					}
+				}
+				bw.write(count+"\n");
+				bw.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let m = sc.next_i32() as usize;
+
+    let mut c: Vec<i32> = vec![0; n];
+    for i in 0..n {
+        c[i] = sc.next_i32();
+    }
+
+    let mut al: Vec<i32> = Vec::with_capacity(m);
+    for _ in 0..m {
+        let x = sc.next_i32();
+        al.push(x);
+    }
+
+    let mut i: usize = 0;
+    let mut count: i32 = 0;
+
+    while !al.is_empty() && i < n {
+        if count > 0 {
+            i += 1;
+        }
+        let b = al[0];
+        // remove first occurrence of value b (like al.remove(new Integer(b)) in Java)
+        if let Some(pos) = al.iter().position(|&v| v == b) {
+            al.remove(pos);
+        }
+
+        while i < n {
+            if b >= c[i] {
+                count += 1;
+                break;
+            }
+            i += 1;
+        }
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!("{}\n", count));
+    let mut w = io::BufWriter::new(io::stdout());
+    w.write_all(out.as_bytes()).unwrap();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

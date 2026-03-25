@@ -1,0 +1,328 @@
+INDEX: 191 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+
+
+public class CF_218_2_B {
+    static HashMap<Integer, Integer> weights = new HashMap<>();
+    static int ans = 1 << 30;
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] line = br.readLine().split("\\s");
+        int a = Integer.parseInt(line[0]);
+        int b = Integer.parseInt(line[1]);
+        
+        f(a, 0);
+        f2(b, 0);
+        if (ans == 1 << 30)
+            System.out.println(-1);
+        else
+            System.out.println(ans);
+    }
+    
+    static void f(int a, int d) {
+        if (weights.containsKey(a))
+            return;
+        
+        weights.put(a, d);
+
+        if (a % 2 == 0)
+            f(a / 2, d + 1);
+        if (a % 3 == 0)
+            f(a / 3, d + 1);
+        if (a % 5 == 0)
+            f(a / 5, d + 1);
+    }
+    
+    static void f2(int b, int d) {
+        if (weights.containsKey(b)) {
+            ans = Math.min(ans, d + weights.get(b));
+            return;
+        }
+
+        if (b % 2 == 0)
+            f2(b / 2, d + 1);
+        if (b % 3 == 0)
+            f2(b / 3, d + 1);
+        if (b % 5 == 0)
+            f2(b / 5, d + 1);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class Main{
+  public static void main(String[] args){
+    Scanner sc = new Scanner(System.in);
+    int a,b,c,d,e,f,g;
+    a = sc.nextInt();
+    Vector<Integer> x = new Vector<Integer>();
+    g = 0;
+    e = 0;
+    f = 0;
+    d = 0;
+    for(b = 0;b < a;b++){
+      c = sc.nextInt();
+      if(c == 0){
+        x.add(c);
+      }
+      if(c == 100){
+        x.add(c);
+      }
+      if(c >= 1 && c<= 9){
+        if(d == 0){
+          d++;
+          x.add(c);
+        }
+      }
+      if(c >= 10 && c <= 99){
+        if(c % 10 == 0){
+          if(e == 0){
+            e++;
+            x.add(c);
+          }
+        }
+        else{
+          if(d == 0 && f == 0 && e == 0){
+            f++;
+            x.add(c);
+            g = x.size();
+          }
+        }
+      }
+    }
+    if(e >= 1 && f >= 1){
+      x.remove(g-1);
+      f--;
+    }
+    else if(d >= 1 && f >= 1){
+      x.remove(g-1);
+    }
+    System.out.println(x.size());
+    for(b = 0;b < x.size();b++){
+      System.out.print(x.get(b)+" ");
+    }
+    System.out.println();
+  }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let a: i32 = sc.next_i32();
+    let mut x: Vec<i32> = Vec::new();
+
+    let mut g: i32 = 0;
+    let mut e: i32 = 0;
+    let mut f: i32 = 0;
+    let mut d: i32 = 0;
+
+    for _b in 0..a {
+        let c: i32 = sc.next_i32();
+
+        if c == 0 {
+            x.push(c);
+        }
+        if c == 100 {
+            x.push(c);
+        }
+        if (1..=9).contains(&c) {
+            if d == 0 {
+                d += 1;
+                x.push(c);
+            }
+        }
+        if (10..=99).contains(&c) {
+            if c % 10 == 0 {
+                if e == 0 {
+                    e += 1;
+                    x.push(c);
+                }
+            } else {
+                if d == 0 && f == 0 && e == 0 {
+                    f += 1;
+                    x.push(c);
+                    g = x.len() as i32;
+                }
+            }
+        }
+    }
+
+    if e >= 1 && f >= 1 {
+        let idx = (g - 1) as usize;
+        x.remove(idx);
+        f -= 1;
+    } else if d >= 1 && f >= 1 {
+        let idx = (g - 1) as usize;
+        x.remove(idx);
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!("{}\n", x.len()));
+    for v in &x {
+        out.push_str(&format!("{} ", v));
+    }
+    out.push('\n');
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class SNT_3 {
+    
+    static  int n;
+    static int nMAX =  1000006;
+    static boolean[] f = new boolean[nMAX+1];
+            
+
+    static void sNT() {
+        for (int i = 0; i <= nMAX; i++) {
+            f[i] = true;
+        }
+        f[0] = false;
+        f[1] = false;
+        for (int i = 2; i <= nMAX; i++) {
+            if (f[i]) {
+                for (int j = 2 * i; j <= nMAX ; j+=i) {
+                    f[j] = false;
+                }
+            }
+        }
+
+    }
+    static Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) {
+        sNT();
+        n = sc.nextInt();
+        for(int i = 0 ; i < n ;  i++){
+            long b = sc.nextLong();
+            double c = Math.sqrt(b);
+            int d = (int)Math.sqrt(b);
+            if(f[d] && c - d == 0){
+                System.out.println("YES");
+            }
+            else{
+                System.out.println("NO");
+            }
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const NMAX: usize = 1_000_006;
+
+fn sieve() -> Vec<bool> {
+    let mut f = vec![true; NMAX + 1];
+    if NMAX >= 0 {
+        f[0] = false;
+    }
+    if NMAX >= 1 {
+        f[1] = false;
+    }
+    for i in 2..=NMAX {
+        if f[i] {
+            let mut j = i * 2;
+            while j <= NMAX {
+                f[j] = false;
+                j += i;
+            }
+        }
+    }
+    f
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let f = sieve();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+    for _ in 0..n {
+        let b: i64 = it.next().unwrap().parse().unwrap();
+        let c = (b as f64).sqrt();
+        let d = c as i32;
+
+        let is_square = (d as i64) * (d as i64) == b;
+        let is_prime_root = d >= 0 && (d as usize) <= NMAX && f[d as usize];
+
+        if is_prime_root && is_square {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

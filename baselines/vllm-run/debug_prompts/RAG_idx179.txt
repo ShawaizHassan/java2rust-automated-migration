@@ -1,0 +1,240 @@
+INDEX: 179 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+/**
+ * @author artyom
+ */
+public class Tetrahedron {
+	private static final int MOD = 1_000_000_007;
+
+	public static void main(String args[]) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int[] dp = new int[]{1, 1, 1, 0};
+		for (int i = 1; i < n; i++) {
+			int t0 = (dp[1] + dp[2]) % MOD + dp[3];
+			int t1 = (dp[0] + dp[2]) % MOD + dp[3];
+			int t2 = (dp[0] + dp[1]) % MOD + dp[3];
+			int t3 = (dp[0] + dp[1]) % MOD + dp[2];
+			dp[0] = t0 % MOD;
+			dp[1] = t1 % MOD;
+			dp[2] = t2 % MOD;
+			dp[3] = t3 % MOD;
+		}
+		System.out.println(dp[3]);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Scanner;
+
+public class Solution{
+    static int mod = 1000000007 ;
+    public static void main(String args[]){
+        Scanner scn= new Scanner(System.in);
+
+        int n = scn.nextInt();
+        int arr[] = new int[n];
+   
+
+        for(int i = 0 ; i < arr.length ; i++){
+            arr[i] = scn.nextInt() - 1;
+        }
+
+        int dp[] = new int[n + 1];
+        for(int i = 0 ; i < arr.length ; i++){
+            dp[i + 1] = 2*dp[i] + 2 - dp[arr[i]];
+
+            dp[i + 1] %= mod;
+
+            if(dp[i + 1] < 0){
+                dp[i + 1] += mod;
+            }
+        }
+
+
+        System.out.println(dp[dp.length - 1]);
+
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 1_000_000_007;
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut arr: Vec<usize> = vec![0; n];
+    for i in 0..n {
+        let x: i64 = it.next().unwrap().parse().unwrap();
+        arr[i] = (x - 1) as usize;
+    }
+
+    let mut dp: Vec<i64> = vec![0; n + 1];
+    for i in 0..n {
+        let val = 2 * dp[i] + 2 - dp[arr[i]];
+        dp[i + 1] = val % MOD;
+        if dp[i + 1] < 0 {
+            dp[i + 1] += MOD;
+        }
+    }
+
+    println!("{}", dp[n]);
+}
+```
+
+Java:
+```
+
+import java.util.Scanner;
+
+
+public class Main {
+    private static final int mod = (int)1e9+7;
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        try{
+
+        Scanner sc = new Scanner(System.in);
+        String input1 = sc.nextLine();
+        String input2 = sc.nextLine();
+        
+        int n = Integer.parseInt(input1);
+        
+        String str1[] = input2.split(" ");
+        int xs[] = new int[n];
+        
+        for(int i=0; i<str1.length; i++){
+            xs[i] = Integer.parseInt(str1[i].trim());
+        }
+        
+        int[] pow2 = new int[n+1];
+        pow2[0] = 1;
+        for(int i = 1; i < pow2.length; i++) pow2[i] = (int)(pow2[i-1] * 2L % mod);
+        
+        int[] dp = new int[1<<20];
+        for(int x : xs) {
+            dp[x]++;
+        }
+        
+        
+        for(int i = 0; i < 20; i++) {
+            for(int j = 0; j < 1 << 20; j++) {
+                if((j>>>i&1) == 0) {
+                    dp[j] += dp[j|1<<i];
+                }
+            }
+        }
+        
+        long ans = 0;
+        for(int i = 0; i < 1 << 20; i++) {
+            ans += (1L-Integer.bitCount(i)%2*2) * pow2[dp[i]]%mod;
+        }
+        
+        System.out.println((ans % mod + mod) % mod);
+        
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MOD: i64 = 1_000_000_007;
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+
+    let mut lines = input.lines();
+    let input1 = lines.next().unwrap_or("").trim().to_string();
+    let input2 = lines.next().unwrap_or("").to_string();
+
+    let n: usize = input1.parse::<i32>().unwrap_or(0).max(0) as usize;
+
+    let mut xs = vec![0i32; n];
+    let parts: Vec<&str> = input2.split(' ').collect();
+    for i in 0..parts.len() {
+        if i >= n {
+            break;
+        }
+        let t = parts[i].trim();
+        if t.is_empty() {
+            continue;
+        }
+        xs[i] = t.parse::<i32>().unwrap();
+    }
+
+    let mut pow2 = vec![0i64; n + 1];
+    pow2[0] = 1;
+    for i in 1..=n {
+        pow2[i] = (pow2[i - 1] * 2) % MOD;
+    }
+
+    let size = 1usize << 20;
+    let mut dp = vec![0i32; size];
+    for &x in &xs {
+        let idx = x as usize;
+        if idx < size {
+            dp[idx] += 1;
+        }
+    }
+
+    for i in 0..20 {
+        for j in 0..size {
+            if ((j >> i) & 1) == 0 {
+                let add = dp[j | (1usize << i)];
+                dp[j] += add;
+            }
+        }
+    }
+
+    let mut ans: i64 = 0;
+    for i in 0..size {
+        let parity = (i as u32).count_ones() & 1;
+        let sign: i64 = if parity == 0 { 1 } else { -1 };
+        let cnt = dp[i] as usize;
+        let term = (sign * pow2[cnt]) % MOD;
+        ans += term;
+    }
+
+    let out = ((ans % MOD) + MOD) % MOD;
+    println!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

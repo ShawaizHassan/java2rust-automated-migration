@@ -1,0 +1,533 @@
+INDEX: 82 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Random;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	static int MOD = 1000 * 1000 * 1000 + 7;
+
+	public static void shuffleArray(int[] arr) {
+		int n = arr.length;
+		Random rnd = new Random();
+		for (int i = 0; i < n; ++i) {
+			int tmp = arr[i];
+			int randomPos = i + rnd.nextInt(n - i);
+			arr[i] = arr[randomPos];
+			arr[randomPos] = tmp;
+		}
+	}
+
+	public static void main(String[] args) {
+		InputStream inputStream = System.in;
+		OutputStream outputStream = System.out;
+		InputReader in = new InputReader(inputStream);
+		PrintWriter out = new PrintWriter(outputStream);
+		solve3(in, out);
+		out.close();
+		System.exit(0);
+	}
+
+	static class Pair implements Comparable<Pair> {
+		int x;
+		int y;
+
+		Pair(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		@Override
+		public int compareTo(Pair o) {
+			int comp = Integer.compare(x, o.x);
+			int comp2 = Integer.compare(y, o.y);
+			if (comp != 0) {
+				return comp;
+			} else {
+				return comp2;
+			}
+		}
+
+	}
+
+	private static void solve3(InputReader in, PrintWriter out) {
+		int a = in.nextInt();
+		int b = in.nextInt();
+		int[][] dp = new int[201][201];
+		for (int sum = 2; sum <= 200; sum++) {
+			for (int i = 1; i <= sum; i++) {
+				int j = sum - i;
+
+				if (i - 2 >= 0 && j > 0) {
+					dp[i][j] = Math.max(dp[i][j], dp[i - 2][j + 1] + 1);
+				}
+				if (j - 2 >= 0 && i > 0) {
+					dp[i][j] = Math.max(dp[i][j], dp[i + 1][j - 2] + 1);
+				}
+			}
+		}
+
+		out.print(dp[a][b]);
+	}
+
+	private static void solve2(InputReader in, PrintWriter out) {
+		int n = in.nextInt();
+		int[] tab = new int[1002];
+		for (int i = 0; i < n; i++) {
+			int curr = in.nextInt();
+			tab[curr]++;
+		}
+		int res = 0;
+		int all = 0;
+		for (int i = 1000; i >= 1; i--) {
+			res += Math.min(tab[i], all);
+			all += tab[i];
+		}
+
+		out.print(res);
+	}
+
+	private static void solve(InputReader in, PrintWriter out) {
+
+		int n = in.nextInt();
+		long a = in.nextInt();
+		long b = in.nextInt();
+		long T = in.nextLong();
+		char[] s = in.next().toCharArray();
+		long[] right = new long[n];
+		long[] left = new long[n];
+		right[0] = 1 + (s[0] == 'w' ? b : 0);
+		left[0] = 0;
+
+		for (int i = 1; i < n; i++) {
+			long changeCost = (s[i] == 'w' ? b : 0);
+			right[i] = right[i - 1] + a + changeCost + 1;
+		}
+		for (int i = 1; i < n; i++) {
+			int pos = n - i;
+			long changeCost = (s[pos] == 'w' ? b : 0);
+			left[pos] = left[(pos + 1) % n] + a + changeCost + 1;
+		}
+
+		long best = 0;
+		int bestL = n - 1;
+		for (int i = n - 1; i >= 0; i--) { // right
+			long time = right[i];
+			if (time <= T) {
+				best = Math.max(best, i + 1);
+				long rem = T - time;
+				rem -= a * i; // back time
+				while (bestL > i && rem >= left[bestL]) {
+					best = Math.max(best, i + 1 + (n - bestL));
+					bestL--;
+				}
+			}
+		}
+
+		char[] tmp = new char[s.length];
+		tmp[0] = s[0];
+		for (int i = 1; i < n; i++) {
+			tmp[i] = s[n - i];
+		}
+		for (int i = 0; i < n; i++) {
+			s[i] = tmp[i];
+		}
+
+		// **** left
+		right = new long[n];
+		left = new long[n];
+		right[0] = 1 + (s[0] == 'w' ? b : 0);
+		left[0] = 0;
+
+		for (int i = 1; i < n; i++) {
+			long changeCost = (s[i] == 'w' ? b : 0);
+			right[i] = right[i - 1] + a + changeCost + 1;
+		}
+		for (int i = 1; i < n; i++) {
+			int pos = n - i;
+			long changeCost = (s[pos] == 'w' ? b : 0);
+			left[pos] = left[(pos + 1) % n] + a + changeCost + 1;
+		}
+
+		bestL = n - 1;
+		for (int i = n - 1; i >= 0; i--) { // right
+			long time = right[i];
+			if (time <= T) {
+				best = Math.max(best, i + 1);
+				long rem = T - time;
+				rem -= a * i; // back time
+				while (bestL > i && rem >= left[bestL]) {
+					best = Math.max(best, i + 1 + (n - bestL));
+					bestL--;
+				}
+			}
+		}
+		out.print(best);
+	}
+
+	/*
+	 * 
+	 */
+	// --------------------------------------------------------
+	static class InputReader {
+		public BufferedReader reader;
+		public StringTokenizer tokenizer;
+
+		public InputReader(InputStream stream) {
+			reader = new BufferedReader(new InputStreamReader(stream), 32768);
+			tokenizer = null;
+		}
+
+		public String next() {
+			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+				try {
+					tokenizer = new StringTokenizer(reader.readLine());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			return tokenizer.nextToken();
+		}
+
+		public int nextInt() {
+			return Integer.parseInt(next());
+		}
+
+		public long nextLong() {
+			return Long.parseLong(next());
+		}
+
+		public double nextDouble() {
+			return Double.parseDouble(next());
+		}
+
+		public String nextLine() {
+			String str = "";
+			try {
+				str = reader.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return str;
+		}
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class B1000{
+	
+	private void solve() throws Exception {
+		int n = nextInt()+2;
+		int M = nextInt();
+		int[] a = new int[n];
+		a[0] = 0;
+		a[n-1] = M;
+		for(int i = 1; i < n-1; i++) a[i] = nextInt();
+		int[] left = new int[n];
+		for(int i = 1; i < n; i++) {
+			if(i%2 == 1) left[i] = left[i-1]+a[i]-a[i-1];
+			else left[i] = left[i-1];
+		}
+		int total = left[n-1];
+		int best = total;
+		for(int i = 0; i < n-1; i++) {
+			int cur = left[i]-a[i]-1+M-(total-left[i+1]);
+			best = Math.max(best,  cur);
+		}
+		out.println(best);
+	}
+	
+	
+	public static void main(String[] args) {
+		(new B1000()).run();
+	}
+
+	private BufferedReader in;
+	private PrintWriter out;
+	private StringTokenizer tokenizer;
+
+	public void run() {
+		try {
+			in = new BufferedReader(new InputStreamReader(System.in));
+			tokenizer = null;
+			out = new PrintWriter(System.out);
+			solve();
+			in.close();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+	private int nextInt() throws IOException {
+		return Integer.parseInt(nextToken());
+	}
+
+	private long nextLong() throws IOException {
+		return Long.parseLong(nextToken());
+	}
+
+	private float nextFloat() throws IOException {
+		return Float.parseFloat(nextToken());
+	}
+
+	private String nextLine() throws IOException {
+		return new String(in.readLine());
+	}
+
+	private String nextToken() throws IOException {
+		while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+			tokenizer = new StringTokenizer(in.readLine());
+		}
+		return tokenizer.nextToken();
+	}
+
+
+}
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = (sc.next_i32() + 2) as usize;
+    let m = sc.next_i32();
+    let mut a = vec![0i32; n];
+    a[0] = 0;
+    a[n - 1] = m;
+    for i in 1..n - 1 {
+        a[i] = sc.next_i32();
+    }
+
+    let mut left = vec![0i32; n];
+    for i in 1..n {
+        if i % 2 == 1 {
+            left[i] = left[i - 1] + a[i] - a[i - 1];
+        } else {
+            left[i] = left[i - 1];
+        }
+    }
+
+    let total = left[n - 1];
+    let mut best = total;
+    for i in 0..n - 1 {
+        let cur = left[i] - a[i] - 1 + m - (total - left[i + 1]);
+        if cur > best {
+            best = cur;
+        }
+    }
+
+    print!("{}", best);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class p566f {
+    public static int N;
+    public static ArrayList<Integer> a = new ArrayList<Integer>();
+    public static int[] dp;
+    public static int[] count = new int[1000010];
+
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        N = in.nextInt();
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < N; i++) {
+            a.add(in.nextInt());
+            max = Math.max(max, a.get(i));
+            count[a.get(i)]++;
+        }
+        dp = new int[max + 1];
+        int res = 0;
+        for (int i = 1; i <= max; i++) {
+            dp[i] += count[i];
+            for (int j = i; j <= max; j += i) {
+                if (dp[j] < dp[i]) {
+                    dp[j] = dp[i];
+                }
+            }
+            res = Math.max(dp[i], res);
+        }
+        out.println(res);
+        out.close();
+    }
+
+    static class InputReader {
+        public BufferedReader reader;
+        public StringTokenizer tokenizer;
+
+        public InputReader(InputStream stream) {
+            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            tokenizer = null;
+        }
+
+        public String next() {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return tokenizer.nextToken();
+        }
+
+        public int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        public long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        public double nextDouble() {
+            return Double.parseDouble(next());
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut a: Vec<i32> = Vec::with_capacity(n);
+    let mut count: Vec<i32> = vec![0; 1_000_010];
+
+    let mut max_val: i32 = i32::MIN;
+    for _ in 0..n {
+        let x = sc.next_i32();
+        a.push(x);
+        if x > max_val {
+            max_val = x;
+        }
+        if x >= 0 {
+            let idx = x as usize;
+            if idx < count.len() {
+                count[idx] += 1;
+            }
+        }
+    }
+
+    let max_u = if max_val < 0 { 0usize } else { max_val as usize };
+    let mut dp: Vec<i32> = vec![0; max_u + 1];
+
+    let mut res: i32 = 0;
+    for i in 1..=max_u {
+        dp[i] += count[i];
+        let mut j = i;
+        while j <= max_u {
+            if dp[j] < dp[i] {
+                dp[j] = dp[i];
+            }
+            j += i;
+        }
+        if dp[i] > res {
+            res = dp[i];
+        }
+    }
+
+    print!("{res}\n");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

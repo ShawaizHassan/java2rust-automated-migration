@@ -1,0 +1,312 @@
+INDEX: 132 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+//package test;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+public class OK_GOOGLE {
+	private static StringTokenizer st;
+	private static BufferedReader in;
+	private static PrintWriter pw;
+	
+	public static void main(String[] args) throws IOException {
+	in = new BufferedReader(new InputStreamReader(System.in));
+	pw = new PrintWriter(new OutputStreamWriter(System.out));
+	int a = nextInt(), b = nextInt(), c = nextInt();
+	if(a > b && c >= 0 || a < b && c <= 0){
+		pw.print("NO");
+		pw.close();
+		return;
+	}
+	if(b - a == 0 || (b - a) % c == 0) {
+		pw.println("YES");
+	}else{
+		pw.print("NO");
+	}
+	in.close();
+	pw.close();
+	}
+
+	private static long nextLong() throws IOException {
+		return Long.parseLong(next());
+	}
+
+	private static double nextDouble() throws IOException {
+		return Double.parseDouble(next());
+	}
+
+	private static int nextInt() throws IOException {
+		return Integer.parseInt(next());
+	}
+
+	private static String next() throws IOException {
+		while (st == null || !st.hasMoreTokens())
+			st = new StringTokenizer(in.readLine());
+		return st.nextToken();
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+
+public class BB {
+    
+    static StringTokenizer st;
+    static BufferedReader in;
+    public static void main(String[] args) throws IOException {
+        in = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+        String s = next();
+        int x = 0, y = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i)=='x')
+                x++;
+            else
+                y++;
+        }
+        int diff = Math.abs(x-y);
+        char w = 'x';
+        if (y > x)
+            w = 'y';
+        for (int i = 1; i <= diff; i++) {
+            pw.print(w);
+        }
+        pw.println();
+        pw.close();
+    }
+    private static int nextInt() throws IOException{
+        return Integer.parseInt(next());
+    }
+    
+    private static long nextLong() throws IOException{
+        return Long.parseLong(next());
+    }
+    
+    private static double nextDouble() throws IOException{
+        return Double.parseDouble(next());
+    }
+    
+    private static String next() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(in.readLine());
+        }
+        return st.nextToken();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let s = match it.next() {
+        Some(v) => v,
+        None => return,
+    };
+
+    let mut x: i32 = 0;
+    let mut y: i32 = 0;
+    for ch in s.chars() {
+        if ch == 'x' {
+            x += 1;
+        } else {
+            y += 1;
+        }
+    }
+
+    let diff: i32 = (x - y).abs();
+    let w: char = if y > x { 'y' } else { 'x' };
+
+    let mut out = String::new();
+    for _ in 0..diff {
+        out.push(w);
+    }
+    out.push('\n');
+
+    let mut stdout = io::BufWriter::new(io::stdout());
+    stdout.write_all(out.as_bytes()).unwrap();
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+
+public class D94 {
+    
+    static StringTokenizer st;
+    static BufferedReader in;
+    static PrintWriter pw;
+    
+    public static void main(String[] args) throws IOException {
+        in = new BufferedReader(new InputStreamReader(System.in));
+        pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+        int n = nextInt();
+        int[]a = new int[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = nextInt();
+        }
+        Arrays.sort(a);
+        int[]cnt = new int[n];
+        int m = a[n-1]-a[0];
+        if (n % 2==1 || m > n/2 || m==0) {
+            System.out.println("NO");
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            cnt[a[i]-a[0]]++;
+        }
+        int L = cnt[0]-1;
+        for (int i = 1; i < m; i++) {
+            if (cnt[i] < L+2) {
+                System.out.println("NO");
+                return;
+            }
+            cnt[i] -= (L+2);
+            L = cnt[i];
+        }
+        if (L != cnt[m]-1)
+            System.out.println("NO");
+        else
+            System.out.println("YES");
+        pw.close();
+    }
+    private static int nextInt() throws IOException{
+        return Integer.parseInt(next());
+    }
+    
+    private static long nextLong() throws IOException{
+        return Long.parseLong(next());
+    }
+    
+    private static double nextDouble() throws IOException{
+        return Double.parseDouble(next());
+    }
+    
+    private static String next() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(in.readLine());
+        }
+        return st.nextToken();
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let mut a = vec![0i32; n];
+    for i in 0..n {
+        a[i] = sc.next_i32();
+    }
+    a.sort();
+
+    let mut cnt = vec![0i32; n];
+    let m = (a[n - 1] - a[0]) as i32;
+
+    if n % 2 == 1 || m > (n as i32) / 2 || m == 0 {
+        print!("NO\n");
+        return;
+    }
+
+    let base = a[0];
+    for &v in &a {
+        let idx = (v - base) as usize;
+        cnt[idx] += 1;
+    }
+
+    let mut l = cnt[0] - 1;
+    for i in 1..(m as usize) {
+        if cnt[i] < l + 2 {
+            print!("NO\n");
+            return;
+        }
+        cnt[i] -= l + 2;
+        l = cnt[i];
+    }
+
+    if l != cnt[m as usize] - 1 {
+        print!("NO\n");
+    } else {
+        print!("YES\n");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

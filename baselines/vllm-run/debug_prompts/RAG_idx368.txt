@@ -1,0 +1,326 @@
+INDEX: 368 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+
+public class Main {
+	public static void main(String args[]){
+		Scanner sc = new Scanner(System.in);
+		
+		int n=sc.nextInt(), m = sc.nextInt(), k = sc.nextInt();
+		
+		int left = k-1, right = n-k,ans=1;
+		int temp =  0;
+
+		m = m-n;
+		
+		while(m>=0){
+			
+			if(temp >= left && temp>=right){
+				temp += m/(Math.min(temp, left)+Math.min(temp, right)+1) +1;
+				break;
+			}
+			m-=Math.min(temp, left);
+			m-=Math.min(temp, right);
+		
+			m--;
+			temp++;
+			
+		}
+			
+		System.out.print(ans+temp-1);
+	}
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+
+
+import java.lang.*;
+import java.util.*;
+
+public class Cubes {
+
+    
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int t=sc.nextInt();
+        for(int w=0;w<t;w++){
+            int n=sc.nextInt();
+            int a[]=new int[n];
+            for(int i=0;i<n;i++){
+                a[i]=sc.nextInt();
+            }
+            long k=(((long)n*(long)(n-1))/2)-1;
+            boolean y=Count(a,k);
+            String s="NO";
+            if(y==true){
+                s="YES";
+            }
+            System.out.println(s);
+        }
+    }static boolean Count(int a[],long k){
+        int n=a.length;
+        
+       int temp[]=new int [n];
+       long m= mergesort(a,temp,0,n-1);
+       
+       if(m<=k)
+           return true;
+        return false;
+    
+    }static long mergesort(int a[],int temp[],int left,int right){
+        int mid;long cnt=0;
+        if(right>left){
+            mid=(right+left)/2;
+            cnt=mergesort(a,temp,left,mid);
+            cnt+=mergesort(a,temp,mid+1,right);
+            cnt+=merge(a,temp,left,mid+1,right);
+        }
+        return cnt;
+    }static long merge(int a[],int temp[],int left,int mid,int right){
+        long cnt=0;
+        int i=left;
+        int j=mid;
+        int k=left;
+        
+        while((i<=mid-1)&&(j<=right)){
+            if(a[i]<=a[j]){
+                temp[k++]=a[i++];
+            }else{
+                temp[k++]=a[j++];
+                cnt+=(mid-i);
+            }
+        }
+        
+        while(i<=mid-1)
+                temp[k++]=a[i++];
+        
+        while(j<=right)
+                temp[k++]=a[j++];
+        
+        for(i=left;i<=right;i++)
+                a[i]=temp[i];
+        
+        return cnt;
+    }
+    
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn merge(a: &mut [i32], temp: &mut [i32], left: usize, mid: usize, right: usize) -> i64 {
+    let mut cnt: i64 = 0;
+    let mut i = left;
+    let mut j = mid;
+    let mut k = left;
+
+    while i <= mid - 1 && j <= right {
+        if a[i] <= a[j] {
+            temp[k] = a[i];
+            i += 1;
+        } else {
+            temp[k] = a[j];
+            j += 1;
+            cnt += (mid - i) as i64;
+        }
+        k += 1;
+    }
+
+    while i <= mid - 1 {
+        temp[k] = a[i];
+        i += 1;
+        k += 1;
+    }
+
+    while j <= right {
+        temp[k] = a[j];
+        j += 1;
+        k += 1;
+    }
+
+    for idx in left..=right {
+        a[idx] = temp[idx];
+    }
+
+    cnt
+}
+
+fn mergesort(a: &mut [i32], temp: &mut [i32], left: usize, right: usize) -> i64 {
+    if right > left {
+        let mid = (right + left) / 2;
+        let mut cnt = mergesort(a, temp, left, mid);
+        cnt += mergesort(a, temp, mid + 1, right);
+        cnt += merge(a, temp, left, mid + 1, right);
+        cnt
+    } else {
+        0
+    }
+}
+
+fn count_ok(a: &mut [i32], k: i64) -> bool {
+    let n = a.len();
+    let mut temp = vec![0i32; n];
+    let m = if n == 0 { 0 } else { mergesort(a, &mut temp, 0, n - 1) };
+    m <= k
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+        let mut a = vec![0i32; n];
+        for i in 0..n {
+            a[i] = it.next().unwrap().parse().unwrap();
+        }
+
+        let nn = n as i64;
+        let k: i64 = (nn * (nn - 1)) / 2 - 1;
+
+        let y = count_ok(&mut a, k);
+        if y {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class C483 {
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		int n = in.nextInt();
+		int k = in.nextInt();
+		int z = n - k;
+		int temp = 1;
+		StringBuilder str = new StringBuilder();
+		str.append(1);
+		int left = 2;
+		int right = n;
+		int m = n - k - 1;
+		for (int i = 0; i < m; ++i) {
+			str.append(" ");
+			str.append(left++);
+
+		}
+
+		while (left <= right) {
+			str.append(" ");
+			str.append(right--);
+			if (left <= right) {
+				str.append(" ");
+				str.append(left++);
+			}
+		}
+		System.out.println(str);
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n: i32 = sc.next_i32();
+    let k: i32 = sc.next_i32();
+
+    let _z = n - k;
+    let _temp = 1i32;
+
+    let mut out = String::new();
+    out.push_str("1");
+
+    let mut left: i32 = 2;
+    let mut right: i32 = n;
+    let m: i32 = n - k - 1;
+
+    for _ in 0..m {
+        out.push(' ');
+        out.push_str(&left.to_string());
+        left += 1;
+    }
+
+    while left <= right {
+        out.push(' ');
+        out.push_str(&right.to_string());
+        right -= 1;
+        if left <= right {
+            out.push(' ');
+            out.push_str(&left.to_string());
+            left += 1;
+        }
+    }
+
+    println!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

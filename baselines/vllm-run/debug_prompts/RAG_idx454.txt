@@ -1,0 +1,306 @@
+INDEX: 454 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.*;
+public class Main {
+    public static void main(String[] args) throws IOException {
+
+        Scanner sc = new Scanner(System.in);
+        int n, k;
+        n = sc.nextInt();
+        k = sc.nextInt();
+        String buff_s = sc.next();
+        char[] s = buff_s.toCharArray();
+
+        boolean ans = false;
+        boolean cur = true;
+
+        int cnt = 0;
+        for (int i = 0; i < n && cur; i++) {
+
+            if (s[i] == 'N')
+                cnt++;
+            else
+                cnt = 0;
+
+            if (cnt > k)
+                cur = false;
+
+        }
+
+        for (int is = 0; is <= n - k && cur && !ans; is++) {
+
+            for (int j = is; j < is + k && cur; j++) {
+                if (s[j] == 'Y')
+                    cur = false;
+            }
+
+            if (cur) {
+
+                if (is > 0 && s[is - 1] == 'N')
+                    cur = false;
+
+                if (is + k < n && s[is + k] == 'N')
+                    cur = false;
+
+            }
+
+            if (cur) {
+
+                ans = true;
+
+            }
+
+            cur = true;
+
+        }
+
+        if (ans) {
+
+            System.out.println("YES");
+
+
+        } else {
+
+            System.out.println("NO");
+
+        }
+
+    }
+
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.*;
+
+public class tC {
+    public static void main(String[] args) throws IOException {
+        boolean oj = System.getProperty("ONLINE_JUDGE") != null;
+/*      Reader reader;
+        Writer writer;
+        //if (!oj) {
+            reader = new FileReader("input.txt");
+            writer = new FileWriter("output.txt");
+//      }
+        Scanner in = oj ? new Scanner(System.in) : new Scanner(new BufferedReader(reader));
+        PrintWriter out = oj ? new PrintWriter(System.out) : new PrintWriter(writer);
+*/      
+        Scanner in = new Scanner(System.in);
+        PrintWriter out = new PrintWriter(System.out);
+        int n = in.nextInt();
+        String s = in.next();
+        int k = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == 'H')
+                k++;
+        }
+        int ans = n;
+        for (int i = 0; i < s.length(); i++) {
+            int cur = 0;
+            for (int j = 0; j < k; j++) {
+                int pos = (i + j) % n;
+                if (s.charAt(pos) == 'T')
+                    cur++;              
+            }
+            if (cur < ans)
+                ans = cur;
+        }
+        out.println(ans);
+        out.flush();
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let s = it.next().unwrap_or("").to_string();
+    let bytes = s.as_bytes();
+    let n_usize = n as usize;
+
+    let mut k: usize = 0;
+    for &b in bytes.iter() {
+        if b == b'H' {
+            k += 1;
+        }
+    }
+
+    let mut ans: i32 = n;
+    for i in 0..bytes.len() {
+        let mut cur: i32 = 0;
+        for j in 0..k {
+            let pos = (i + j) % n_usize;
+            if bytes[pos] == b'T' {
+                cur += 1;
+            }
+        }
+        if cur < ans {
+            ans = cur;
+        }
+    }
+
+    print!("{}", ans);
+    println!();
+}
+```
+
+Java:
+```
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class BB {
+
+	public static void main(String args[])
+	{
+		Scanner scan=new Scanner(System.in);
+		int n=scan.nextInt();
+		int m=scan.nextInt();
+		int ar[][]=new int[n][m];
+		for(int i=0;i<n;i++)
+		{
+			for(int j=0;j<m;j++)
+			{
+				ar[i][j]=scan.nextInt();
+				
+			}
+		}
+		int cur=0;
+		for(int i=0;i<n;i++)
+		{
+			cur=cur^(ar[i][0]);
+		}
+//		System.out.println(cur);
+		int ans[]=new int[n];
+		Arrays.fill(ans, 1);
+		boolean anss=false;
+		boolean done=false;
+		if(cur==0)
+		{
+			for(int i=0;i<n;i++)
+			{
+				if(done) {
+					break;
+				}
+				for(int j=0;j<m;j++)
+				{
+					if(ar[i][j]!=ar[i][0])
+					{
+						ans[i]=(j+1);
+						anss=true;
+						done=true;
+						break;
+					}
+				}
+			}
+		}else {
+			anss=true;
+		}
+		if(!anss)
+		{
+			System.out.println("NIE");
+		}else {
+			System.out.println("TAK");
+			for(int i=0;i<ans.length;i++)
+			{
+				System.out.print(ans[i]+" ");
+			}
+		}
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: usize = it.next().unwrap().parse().unwrap();
+
+    let mut ar = vec![vec![0i32; m]; n];
+    for i in 0..n {
+        for j in 0..m {
+            ar[i][j] = it.next().unwrap().parse().unwrap();
+        }
+    }
+
+    let mut cur: i32 = 0;
+    for i in 0..n {
+        cur ^= ar[i][0];
+    }
+
+    let mut ans = vec![1i32; n];
+    let mut anss = false;
+    let mut done = false;
+
+    if cur == 0 {
+        for i in 0..n {
+            if done {
+                break;
+            }
+            for j in 0..m {
+                if ar[i][j] != ar[i][0] {
+                    ans[i] = (j + 1) as i32;
+                    anss = true;
+                    done = true;
+                    break;
+                }
+            }
+        }
+    } else {
+        anss = true;
+    }
+
+    if !anss {
+        print!("NIE");
+    } else {
+        print!("TAK\n");
+        for i in 0..ans.len() {
+            print!("{} ", ans[i]);
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

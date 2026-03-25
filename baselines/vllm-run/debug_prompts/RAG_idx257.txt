@@ -1,0 +1,412 @@
+INDEX: 257 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.*;
+import java.io.*;
+
+public  class PalinInd{
+    static class FastReader{
+        BufferedReader br;
+        StringTokenizer st;
+        public FastReader(){
+            br=new BufferedReader(new InputStreamReader(System.in));
+        }
+        String next(){
+            while(st==null || !st.hasMoreTokens()){
+                try {
+                    st=new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+        int nextInt(){
+            return Integer.parseInt(next());
+        }
+        long nextLong(){
+            return Long.parseLong(next());
+        }
+        double nextDouble(){
+            return Double.parseDouble(next());
+        }
+        String nextLine(){
+            String str="";
+            try {
+                str=br.readLine().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+    static class FastWriter {
+		private final BufferedWriter bw;
+
+		public FastWriter() {
+			this.bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		}
+
+		public void print(Object object) throws IOException {
+			bw.append("" + object);
+		}
+
+		public void println(Object object) throws IOException {
+			print(object);
+			bw.append("\n");
+		}
+
+		public void close() throws IOException {
+			bw.close();
+		}
+	}
+    public static void main(String[] args) {
+        try {
+            FastReader in=new FastReader();
+            FastWriter out = new FastWriter();
+            int testCases=in.nextInt();
+            for(int z=0;z<testCases;z++)
+            {
+               
+                     
+                       int mat[][]=new int[2][2];
+                     for(int i=0;i<2;i++)
+                   {
+                        for(int j=0;j<2;j++)
+                        {
+                            mat[i][j]=in.nextInt();
+                        }
+                   }
+                   int c=0;
+                   for(int i=0;i<2;i++)
+                   {
+                    for(int j=0;j<2;j++)
+                    {
+                         if(mat[i][j]==1)
+                         {
+                            c++;
+                         }
+                    }
+
+                   }
+                   if(c==0)
+                   {
+                    System.out.println("0");
+                   }
+                   else if(c==1||c==2||c==3)
+                   {
+                         System.out.println("1");
+                   }
+                   
+                   else{
+                     System.out.println("2");
+                   }
+                    
+                    }
+                }
+                catch (Exception e) { 
+            return;
+        }
+            }
+        }
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.util.StringTokenizer;
+
+public class Main {
+    static class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastReader() {
+            br = new BufferedReader(new
+                    InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+    public static void main(String[] args) throws IOException {
+        FastReader sc = new FastReader();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        String s = sc.nextLine();
+        bw.write("Mike\n");
+        char min = s.charAt(0);
+        int len = s.length();
+        for (int i = 1; i < len; i++) {
+            boolean flag = true;
+
+            if (s.charAt(i) <= min) {
+                flag = false;
+                min = s.charAt(i);
+            }
+            if (flag)
+              bw.write("Ann\n");
+            else
+                bw.write("Mike\n");
+
+        }
+        bw.flush();
+
+
+
+    }
+
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+fn main() {
+    // Read entire input (matches Java nextLine() behavior by taking first line)
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+
+    let mut s = input;
+    if s.ends_with('\n') {
+        s.pop();
+        if s.ends_with('\r') {
+            s.pop();
+        }
+    }
+
+    let mut out = String::new();
+
+    out.push_str("Mike\n");
+
+    let bytes = s.as_bytes();
+    if !bytes.is_empty() {
+        let mut min_ch: u8 = bytes[0];
+        let len: usize = bytes.len();
+        for i in 1..len {
+            let mut flag = true;
+            let c = bytes[i];
+            if c <= min_ch {
+                flag = false;
+                min_ch = c;
+            }
+            if flag {
+                out.push_str("Ann\n");
+            } else {
+                out.push_str("Mike\n");
+            }
+        }
+    }
+
+    let mut stdout = io::BufWriter::new(io::stdout());
+    stdout.write_all(out.as_bytes()).unwrap();
+}
+```
+
+Java:
+```
+// Working program with FastReader 
+import java.io.BufferedReader; 
+import java.io.IOException; 
+import java.io.InputStreamReader; 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.util.*; 
+
+public class Main { 
+	static class FastReader { 
+		BufferedReader br; 
+		StringTokenizer st; 
+
+		public FastReader() { 
+			br = new BufferedReader(new InputStreamReader(System.in)); 
+		} 
+
+		String next() { 
+			while (st == null || !st.hasMoreElements()){ 
+				try{ 
+					st = new StringTokenizer(br.readLine()); 
+				} 
+				catch (IOException e){ 
+					e.printStackTrace(); 
+				} 
+			} 
+			return st.nextToken(); 
+		} 
+
+		int nextInt() { 
+			return Integer.parseInt(next()); 
+		} 
+
+		long nextLong() { 
+			return Long.parseLong(next()); 
+		} 
+
+		double nextDouble() { 
+			return Double.parseDouble(next()); 
+		} 
+
+		String nextLine()  { 
+			String str = ""; 
+			try{ 
+				str = br.readLine(); 
+			} catch (IOException e) { 
+				e.printStackTrace(); 
+			} 
+			return str; 
+		} 
+	} 
+
+	public static void main(String[] args) { 
+		FastReader in=new FastReader(); 
+
+		int n = in.nextInt();
+		int relations[] = new int[n+1];
+		for(int i = 0;i<n; i++){
+			int p = in.nextInt();
+			int c = in.nextInt();
+			if(c == 0){
+				relations [i+1] = 1;
+				if(p != -1){
+					relations[p] = 1;
+				}
+			}
+		}
+
+
+
+		try{
+			BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
+			boolean flag = false;
+			for(int i = 1; i<n+1;i++){
+				if (relations[i] == 0) {
+					flag = true;
+					log.write(i + " ");
+				}
+			}
+			if(!flag)
+				log.write(-1 + "");
+			
+			log.flush();
+			log.close();
+		}catch(IOException e){
+
+		}
+	} 
+} 
+```
+Translated Rust:
+```
+use std::io::{self, Read, Write};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut fs = FastScanner::new();
+
+    let n = fs.next_i32() as usize;
+    let mut relations = vec![0i32; n + 1];
+
+    for i in 0..n {
+        let p = fs.next_i32();
+        let c = fs.next_i32();
+        if c == 0 {
+            relations[i + 1] = 1;
+            if p != -1 {
+                let pi = p as usize;
+                if pi < relations.len() {
+                    relations[pi] = 1;
+                }
+            }
+        }
+    }
+
+    let mut out = String::new();
+    let mut flag = false;
+    for i in 1..=n {
+        if relations[i] == 0 {
+            flag = true;
+            out.push_str(&format!("{} ", i));
+        }
+    }
+    if !flag {
+        out.push_str("-1");
+    }
+
+    let mut stdout = io::BufWriter::new(io::stdout());
+    let _ = stdout.write_all(out.as_bytes());
+    let _ = stdout.flush();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

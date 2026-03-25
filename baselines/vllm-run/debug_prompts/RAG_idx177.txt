@@ -1,0 +1,197 @@
+INDEX: 177 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Scanner;
+
+public class GoldenPlate {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int width = sc.nextInt();
+        int length = sc.nextInt();
+        int glidedRings = sc.nextInt();
+        int totalGlidedRings = 0;
+
+        for(int i = 1; i <= glidedRings; i++) {
+            totalGlidedRings += 2 * (width - 4 * (i - 1) - 2) + 2 * (length - 4 * (i - 1));
+        }
+
+        System.out.print(totalGlidedRings);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+
+public class PhotoToRemember {
+	
+	public static void main(String args[])
+	{
+		Scanner sc = new Scanner(System.in);
+		int n  = sc.nextInt();
+		
+		int sum = 0;
+		
+		int width[] = new int[n];
+		int height[] = new int[n];
+		int sortedHeight[] = new int[n];
+		
+		for(int i=0;i<n;i++)
+		{
+			width[i] = sc.nextInt();
+			height[i] = sc.nextInt();
+			sortedHeight[i] = height[i];
+			sum += width[i];
+		}
+		
+		Arrays.sort(sortedHeight);
+		
+		for(int i=0; i<n; i++)
+		{
+			int a = sum - width[i];
+			int b = sortedHeight[n-1];
+			if(sortedHeight[n-1]==height[i])
+			{
+				b = sortedHeight[n-2];
+			}
+			
+			System.out.println(a*b);
+		}
+	}
+
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+
+    let mut sum: i32 = 0;
+    let mut width: Vec<i32> = vec![0; n];
+    let mut height: Vec<i32> = vec![0; n];
+    let mut sorted_height: Vec<i32> = vec![0; n];
+
+    for i in 0..n {
+        width[i] = sc.next_i32();
+        height[i] = sc.next_i32();
+        sorted_height[i] = height[i];
+        sum += width[i];
+    }
+
+    sorted_height.sort();
+
+    let mut out = String::new();
+    for i in 0..n {
+        let a = sum - width[i];
+        let mut b = sorted_height[n - 1];
+        if sorted_height[n - 1] == height[i] {
+            b = sorted_height[n - 2];
+        }
+        out.push_str(&(a.wrapping_mul(b)).to_string());
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.util.Scanner;
+
+public class VenyaAndFence {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner (System.in);
+        int num =input.nextInt() , h =input.nextInt(), width =0;
+        for (int i=1; i<=num; i++){
+        int ai = input.nextInt();
+        if (ai <= h)
+            width +=1;
+        else 
+            width +=2;
+    }
+        System.out.println(width);
+        
+    }
+    
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let num: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let h: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut width: i32 = 0;
+    for _ in 0..num {
+        let ai: i32 = it.next().unwrap().parse().unwrap();
+        if ai <= h {
+            width += 1;
+        } else {
+            width += 2;
+        }
+    }
+
+    println!("{}", width);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

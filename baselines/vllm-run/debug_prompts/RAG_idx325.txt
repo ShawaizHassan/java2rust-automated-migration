@@ -1,0 +1,643 @@
+INDEX: 325 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+// Code Author: Rutul Patel
+import java.io.*;
+	import java.math.BigInteger;
+	import java.math.RoundingMode;
+	import java.text.DecimalFormat;
+	import java.util.*;
+	
+public class Main {
+	
+		static double eps=(double)1e-6;
+		static long mod=(int)1e9+6;
+		static ArrayList<Integer>[] list=new ArrayList[1000003];
+		static int[] dist=new int[1000003];
+		public static void main(String args[]) throws IOException{
+			InputReader sc = new InputReader(System.in);
+			OutputStream outputStream = System.out;
+			PrintWriter out = new PrintWriter(outputStream);
+			//-------------------------------------
+			
+			int[][] arr=new int[5][5];
+			for(int i=1;i<=4;i++)
+			{
+				for(int j=1;j<=4;j++)
+					arr[i][j]=sc.nextInt();
+			}
+			
+			boolean[] can=new boolean[5];
+			for(int i=1;i<=4;i++)
+			{
+				for(int j=1;j<=3;j++)
+				{
+					if(arr[i][j]==1)
+						can[i]=true;
+					if(j==1 && arr[i][j]==1)
+					{
+						int l=i-1;
+						if(l==0)
+							l=4;
+						can[l]=true;
+					}
+					else if(j==2 && arr[i][j]==1)
+					{
+						int s=(i+2)%4;
+						if(s==0)
+							s=4;
+						can[s]=true;
+					}
+					else if(arr[i][j]==1)
+					{
+						int r=(i+1)%4;
+						if(r==0)
+							r=4;
+						can[r]=true;
+					}
+				}
+				/*for(int k=1;k<=4;k++)
+					out.print(can[k]+" ");
+				out.println();*/
+			}
+			/*for(int i=1;i<=4;i++)
+				out.print(can[i]+" ");*/
+			boolean ans=true;
+			for(int i=1;i<=4;i++)
+			{
+				if(arr[i][4]==1 && can[i])
+				{
+					ans=false;
+					break;
+				}
+			}
+			if(ans)
+				out.println("NO");
+			else
+				out.println("YES");
+			//-------------------------------------
+			out.close();
+		}
+		
+	
+		static class Pair implements Comparable<Pair> {
+			int a, b;
+
+			Pair(int a, int b) {
+				this.a = a;
+				this.b = b;
+			}
+
+			public int compareTo(Pair o) {
+				// TODO Auto-generated method stub
+				if (this.a != o.a)
+					return Integer.compare(this.a, o.a);
+				else
+					return Integer.compare(this.b, o.b);
+				//return 0;
+			}
+
+			public boolean equals(Object o) {
+				if (o instanceof Pair) {
+					Pair p = (Pair) o;
+					return p.a == a && p.b == b;
+				}
+				return false;
+			}
+
+			public int hashCode() {
+				return new Integer(a).hashCode() * 31 + new Integer(b).hashCode();
+			}
+
+			public String toString() {
+				return a + " " + b;
+			}
+		}
+		
+		static int[] sieve(int n,int[] arr)
+		{
+			for(int i=2;i*i<=n;i++)
+			{
+				if(arr[i]==0)
+				{
+					for(int j=i*2;j<=n;j+=i)
+						arr[j]=1;
+				}
+			}
+			return arr;
+		}
+		
+		static boolean isPal(String s)
+		{
+			for(int i=0, j=s.length()-1;i<=j;i++,j--)
+			{
+				if(s.charAt(i)!=s.charAt(j)) return false;
+			}
+			return true;
+		}
+		public static String rev(String s)
+		{
+			StringBuilder sb=new StringBuilder(s);
+			sb.reverse();
+			return sb.toString();
+		}
+		    
+		static long lcm(long a, long b)
+		{
+		    return a * (b / gcd(a, b));
+		}
+		
+		static long gcd(long a, long b)
+		{
+		    while (b > 0)
+		    {
+		        long temp = b;
+		        b = a % b; // % is remainder
+		        a = temp;
+		    }
+		    return a;
+		}
+		static long modulo(long a,long b,long c) {
+			long x=1;
+			long y=a;
+			while(b > 0){
+				if(b%2 == 1){
+					x=(x*y)%c;
+				}
+				y = (y*y)%c; // squaring the base
+				b /= 2;
+			}
+			return  x%c;
+		}
+		public static void debug(Object... o) {
+			System.out.println(Arrays.deepToString(o));
+		}
+		
+		static long sort(int a[]) {
+			int n = a.length;
+			int b[] = new int[n];
+			return mergeSort(a, b, 0, n - 1);
+		}
+
+		static long mergeSort(int a[], int b[], long left, long right) {
+			long c = 0;
+			if (left < right) {
+				long mid = left + (right - left) / 2;
+				c = mergeSort(a, b, left, mid);
+				c += mergeSort(a, b, mid + 1, right);
+				c += merge(a, b, left, mid + 1, right);
+			}
+			return c;
+		}
+
+		static long merge(int a[], int b[], long left, long mid, long right) {
+			long c = 0;
+			int i = (int) left;
+			int j = (int) mid;
+			int k = (int) left;
+			while (i <= (int) mid - 1 && j <= (int) right) {
+				if (a[i] <= a[j]) {
+					b[k++] = a[i++];
+				} else {
+					b[k++] = a[j++];
+					c += mid - i;
+				}
+			}
+			while (i <= (int) mid - 1)
+				b[k++] = a[i++];
+			while (j <= (int) right)
+				b[k++] = a[j++];
+			for (i = (int) left; i <= (int) right; i++)
+				a[i] = b[i];
+			return c;
+		}  
+		
+	
+		static final class InputReader{
+			private final InputStream stream;
+			private final byte[] buf=new byte[1024];
+			private int curChar;
+			private int numChars;
+			public InputReader(InputStream stream){this.stream=stream;}
+			private int read()throws IOException{
+				if(curChar>=numChars){
+					curChar=0;
+					numChars=stream.read(buf);
+					if(numChars<=0)
+						return -1;
+				}
+				return buf[curChar++];
+			}
+			public final int nextInt()throws IOException{return (int)nextLong();}
+			public final long nextLong()throws IOException{
+				int c=read();
+				while(isSpaceChar(c)){
+					c=read();
+					if(c==-1) throw new IOException();
+				}
+				boolean negative=false;
+				if(c=='-'){
+					negative=true;
+					c=read();
+				}
+				long res=0;
+				do{
+					if(c<'0'||c>'9')throw new InputMismatchException();
+					res*=10;
+					res+=(c-'0');
+					c=read();
+				}while(!isSpaceChar(c));
+				return negative?(-res):(res);
+			}
+			public final int[] readIntBrray(int size)throws IOException{
+				int[] arr=new int[size];
+				for(int i=0;i<size;i++)arr[i]=nextInt();
+				return arr;
+			}
+			public final String next()throws IOException{
+				int c=read();
+				while(isSpaceChar(c))c=read();
+				StringBuilder res=new StringBuilder();
+				do{
+					res.append((char)c);
+					c=read();
+				}while(!isSpaceChar(c));
+				return res.toString();
+			}
+			public final String nextLine()throws IOException{
+				int c=read();
+				while(isSpaceChar(c))c=read();
+				StringBuilder res=new StringBuilder();
+				do{
+					res.append((char)c);
+					c=read();
+				}while(c!='\n'&&c!=-1);
+				return res.toString();
+			}
+			private boolean isSpaceChar(int c){
+				return c==' '||c=='\n'||c=='\r'||c=='\t'||c==-1;
+			}
+		}
+	}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class A {
+	static long mod = 5000001;
+
+	public static void main(String[] args) {
+
+		Scanner nik = new Scanner(System.in);
+		int n = nik.nextInt();
+		long k = nik.nextLong();
+		int t = 0;
+		long[] a = new long[n];
+		for (int i = 0; i < n; i++) {
+			a[i] = nik.nextInt();
+			t += a[i];
+		}
+		long[] b = new long[n];
+		pair[] p = new pair[n];
+		for (int j = 0; j < n; j++) {
+			b[j] = nik.nextLong();
+		}
+
+		long l = 0;
+		long r = 2000000007;
+		while (l + 1 < r) {
+			long mid = (l + r) / 2;
+
+			long temp = k;
+			boolean b1 = true;
+			for (int i = 0; i < n; i++) {
+
+				if (a[i] * mid > b[i]) {
+					if (a[i] * mid > b[i] + temp) {
+						b1 = false;
+						break;
+					} else {
+						temp -= (a[i] * mid - b[i]);
+					}
+				}
+			}
+			if (!b1) {
+				r = mid;
+			} else {
+				l = mid;
+			}
+		}
+
+		System.out.println(l);
+
+	}
+
+	private static class pair implements Comparable<pair> {
+		int val;
+		int r;
+		int c;
+
+		pair(int val, int r, int c) {
+			this.val = val;
+			this.r = r;
+			this.c = c;
+		}
+
+		public int compareTo(pair o) {
+			return this.c - o.c;
+		}
+
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_i64(&mut self) -> i64 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i64;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+
+    let n: i32 = sc.next_i32();
+    let k: i64 = sc.next_i64();
+
+    let n_usize = n as usize;
+    let mut t: i32 = 0;
+    let mut a: Vec<i64> = vec![0; n_usize];
+    for i in 0..n_usize {
+        let v = sc.next_i32() as i64;
+        a[i] = v;
+        t = t.wrapping_add(v as i32); // matches Java int overflow behavior if ever occurs
+    }
+
+    let mut b: Vec<i64> = vec![0; n_usize];
+    for j in 0..n_usize {
+        b[j] = sc.next_i64();
+    }
+
+    let mut l: i64 = 0;
+    let mut r: i64 = 2_000_000_007;
+    while l + 1 < r {
+        let mid = (l + r) / 2;
+
+        let mut temp = k;
+        let mut ok = true;
+        for i in 0..n_usize {
+            let need = a[i] * mid;
+            if need > b[i] {
+                let diff = need - b[i];
+                if need > b[i] + temp {
+                    ok = false;
+                    break;
+                } else {
+                    temp -= diff;
+                }
+            }
+        }
+
+        if !ok {
+            r = mid;
+        } else {
+            l = mid;
+        }
+    }
+
+    println!("{}", l);
+}
+```
+
+Java:
+```
+
+
+
+import java.lang.*;
+import java.util.*;
+
+public class Cubes {
+
+    
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int t=sc.nextInt();
+        for(int w=0;w<t;w++){
+            int n=sc.nextInt();
+            int a[]=new int[n];
+            for(int i=0;i<n;i++){
+                a[i]=sc.nextInt();
+            }
+            long k=(((long)n*(long)(n-1))/2)-1;
+            boolean y=Count(a,k);
+            String s="NO";
+            if(y==true){
+                s="YES";
+            }
+            System.out.println(s);
+        }
+    }static boolean Count(int a[],long k){
+        int n=a.length;
+        
+       int temp[]=new int [n];
+       long m= mergesort(a,temp,0,n-1);
+       
+       if(m<=k)
+           return true;
+        return false;
+    
+    }static long mergesort(int a[],int temp[],int left,int right){
+        int mid;long cnt=0;
+        if(right>left){
+            mid=(right+left)/2;
+            cnt=mergesort(a,temp,left,mid);
+            cnt+=mergesort(a,temp,mid+1,right);
+            cnt+=merge(a,temp,left,mid+1,right);
+        }
+        return cnt;
+    }static long merge(int a[],int temp[],int left,int mid,int right){
+        long cnt=0;
+        int i=left;
+        int j=mid;
+        int k=left;
+        
+        while((i<=mid-1)&&(j<=right)){
+            if(a[i]<=a[j]){
+                temp[k++]=a[i++];
+            }else{
+                temp[k++]=a[j++];
+                cnt+=(mid-i);
+            }
+        }
+        
+        while(i<=mid-1)
+                temp[k++]=a[i++];
+        
+        while(j<=right)
+                temp[k++]=a[j++];
+        
+        for(i=left;i<=right;i++)
+                a[i]=temp[i];
+        
+        return cnt;
+    }
+    
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn merge(a: &mut [i32], temp: &mut [i32], left: usize, mid: usize, right: usize) -> i64 {
+    let mut cnt: i64 = 0;
+    let mut i = left;
+    let mut j = mid;
+    let mut k = left;
+
+    while i <= mid - 1 && j <= right {
+        if a[i] <= a[j] {
+            temp[k] = a[i];
+            i += 1;
+        } else {
+            temp[k] = a[j];
+            j += 1;
+            cnt += (mid - i) as i64;
+        }
+        k += 1;
+    }
+
+    while i <= mid - 1 {
+        temp[k] = a[i];
+        i += 1;
+        k += 1;
+    }
+
+    while j <= right {
+        temp[k] = a[j];
+        j += 1;
+        k += 1;
+    }
+
+    for idx in left..=right {
+        a[idx] = temp[idx];
+    }
+
+    cnt
+}
+
+fn mergesort(a: &mut [i32], temp: &mut [i32], left: usize, right: usize) -> i64 {
+    if right > left {
+        let mid = (right + left) / 2;
+        let mut cnt = mergesort(a, temp, left, mid);
+        cnt += mergesort(a, temp, mid + 1, right);
+        cnt += merge(a, temp, left, mid + 1, right);
+        cnt
+    } else {
+        0
+    }
+}
+
+fn count_ok(a: &mut [i32], k: i64) -> bool {
+    let n = a.len();
+    let mut temp = vec![0i32; n];
+    let m = if n == 0 { 0 } else { mergesort(a, &mut temp, 0, n - 1) };
+    m <= k
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let t: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+        let mut a = vec![0i32; n];
+        for i in 0..n {
+            a[i] = it.next().unwrap().parse().unwrap();
+        }
+
+        let nn = n as i64;
+        let k: i64 = (nn * (nn - 1)) / 2 - 1;
+
+        let y = count_ok(&mut a, k);
+        if y {
+            out.push_str("YES\n");
+        } else {
+            out.push_str("NO\n");
+        }
+    }
+
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

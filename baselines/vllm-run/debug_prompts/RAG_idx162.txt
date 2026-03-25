@@ -1,0 +1,304 @@
+INDEX: 162 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Scanner;
+
+
+public class CodeLab {
+
+	public static void main(String[] args) {
+	Scanner sc=new Scanner(System.in);
+	int n=sc.nextInt();
+	int m=sc.nextInt();
+	int maxIndex=1;
+	int max=(int) Math.ceil(sc.nextInt()*1.0/m);
+	
+	for(int i=1;i<n;i++) {
+		int x=sc.nextInt();
+		if(Math.ceil(x*1.0/m)>=max) {
+			max=(int) Math.ceil(x*1.0/m);
+			maxIndex=i+1;
+		}
+	}
+	System.out.println(maxIndex);
+	
+	
+	
+	
+	
+	sc.close();
+	}
+	
+	
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.Vector;
+
+public class test {
+
+    public static Scanner sc = new Scanner(System.in);
+
+    public static final int MAX_N = 200005;
+
+    public static final int MAX_M = 30;
+
+    public static void main(String []args) {
+        int t = sc.nextInt();
+        while (t > 0) {
+            t--;
+            int n = sc.nextInt();
+            int m = sc.nextInt();
+            String str = sc.next();
+            char[] s = str.toCharArray();
+            int [][]a = new int[n][];
+            for (int i = 0; i < n; ++i) {
+                a[i] = new int[MAX_M];
+            }
+            a[0][s[0] - 'a']++;
+            for (int i = 1; i < n; ++i) {
+                for (int j = 0; j < 26; ++j) {
+                    a[i][j] = a[i - 1][j];
+                }
+                a[i][s[i] - 'a']++;
+            }
+            int[] ans = new int[MAX_M];
+            for (int i = 0; i < m; ++i) {
+                int b = sc.nextInt();
+                for (int j = 0; j < 26; ++j) {
+                    ans[j] += a[b - 1][j];
+                }
+            }
+            for (int i = 0; i < 26; ++i) {
+                ans[i] += a[n - 1][i];
+            }
+            System.out.print(ans[0]);
+            for (int i = 1; i < 26; ++i) {
+                System.out.print(" " + ans[i]);
+            }
+            System.out.println();
+        }
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+const MAX_M: usize = 30;
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_string(&mut self) -> String {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        String::from_utf8(self.input[start..self.idx].to_vec()).unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let mut t = sc.next_i32();
+    let mut out = String::new();
+
+    while t > 0 {
+        t -= 1;
+        let n = sc.next_i32() as usize;
+        let m = sc.next_i32() as usize;
+        let str_s = sc.next_string();
+        let s = str_s.as_bytes();
+
+        let mut a: Vec<[i32; MAX_M]> = vec![[0i32; MAX_M]; n];
+
+        a[0][(s[0] - b'a') as usize] += 1;
+        for i in 1..n {
+            for j in 0..26usize {
+                a[i][j] = a[i - 1][j];
+            }
+            a[i][(s[i] - b'a') as usize] += 1;
+        }
+
+        let mut ans = [0i32; MAX_M];
+        for _ in 0..m {
+            let b = sc.next_i32() as usize;
+            for j in 0..26usize {
+                ans[j] += a[b - 1][j];
+            }
+        }
+        for i in 0..26usize {
+            ans[i] += a[n - 1][i];
+        }
+
+        out.push_str(&format!("{}", ans[0]));
+        for i in 1..26usize {
+            out.push_str(&format!(" {}", ans[i]));
+        }
+        out.push('\n');
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+public class Pillars {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(new InputStreamReader(System.in));
+        int numPillars = sc.nextInt();
+        int[] length = new int[numPillars];
+
+        int maxIndex = 0;
+        int max = 0;
+        for(int pil =0; pil < numPillars; pil++){
+            length[pil] = sc.nextInt();
+
+            if(max<length[pil]){
+                max = length[pil];
+                maxIndex = pil;
+            }
+        }
+
+        boolean isDone = false;
+
+        for(int i=0; i<maxIndex-1; i++){
+            //increasing
+            if(length[i+1] - length[i] < 0){
+                isDone = true;
+            }
+        }
+
+        for(int i=maxIndex; i<numPillars-1; i++){
+            //decreasing
+            if(length[i+1] - length[i] > 0){
+                isDone = true;
+            }
+        }
+
+        if(isDone){
+            System.out.println("No");
+        }else{
+            System.out.println("Yes");
+        }
+
+
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let num_pillars: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut length: Vec<i32> = vec![0; num_pillars];
+
+    let mut max_index: usize = 0;
+    let mut max_val: i32 = 0;
+
+    for pil in 0..num_pillars {
+        let v: i32 = it.next().unwrap().parse().unwrap();
+        length[pil] = v;
+        if max_val < length[pil] {
+            max_val = length[pil];
+            max_index = pil;
+        }
+    }
+
+    let mut is_done = false;
+
+    if max_index >= 2 {
+        for i in 0..(max_index - 1) {
+            if length[i + 1] - length[i] < 0 {
+                is_done = true;
+            }
+        }
+    }
+
+    if num_pillars >= 2 {
+        for i in max_index..(num_pillars - 1) {
+            if length[i + 1] - length[i] > 0 {
+                is_done = true;
+            }
+        }
+    }
+
+    if is_done {
+        println!("No");
+    } else {
+        println!("Yes");
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

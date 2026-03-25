@@ -1,0 +1,339 @@
+INDEX: 335 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Arrays;
+import java.util.Scanner;
+public class main {
+    public static void main(String args[])
+    {
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int l=sc.nextInt();
+        int a[]=new int[n];
+        int aa[]=new int[n];
+        int bb[]=new int[n];
+        int b[]=new int[n];
+        for (int i=0;i< n;i++)
+        {
+            a[i]=sc.nextInt();    
+        }
+        for (int i=0;i< n;i++)
+        {
+            b[i]=sc.nextInt();
+        }
+        aa[0]=(l-a[n-1])+a[0];
+        bb[0]=(l-b[n-1])+b[0];
+        for (int i=1;i<n;i++)
+        {
+            aa[i]=a[i]-a[i-1];
+            bb[i]=b[i]-b[i-1];   
+        }
+        int f=1;
+        for(int i=0;i<n;i++)
+        {
+         int cnt=0;
+         for(int j=0;j<n;j++)
+         {
+          if(aa[j]==bb[j])
+          {
+           cnt++;
+          }
+         }
+         if(cnt==n)
+         {
+          f=0;
+          break;
+         }
+         else
+         {
+          int temp=bb[0];
+          for(int k=0;k<n;k++)
+          {
+           if(k==n-1)
+            bb[k]=temp;
+           else
+            bb[k]=bb[k+1];
+          }
+          
+         }
+        }
+        if(f==0)
+            System.out.println("YES");
+        else
+            System.out.println("NO"); 
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+// practice with kaiboy
+import java.io.*;
+import java.util.*;
+
+public class CF1271B extends PrintWriter {
+	CF1271B() { super(System.out, true); }
+	Scanner sc = new Scanner(System.in);
+	public static void main(String[] $) {
+		CF1271B o = new CF1271B(); o.main(); o.flush();
+	}
+
+	int[] qu; int cnt;
+	boolean solve(byte[] aa, int n) {
+		cnt = 0;
+		for (int i = 0; i < n - 1; i++)
+			if (aa[i] == 1) {
+				aa[i] ^= 1;
+				aa[i + 1] ^= 1;
+				qu[cnt++] = i;
+			}
+		return aa[n - 1] == 0;
+	}
+	void main() {
+		int n = sc.nextInt();
+		byte[] aa = sc.next().getBytes();
+		byte[] bb = new byte[n];
+		for (int i = 0; i < n; i++)
+			if (aa[i] == 'B') {
+				aa[i] = 1;
+				bb[i] = 0;
+			} else {
+				aa[i] = 0;
+				bb[i] = 1;
+			}
+		qu = new int[n];
+		if (solve(aa, n) || solve(bb, n)) {
+			println(cnt);
+			for (int h = 0; h < cnt; h++)
+				print(qu[h] + 1 + " ");
+			println();
+		} else
+			println(-1);
+	}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Solver {
+    qu: Vec<usize>,
+    cnt: usize,
+}
+
+impl Solver {
+    fn solve(&mut self, a: &mut [u8], n: usize) -> bool {
+        self.cnt = 0;
+        if n == 0 {
+            return true;
+        }
+        for i in 0..n - 1 {
+            if a[i] == 1 {
+                a[i] ^= 1;
+                a[i + 1] ^= 1;
+                self.qu[self.cnt] = i;
+                self.cnt += 1;
+            }
+        }
+        a[n - 1] == 0
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(x) => x.parse().unwrap(),
+        None => return,
+    };
+    let s = it.next().unwrap_or("");
+    let bytes = s.as_bytes();
+
+    let mut aa = vec![0u8; n];
+    let mut bb = vec![0u8; n];
+
+    for i in 0..n {
+        if bytes[i] == b'B' {
+            aa[i] = 1;
+            bb[i] = 0;
+        } else {
+            aa[i] = 0;
+            bb[i] = 1;
+        }
+    }
+
+    let mut solver = Solver {
+        qu: vec![0usize; n],
+        cnt: 0,
+    };
+
+    let ok = solver.solve(&mut aa, n) || solver.solve(&mut bb, n);
+
+    if ok {
+        let mut out = String::new();
+        out.push_str(&format!("{}\n", solver.cnt));
+        for h in 0..solver.cnt {
+            out.push_str(&(solver.qu[h] + 1).to_string());
+            out.push(' ');
+        }
+        out.push('\n');
+        print!("{}", out);
+    } else {
+        print!("-1\n");
+    }
+}
+```
+
+Java:
+```
+import java.util.*;
+import java.util.regex.Pattern;
+
+public class Q2 {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int i,n,k,c=0,temp=0;
+        n=sc.nextInt();
+        k=sc.nextInt();
+        String s=sc.next();
+        int aa[]=new int[26];
+        int bb[]=new int[26];
+        if(n==k){
+            return;
+        }
+        for(i=0;i<n;i++){
+            aa[s.charAt(i)-'a']++;
+        }
+        i=0;
+        temp=k;
+        while (aa[i]==0 && i<26) i++;
+        while(temp>0){
+            if(aa[i]<=temp){
+                bb[i]=aa[i];
+                temp-=aa[i];
+                i++;
+                while (aa[i]==0 && i<26) i++;
+            }
+            else {
+                bb[i]=temp;
+                break;
+            }
+
+        }
+        for(i=0;i<n;i++){
+                if(bb[s.charAt(i)-'a']==0) {
+                    System.out.print(s.charAt(i));
+                }
+                else bb[s.charAt(i)-'a']--;
+        }
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next<T: std::str::FromStr>(&mut self) -> T {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let start = self.idx;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        std::str::from_utf8(&self.input[start..self.idx])
+            .unwrap()
+            .parse::<T>()
+            .ok()
+            .unwrap()
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n: i32 = sc.next();
+    let k: i32 = sc.next();
+    let s: String = sc.next();
+
+    if n == k {
+        return;
+    }
+
+    let bytes = s.as_bytes();
+    let mut aa = [0i32; 26];
+    let mut bb = [0i32; 26];
+
+    for &ch in bytes.iter().take(n as usize) {
+        aa[(ch - b'a') as usize] += 1;
+    }
+
+    let mut i: usize = 0;
+    let mut temp: i32 = k;
+
+    while i < 26 && aa[i] == 0 {
+        i += 1;
+    }
+
+    while temp > 0 {
+        if i >= 26 {
+            break;
+        }
+        if aa[i] <= temp {
+            bb[i] = aa[i];
+            temp -= aa[i];
+            i += 1;
+            while i < 26 && aa[i] == 0 {
+                i += 1;
+            }
+        } else {
+            bb[i] = temp;
+            break;
+        }
+    }
+
+    let mut out = String::new();
+    for &ch in bytes.iter().take(n as usize) {
+        let idx = (ch - b'a') as usize;
+        if bb[idx] == 0 {
+            out.push(ch as char);
+        } else {
+            bb[idx] -= 1;
+        }
+    }
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,242 @@
+INDEX: 45 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        int k, c = 0, sum = 0, summ = 0;
+        int[] A = new int[12];
+
+        Scanner s = new Scanner(System.in);
+        k = s.nextInt();
+        s.nextLine();
+        for (int i = 0; i < 12; i++) {
+            A[i] = s.nextInt();
+        }
+        Arrays.sort(A);
+        for (int x : A) {
+            summ += x;
+        }
+        if (summ < k)
+            System.out.println(-1);
+        else {
+            for (int i = 11; i >= 0; i--) {
+                if (sum < k) {
+                    sum += A[i];
+                    c++;
+                    if(sum==k)
+                    {
+                        System.out.println(c);
+                        break;
+                    }
+                } else {
+                    System.out.println(c);
+                    break;
+                }
+            }
+        }
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    private static Scanner scanner = new Scanner(System.in);
+    private static int OO = (int) 1e9 + 9, r;
+    private static int[] dx = {0, 0, 1, -1};
+    private static int[] dy = {1, -1, 0, 0};
+    private static int[] arr = new int[32];
+
+    public static void main(String[] args) {
+        int n = scanner.nextInt(), k = scanner.nextInt(), i;
+        int[] arr = new int[n];
+        for (i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+        i = 0;
+        while (k > 0 && i < n && arr[i] < 0) {
+            k--;
+            arr[i] *= -1;
+            i++;
+        }
+        if (k == 0) {
+            System.out.println(sum(arr));
+        } else {
+            Arrays.sort(arr);
+            if (k % 2 == 0) {
+                System.out.println(sum(arr));
+            } else {
+                arr[0] *= -1;
+                System.out.println(sum(arr));
+            }
+        }
+
+    }
+
+    private static int sum(int[] arr) {
+        int r = 0;
+        for (int value : arr) {
+            r += value;
+        }
+        return r;
+    }
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn sum(arr: &[i32]) -> i32 {
+    let mut r: i32 = 0;
+    for &v in arr {
+        r += v;
+    }
+    r
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let mut k: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut arr: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        arr.push(it.next().unwrap().parse().unwrap());
+    }
+
+    let mut i: usize = 0;
+    while k > 0 && i < n && arr[i] < 0 {
+        k -= 1;
+        arr[i] *= -1;
+        i += 1;
+    }
+
+    if k == 0 {
+        println!("{}", sum(&arr));
+    } else {
+        arr.sort();
+        if k % 2 == 0 {
+            println!("{}", sum(&arr));
+        } else {
+            if !arr.is_empty() {
+                arr[0] *= -1;
+            }
+            println!("{}", sum(&arr));
+        }
+    }
+}
+```
+
+Java:
+```
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main{
+
+    public static void main(String[] args) {
+       Scanner input=new Scanner(System.in);
+       int z=input.nextInt();
+       int x=input.nextInt();
+       int sum=0;
+       int[]a=new int[z];
+       boolean m=false;
+       for(int i=0;i<z;i++){
+           int q=input.nextInt();
+           if(q>=x)
+               m=true;
+           a[i]=q;
+        }
+       Arrays.sort(a);
+       
+       if(m)
+            System.out.println(1);
+       else {
+           for(int i=z-1;i>=0;i--)
+           {
+               sum+=a[i];
+               if (sum>=x)
+               {
+                   System.out.println(z-i);
+                   break;
+               }
+           }
+       }
+    }
+    
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let z: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let x: i64 = it.next().unwrap().parse().unwrap();
+
+    let mut a: Vec<i64> = vec![0; z];
+    let mut m = false;
+
+    for i in 0..z {
+        let q: i64 = it.next().unwrap().parse().unwrap();
+        if q >= x {
+            m = true;
+        }
+        a[i] = q;
+    }
+
+    a.sort();
+
+    if m {
+        print!("1");
+    } else {
+        let mut sum: i64 = 0;
+        for i in (0..z).rev() {
+            sum += a[i];
+            if sum >= x {
+                print!("{}", z - i);
+                break;
+            }
+        }
+    }
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

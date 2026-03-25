@@ -1,0 +1,380 @@
+INDEX: 146 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+/**
+ * 
+ */
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+/**
+ * @author Rachna
+ *
+ */
+public class MagicForest {
+
+	/**
+	 * @param args
+	 * @throws IOException
+	 * @throws NumberFormatException
+	 */
+	public static void main(String[] args) throws NumberFormatException, IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		int count = 0;
+
+		for (int i = 1; i <= n; i++) {
+
+			for (int j = i + 1; j <= n; j++) {
+				
+				int k = i ^ j;
+				if (k <= n && i+j > k && k >=j) {
+					count++;
+                }
+
+			}
+		}
+
+		System.out.println(count);
+	}
+
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+public class Main {
+	static int total=0;
+	static int count=0;
+	public static void main(String args[]) throws NumberFormatException,
+			IOException {
+
+		Stdin in = new Stdin();
+		PrintWriter out = new PrintWriter(System.out);
+		int n=in.readInt();
+		int k=in.readInt();
+		int p[]=new int[n];
+		for(int i=0;i<n;i++)
+			p[i]=in.readInt();
+		solve(k,p);
+		out.println((double)total/count);
+		out.flush();
+		out.close();
+
+	}
+	private static void solve(int k,int[]p){
+		if(k==0){
+			total+=count(p);
+			count++;
+			return;
+		}
+		for(int i=0;i<p.length;i++){
+			for(int j=i;j<p.length;j++){
+				reverse(i,j,p);
+				solve(k-1,p);
+				reverse(i,j,p);
+			}
+		}
+	}
+	private static void reverse(int i,int j,int p[]){
+		int t;
+		while(i<j){
+			t=p[i];
+			p[i]=p[j];
+			p[j]=t;
+			i++;
+			j--;
+		}
+	}
+	private static int count(int p[]){
+		int count=0;
+		for(int i=0;i<p.length;i++){
+			for(int j=i+1;j<p.length;j++){
+				if(p[i]>p[j])
+					count++;
+			}
+		}
+		return count;
+	}
+	private static class Stdin {
+		InputStreamReader read;
+		BufferedReader br;
+
+		StringTokenizer st = new StringTokenizer("");
+
+		private Stdin() {
+			read = new InputStreamReader(System.in);
+			br = new BufferedReader(read);
+
+		}
+
+		private String readNext() throws IOException {
+
+			while (!st.hasMoreTokens())
+				st = new StringTokenizer(br.readLine());
+			return st.nextToken();
+		}
+
+		private int readInt() throws IOException, NumberFormatException {
+
+			return Integer.parseInt(readNext());
+
+		}
+
+		private long readLong() throws IOException, NumberFormatException {
+
+			return Long.parseLong(readNext());
+
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+static mut TOTAL: i32 = 0;
+static mut CNT: i32 = 0;
+
+fn reverse_range(i: usize, j: usize, p: &mut [i32]) {
+    let mut l = i;
+    let mut r = j;
+    while l < r {
+        p.swap(l, r);
+        l += 1;
+        r -= 1;
+    }
+}
+
+fn inversion_count(p: &[i32]) -> i32 {
+    let mut c: i32 = 0;
+    for i in 0..p.len() {
+        for j in (i + 1)..p.len() {
+            if p[i] > p[j] {
+                c += 1;
+            }
+        }
+    }
+    c
+}
+
+fn solve(k: i32, p: &mut Vec<i32>) {
+    if k == 0 {
+        unsafe {
+            TOTAL += inversion_count(p);
+            CNT += 1;
+        }
+        return;
+    }
+    let n = p.len();
+    for i in 0..n {
+        for j in i..n {
+            reverse_range(i, j, p);
+            solve(k - 1, p);
+            reverse_range(i, j, p);
+        }
+    }
+}
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self {
+            input: input.into_bytes(),
+            idx: 0,
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n = sc.next_i32() as usize;
+    let k = sc.next_i32();
+    let mut p: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        p.push(sc.next_i32());
+    }
+
+    solve(k, &mut p);
+
+    let total = unsafe { TOTAL } as f64;
+    let cnt = unsafe { CNT } as f64;
+    println!("{}", total / cnt);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.util.*;
+public class Palinpath
+{
+	static int count=0;
+	public static void run(int arr[][], int n, int m)
+	{
+		for(int i=0;i<(n+m-1)/2;i++)
+		{
+			int count0=0,count1=0;
+			for(int j=0;j<n;j++)
+			{
+				for(int k=0;k<m;k++)
+				{
+					if(k+j==i||k+j==n+m-2-i)
+					{
+						if(arr[j][k]==0)
+							count0++;
+						else
+							count1++;
+					}
+				}
+			}
+			count +=(int)Math.min(count0,count1);
+		}		
+	}
+	public static void main(String args[])throws IOException
+	{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int t = Integer.parseInt(br.readLine());
+		while(t-->0)
+		{
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int n = Integer.parseInt(st.nextToken());
+			int m = Integer.parseInt(st.nextToken());
+			int arr[][]= new int[n][m];
+			for(int i=0;i<n;i++)
+			{
+				st = new StringTokenizer(br.readLine());
+				for(int j=0;j<m;j++)
+					arr[i][j] = Integer.parseInt(st.nextToken()); 
+			}
+			run(arr,n,m);
+			System.out.println(count);
+			count=0;
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn run(arr: &Vec<Vec<i32>>, n: i32, m: i32) -> i32 {
+    let mut count: i32 = 0;
+    let layers = (n + m - 1) / 2;
+    let target_sum = n + m - 2;
+
+    for i in 0..layers {
+        let mut count0: i32 = 0;
+        let mut count1: i32 = 0;
+        for j in 0..n {
+            for k in 0..m {
+                if k + j == i || k + j == target_sum - i {
+                    if arr[j as usize][k as usize] == 0 {
+                        count0 += 1;
+                    } else {
+                        count1 += 1;
+                    }
+                }
+            }
+        }
+        count += count0.min(count1);
+    }
+    count
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let t = sc.next_i32();
+    let mut out = String::new();
+
+    for _ in 0..t {
+        let n = sc.next_i32();
+        let m = sc.next_i32();
+        let mut arr: Vec<Vec<i32>> = vec![vec![0; m as usize]; n as usize];
+        for i in 0..n as usize {
+            for j in 0..m as usize {
+                arr[i][j] = sc.next_i32();
+            }
+        }
+        let ans = run(&arr, n, m);
+        out.push_str(&format!("{ans}\n"));
+    }
+
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

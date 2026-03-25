@@ -1,0 +1,405 @@
+INDEX: 129 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+/**
+ * @author: Mehul Raheja
+ */
+import java.util.*;
+import java.io.*;
+
+public class E {
+
+    /*
+        Runtime = O()
+     */
+    static int N, M, K;
+    static String s;
+    static StringTokenizer st;
+    static int[] d;
+
+    static long ans = 0;
+    static long[] pre;
+    
+    static void dis(long N) {
+        //System.out.println(N);
+        if(N == 1){
+            return;
+        }
+        long x = ((long)((Math.log(N-0.1))/Math.log(2)));
+        //System.out.println(x);
+        long low = (long)Math.pow(2, x);
+        //System.out.println(low);
+        ans += low;
+        ans += pre[(int)x];
+        dis(N-low);
+    }
+
+    public static void main(String[] args) throws Exception {
+        pre = new long[50];
+        pre[0] = 0;
+        for (int i = 1; i < 50; i++) {
+            pre[i] = pre[i-1] * 2 + (long)Math.pow(2, i-1);
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        long N = Long.parseLong(br.readLine());
+        dis(N);
+        System.out.println(ans);
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.util.*;
+public class cp1 {
+	
+	static StringBuilder run(){
+		StringBuilder sb=new StringBuilder();
+		// code
+		int n=in.nextInt();
+		long x=in.nextLong();
+		long a[]=new long[2*n+1];
+		long pre1[]=new long[2*n+1];
+		long pre2[]=new long[2*n+1];
+		for(int i=1;i<=n;i++){
+			a[i]=in.nextLong();
+			a[i+n]=a[i];
+		}
+		for(int i=1;i<=2*n;i++){
+			pre1[i]=pre1[i-1]+(a[i]*(a[i]+1))/2;
+			pre2[i]=pre2[i-1]+a[i];
+		}
+
+		long maxi=0;
+		for(int i=2*n;i>=n+1;i--){
+			int low=1;
+			int high=i;
+			int ans=i;
+			while(low<=high){
+				int mid=(low+high)/2;
+				if(pre2[i]-pre2[mid]<x){
+					ans=mid;
+					high=mid-1;
+				}
+				else
+					low=mid+1;
+			}
+			long tmp=pre2[i]-pre2[ans-1]-x;
+			long sum=pre1[i]-pre1[ans-1]-((tmp*(tmp+1))/2);
+			maxi=Math.max(maxi, sum);
+		}
+		sb.append(maxi);
+		return sb;
+	}
+
+	static StringBuilder solve() {
+		StringBuilder result=new StringBuilder();
+		int t=1;
+		// t=in.nextInt();
+		while(--t>=0)
+			result.append(run()+"\n");
+		return result;
+	}
+
+	// Sankcan
+	public static void main(String args[]) {
+		System.out.print(solve());
+	}
+	static Scanner in=new Scanner(System.in);
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.skip_whitespace();
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i64 = 0;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i64;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn run(sc: &mut Scanner) -> String {
+    let n = sc.next_i32() as usize;
+    let x = sc.next_i64();
+
+    let mut a = vec![0i64; 2 * n + 1];
+    let mut pre1 = vec![0i64; 2 * n + 1];
+    let mut pre2 = vec![0i64; 2 * n + 1];
+
+    for i in 1..=n {
+        a[i] = sc.next_i64();
+        a[i + n] = a[i];
+    }
+
+    for i in 1..=2 * n {
+        pre1[i] = pre1[i - 1] + (a[i] * (a[i] + 1)) / 2;
+        pre2[i] = pre2[i - 1] + a[i];
+    }
+
+    let mut maxi: i64 = 0;
+    for i in (n + 1..=2 * n).rev() {
+        let mut low: i32 = 1;
+        let mut high: i32 = i as i32;
+        let mut ans: i32 = i as i32;
+
+        while low <= high {
+            let mid = (low + high) / 2;
+            let mid_usize = mid as usize;
+            if pre2[i] - pre2[mid_usize] < x {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+
+        let ans_usize = ans as usize;
+        let tmp = pre2[i] - pre2[ans_usize - 1] - x;
+        let sum = pre1[i] - pre1[ans_usize - 1] - ((tmp * (tmp + 1)) / 2);
+        if sum > maxi {
+            maxi = sum;
+        }
+    }
+
+    maxi.to_string()
+}
+
+fn solve(sc: &mut Scanner) -> String {
+    let t: i32 = 1;
+    let mut out = String::new();
+    for _ in 0..t {
+        out.push_str(&run(sc));
+        out.push('\n');
+    }
+    out
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let res = solve(&mut sc);
+    print!("{}", res);
+}
+```
+
+Java:
+```
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+
+
+
+public class Solution {
+	public static class FastReader {
+			BufferedReader br;
+			StringTokenizer root;
+			
+	 
+			public FastReader() {
+				br = new BufferedReader(new InputStreamReader(System.in));
+			}
+	 
+			String next() {
+				while (root == null || !root.hasMoreTokens()) {
+					try {
+						root = new StringTokenizer(br.readLine());
+					} catch (Exception addd) {
+						addd.printStackTrace();
+					}
+				}
+				return root.nextToken();
+			}
+	 
+			int nextInt() {
+				return Integer.parseInt(next());
+			}
+	 
+			double nextDouble() {
+				return Double.parseDouble(next());
+			}
+	 
+			long nextLong() {
+				return Long.parseLong(next());
+			}
+	 
+			String nextLine() {
+				String str = "";
+				try {
+					str = br.readLine();
+				} catch (Exception addd) {
+					addd.printStackTrace();
+				}
+				return str;
+			}
+		}
+	 
+	public static PrintWriter out = new PrintWriter (new BufferedOutputStream(System.out));
+	public static FastReader sc = new FastReader();
+ 
+	static long mod = (int) (1000000000),MAX=(int)(1e5+10);
+	
+	public static void main(String[] args) throws IOException{
+		
+		int n = sc.nextInt();
+		long[] a = new long[n];
+		for(int i=0;i<n;++i) a[i] = sc.nextLong();
+		long[] pre = new long[2*n+2];
+		for(int i=0;i<2*n;++i) {
+			pre[i+2] = pre[i] + a[i%n];
+		}
+		long max = 0;
+		for(int i = 0;i < n;i++){
+			max = Math.max(max, pre[i+n+1] - pre[i]);
+		}
+		out.println(max);
+		
+	  out.close();
+	}
+	
+
+}
+
+
+
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct FastScanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl FastScanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        self.skip_whitespace();
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i32 = 0;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i32;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+    fn next_i64(&mut self) -> i64 {
+        self.skip_whitespace();
+        let mut sign = 1i64;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num: i64 = 0;
+        while self.idx < self.input.len() {
+            let c = self.input[self.idx];
+            if c.is_ascii_digit() {
+                num = num * 10 + (c - b'0') as i64;
+                self.idx += 1;
+            } else {
+                break;
+            }
+        }
+        num * sign
+    }
+    fn skip_whitespace(&mut self) {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+    }
+}
+
+fn main() {
+    let mut sc = FastScanner::new();
+    let n = sc.next_i32() as usize;
+    let mut a = vec![0i64; n];
+    for i in 0..n {
+        a[i] = sc.next_i64();
+    }
+
+    let mut pre = vec![0i64; 2 * n + 2];
+    for i in 0..(2 * n) {
+        pre[i + 2] = pre[i] + a[i % n];
+    }
+
+    let mut maxv: i64 = 0;
+    for i in 0..n {
+        let val = pre[i + n + 1] - pre[i];
+        if val > maxv {
+            maxv = val;
+        }
+    }
+
+    print!("{}", maxv);
+    println!();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

@@ -1,0 +1,468 @@
+INDEX: 446 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+/**
+ * Date: 1 Jul, 2018
+ * Link:
+ *
+ * @author Prasad-Chaudhari
+ * @email prasadc8897@gmail.com
+ */
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+
+public class newProgram2 {
+
+    public static void main(String[] args) throws IOException {
+        // TODO code application logic here
+        FastIO in = new FastIO();
+        int n = in.ni();
+        int b = in.ni();
+        int a[] = in.gia(n);
+        int diff[] = new int[n];
+        int index = 0;
+        int even = a[0] % 2 == 0 ? 1 : 0;
+        int odd = a[0] % 2 == 1 ? 1 : 0;
+        for (int i = 1; i < n; i++) {
+            if (even == odd) {
+//                System.out.println(i);
+                diff[index++] = Math.abs(a[i] - a[i - 1]);
+            }
+            if (a[i] % 2 == 0) {
+                even++;
+            } else {
+                odd++;
+            }
+        }
+//        for (int i = 0; i < n; i++) {
+//            System.out.println(diff[i]);
+//        }
+        Arrays.sort(diff, 0, index);
+        long sum = 0;
+        int count = 0;
+        for (int i = 0; i < index; i++) {
+            if (diff[i] + sum <= b) {
+                count++;
+                sum += diff[i];
+            }
+        }
+        System.out.println(count);
+    }
+
+    static class FastIO {
+
+        private final BufferedReader br;
+        private final BufferedWriter bw;
+        private String s[];
+        private int index;
+
+        public FastIO() throws IOException {
+            br = new BufferedReader(new InputStreamReader(System.in));
+            bw = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
+            s = br.readLine().split(" ");
+            index = 0;
+        }
+
+        public int ni() throws IOException {
+            return Integer.parseInt(nextToken());
+        }
+
+        public double nd() throws IOException {
+            return Double.parseDouble(nextToken());
+        }
+
+        public long nl() throws IOException {
+            return Long.parseLong(nextToken());
+        }
+
+        public String next() throws IOException {
+            return nextToken();
+        }
+
+        public String nli() throws IOException {
+            try {
+                return br.readLine();
+            } catch (IOException ex) {
+
+            }
+            return null;
+        }
+
+        public int[] gia(int n) throws IOException {
+            int a[] = new int[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = ni();
+            }
+            return a;
+        }
+
+        public int[] gia(int n, int start, int end) throws IOException {
+            validate(n, start, end);
+            int a[] = new int[n];
+            for (int i = start; i < end; i++) {
+                a[i] = ni();
+            }
+            return a;
+        }
+
+        public double[] gda(int n) throws IOException {
+            double a[] = new double[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = nd();
+            }
+            return a;
+        }
+
+        public double[] gda(int n, int start, int end) throws IOException {
+            validate(n, start, end);
+            double a[] = new double[n];
+            for (int i = start; i < end; i++) {
+                a[i] = nd();
+            }
+            return a;
+        }
+
+        public long[] gla(int n) throws IOException {
+            long a[] = new long[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = ni();
+            }
+            return a;
+        }
+
+        public long[] gla(int n, int start, int end) throws IOException {
+            validate(n, start, end);
+            long a[] = new long[n];
+            for (int i = start; i < end; i++) {
+                a[i] = ni();
+            }
+            return a;
+        }
+
+        public int[][] gg(int n, int m) throws IOException {
+            int adja[][] = new int[n + 1][];
+            int from[] = new int[m];
+            int to[] = new int[m];
+            int count[] = new int[n + 1];
+            for (int i = 0; i < m; i++) {
+                from[i] = ni();
+                to[i] = ni();
+                count[from[i]]++;
+                count[to[i]]++;
+            }
+            for (int i = 0; i <= n; i++) {
+                adja[i] = new int[count[i]];
+            }
+            for (int i = 0; i < m; i++) {
+                adja[from[i]][--count[from[i]]] = to[i];
+                adja[to[i]][--count[to[i]]] = from[i];
+            }
+            return adja;
+        }
+
+        public void print(String s) throws IOException {
+            bw.write(s);
+            bw.flush();
+        }
+
+        public void println(String s) throws IOException {
+            bw.write(s);
+            bw.newLine();
+            bw.flush();
+        }
+
+        private String nextToken() throws IndexOutOfBoundsException, IOException {
+            if (index == s.length) {
+                s = br.readLine().split(" ");
+                index = 0;
+            }
+            return s[index++];
+        }
+
+        private void validate(int n, int start, int end) {
+            if (start < 0 || end >= n) {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.StringTokenizer;
+
+public class Solution {
+	static int TC, N, start, end, diff;
+	static int[] arr, arr2;
+	static StringTokenizer st;
+	static boolean same;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		TC = Integer.parseInt(br.readLine().trim());
+
+		for (int tc = 1; tc <= TC; tc++) {
+			N = Integer.parseInt(br.readLine().trim());
+			arr = new int[N];
+			arr2 = new int[N];
+			st = new StringTokenizer(br.readLine(), " ");
+
+			for (int i = 0; i < N; i++) {
+				arr[i] = Integer.parseInt(st.nextToken());
+			}
+
+			st = new StringTokenizer(br.readLine(), " ");
+			for (int i = 0; i < N; i++) {
+				arr2[i] = Integer.parseInt(st.nextToken());
+			}
+
+			same = false;
+			start = end = diff = -1;
+
+			for (int i = 0; i < N; i++) {
+				if (arr[i] != arr2[i]) { // 다르다면
+					same = true;
+					if (start == -1) {
+						start = end = i;
+						diff = arr[i] - arr2[i];
+					} else
+						end = i;
+				}
+			}
+
+			if (same) {
+				for (int i = start; i <= end; i++) {
+					arr[i] -= diff;
+				}
+			}
+
+			boolean yes = false;
+			for (int i = 0; i < N; i++) {
+				if (arr[i] != arr2[i])
+					yes = true;
+			}
+			
+			if (!same) {
+				bw.write("YES\n");
+			} else {
+				if (!yes && diff < 0)
+					bw.write("YES\n");
+				else
+					bw.write("NO\n");
+			}
+		}
+		bw.flush();
+		bw.close();
+	}
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let tc: i32 = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut out = String::new();
+
+    for _ in 0..tc {
+        let n: usize = it.next().unwrap().parse::<i32>().unwrap() as usize;
+        let mut arr = vec![0i32; n];
+        let mut arr2 = vec![0i32; n];
+
+        for i in 0..n {
+            arr[i] = it.next().unwrap().parse().unwrap();
+        }
+        for i in 0..n {
+            arr2[i] = it.next().unwrap().parse().unwrap();
+        }
+
+        let mut same = false;
+        let mut start: i32 = -1;
+        let mut end: i32 = -1;
+        let mut diff: i32 = -1;
+
+        for i in 0..n {
+            if arr[i] != arr2[i] {
+                same = true;
+                if start == -1 {
+                    start = i as i32;
+                    end = i as i32;
+                    diff = arr[i] - arr2[i];
+                } else {
+                    end = i as i32;
+                }
+            }
+        }
+
+        if same {
+            let s = start as usize;
+            let e = end as usize;
+            for i in s..=e {
+                arr[i] -= diff;
+            }
+        }
+
+        let mut yes = false;
+        for i in 0..n {
+            if arr[i] != arr2[i] {
+                yes = true;
+            }
+        }
+
+        if !same {
+            out.push_str("YES\n");
+        } else {
+            if !yes && diff < 0 {
+                out.push_str("YES\n");
+            } else {
+                out.push_str("NO\n");
+            }
+        }
+    }
+
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader; 
+import java.io.IOException; 
+import java.io.InputStreamReader; 
+import java.util.StringTokenizer; 
+import java.util.*;
+ 
+public class Main 
+{ 
+ 
+   public static long ans(int a[],int b[],int n){
+      ArrayList<Integer> c=new ArrayList<>();
+    for(int i=0;i<n;i++){
+        c.add(a[i]-b[i]);
+    }
+    Collections.sort(c);
+    long ans=0;
+    int start=0;
+    int end=n-1;
+    while(start<end){
+        if(c.get(start)+c.get(end)>0){
+            ans=ans+(end-start);
+            end--;
+        }else{
+            start++;
+        }
+    }
+    return ans;
+   }
+    public static void main(String[] args) throws IOException 
+    { 
+  
+       BufferedReader br = new BufferedReader( 
+                              new InputStreamReader(System.in));
+                
+                  int n=Integer.parseInt(br.readLine()); 
+                  StringTokenizer as =  new StringTokenizer(br.readLine());
+                  int a[]=new int[n];
+                  for(int i=0;i<n;i++){
+                      a[i]=Integer.parseInt(as.nextToken());
+                  }
+                   StringTokenizer bs =  new StringTokenizer(br.readLine());
+                    int b[]=new int[n];
+                  for(int i=0;i<n;i++){
+                      b[i]=Integer.parseInt(bs.nextToken());
+                  }
+                 
+                System.out.println(ans(a,b,n));
+    }
+    }
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn ans(a: &Vec<i32>, b: &Vec<i32>, n: usize) -> i64 {
+    let mut c: Vec<i32> = Vec::with_capacity(n);
+    for i in 0..n {
+        c.push(a[i] - b[i]);
+    }
+    c.sort();
+
+    let mut res: i64 = 0;
+    let mut start: usize = 0;
+    let mut end: usize = n - 1;
+
+    while start < end {
+        let sum = c[start] as i64 + c[end] as i64;
+        if sum > 0 {
+            res += (end - start) as i64;
+            if end == 0 { break; }
+            end -= 1;
+        } else {
+            start += 1;
+        }
+    }
+    res
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+
+    let mut a: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        a.push(it.next().unwrap().parse().unwrap());
+    }
+
+    let mut b: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        b.push(it.next().unwrap().parse().unwrap());
+    }
+
+    let out = ans(&a, &b, n);
+    print!("{out}");
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

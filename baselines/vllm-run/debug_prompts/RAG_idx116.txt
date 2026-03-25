@@ -1,0 +1,479 @@
+INDEX: 116 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+
+
+public class CodeForce {
+	
+	
+	
+	
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+	//	int t=Integer.parseInt(br.readLine());
+		
+	//	while(t-->0)
+	String[] sr=br.readLine().split(" ");
+	int n=Integer.parseInt(sr[0]);
+	int a=Integer.parseInt(sr[1]);
+	int b=Integer.parseInt(sr[2]);
+	int temp=Math.min(a, b);
+	int temp1=Math.max(a, b);
+	a=temp;
+	b=temp1;
+	int l=(int)(Math.log(n)/Math.log(2));
+	Queue<Integer>q=new LinkedList<Integer>();
+	Queue<Integer>st1=new LinkedList<Integer>();
+	int count=2;
+	
+	if(n==2)
+	{
+		System.out.println("Final!");
+		return;
+	}
+	
+	for(int i=1;i<=n;i=i+2)
+	{
+		if(i==a&&i+1==b)
+	{System.out.println("1");
+		return;}
+		if(i==a||i+1==a)
+			q.add(a);
+		
+		else if(i==b||i+1==b)
+			q.add(b);
+		
+		else
+			q.add(i+1);
+		
+			
+	}
+
+	
+	
+	
+	
+	
+	while(true)
+	{
+		if(st1.isEmpty())
+	{
+			while(!q.isEmpty())
+	{
+			int x=q.poll();
+	 int y=q.poll();
+	 if(x==a&&y==b)
+		{if(count==l)
+			System.out.println("Final!");
+		else System.out.println(count);
+			return;}
+			if(x==a||y==a)
+				st1.add(a);
+			
+			else if(x==b||y==b)
+				st1.add(b);
+			
+			else
+				st1.add(y);
+		
+	}
+	}
+	else if(q.isEmpty())
+	{
+		while(!st1.isEmpty())
+		{
+		int x=st1.poll();
+	     int y=st1.poll();
+	      if(x==a&&y==b)
+	 {if(count==l)
+			System.out.println("Final!");
+		else System.out.println(count);
+			return;}
+			if(x==a||y==a)
+				q.add(a);
+			
+			else if(x==b||y==b)
+				q.add(b);
+			
+			else
+				q.add(y);
+		
+	}}
+		count++;
+	}
+		
+	
+
+
+
+
+	
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			}}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.*;
+import java.math.*;
+import java.util.*;
+
+public class CF_580C_KefaAndPark
+{
+    public static void main(String[] args) throws IOException
+    {
+        BufferedReader in = new BufferedReader( new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder("");
+        String line, lines[];
+        int n, m, x, y;
+        boolean flags[];
+        lines = in.readLine().trim().split("\\s+");
+        n = Integer.parseInt(lines[0]);
+        m = Integer.parseInt(lines[1]);
+        lines = in.readLine().trim().split("\\s+");
+        flags = new boolean[n];
+        ArrayList<Integer> graph[] = new ArrayList[n];
+        for( int i = 0; i < n; i++ ) graph[i] = new ArrayList<Integer>();
+        for( int i = 0; i<  n; i++ )
+        {
+            if ( lines[i].equals("1") ) flags[i] = true;
+        }
+        for( int i = 0; i < n-1; i++ )
+        {
+            lines = in.readLine().trim().split("\\s+");
+            x = Integer.parseInt(lines[0])-1;
+            y = Integer.parseInt(lines[1])-1;
+            graph[x].add(y);
+            graph[y].add(x);
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        Queue<Integer> cats = new LinkedList<Integer>();
+        boolean visited[] = new boolean[n];
+        q.add(0);
+        cats.add(0);
+        int node, cat;
+        int count = 0;
+        while( !q.isEmpty())
+        {
+            node = q.poll();
+            cat = cats.poll();
+            //System.out.println(node+" "+cat);
+            if ( visited[node] ) continue;
+            if ( flags[node] ) cat++;
+            else cat = 0;
+            visited[node] = true;
+            if ( cat > m ) continue; 
+            if ( graph[node].size() == 1 && node != 0) count++;
+            for( int i = 0; i < graph[node].size(); i++ )
+            {
+                q.add(graph[node].get(i));
+                cats.add( cat );
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+use std::collections::VecDeque;
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(v) => v.parse().unwrap(),
+        None => return,
+    };
+    let m: i32 = it.next().unwrap().parse().unwrap();
+
+    let mut flags = vec![false; n];
+    for i in 0..n {
+        let s = it.next().unwrap();
+        if s == "1" {
+            flags[i] = true;
+        }
+    }
+
+    let mut graph: Vec<Vec<usize>> = vec![Vec::new(); n];
+    for _ in 0..(n.saturating_sub(1)) {
+        let x: usize = it.next().unwrap().parse::<usize>().unwrap() - 1;
+        let y: usize = it.next().unwrap().parse::<usize>().unwrap() - 1;
+        graph[x].push(y);
+        graph[y].push(x);
+    }
+
+    let mut q: VecDeque<usize> = VecDeque::new();
+    let mut cats: VecDeque<i32> = VecDeque::new();
+    let mut visited = vec![false; n];
+
+    q.push_back(0);
+    cats.push_back(0);
+
+    let mut count: i32 = 0;
+
+    while let (Some(node), Some(mut cat)) = (q.pop_front(), cats.pop_front()) {
+        if visited[node] {
+            continue;
+        }
+        if flags[node] {
+            cat += 1;
+        } else {
+            cat = 0;
+        }
+        visited[node] = true;
+        if cat > m {
+            continue;
+        }
+        if graph[node].len() == 1 && node != 0 {
+            count += 1;
+        }
+        for &nei in &graph[node] {
+            q.push_back(nei);
+            cats.push_back(cat);
+        }
+    }
+
+    println!("{}", count);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+public class hals {
+	
+	static class node{
+		int val,ind;
+		public node(int x,int y){
+			ind = x;
+			val=y;
+		}
+	}
+	static class comparer implements Comparator<node>{
+		public int compare(node n1,node n2){
+			if(n1.val>n2.val)
+				return -1;
+			else if(n1.val<n2.val)
+				return 1;
+			return 0;
+		}
+	}
+	public static void main(String[] args)throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		Comparator<node> comp = new comparer();
+		PriorityQueue<node> q = new PriorityQueue<node>(n,comp);
+		String[] in = br.readLine().split(" ");
+		for(int i=0;i<n;i++){
+			q.add(new node(i+1,Integer.parseInt(in[i])));
+		}
+		ArrayList<Integer> team1 = new ArrayList<Integer>();
+		ArrayList<Integer> team2 = new ArrayList<Integer>();
+		int temp = 1;
+		while(!q.isEmpty()){
+			if(temp>0){
+				team1.add(q.poll().ind);
+				temp*=-1;
+			}
+			else{
+				team2.add(q.poll().ind);
+				temp*=-1;
+			}
+		}
+		System.out.println(team1.size());
+		for(int i=0;i<team1.size();i++)
+			System.out.print(team1.get(i)+" ");
+		System.out.println();
+		System.out.println(team2.size());
+		for(int i=0;i<team2.size();i++)
+			System.out.print(team2.get(i)+" ");
+		System.out.println();
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+#[derive(Clone, Copy)]
+struct Node {
+    ind: i32,
+    val: i32,
+}
+
+fn cmp(a: &Node, b: &Node) -> i32 {
+    if a.val > b.val {
+        -1
+    } else if a.val < b.val {
+        1
+    } else {
+        0
+    }
+}
+
+// Java-like PriorityQueue with comparator; min-heap by cmp; no swaps on cmp == 0.
+struct JPriorityQueue {
+    data: Vec<Node>,
+}
+
+impl JPriorityQueue {
+    fn with_capacity(cap: usize) -> Self {
+        Self {
+            data: Vec::with_capacity(cap),
+        }
+    }
+
+    fn is_empty(&self) -> bool {
+        self.data.is_empty()
+    }
+
+    fn add(&mut self, x: Node) {
+        self.data.push(x);
+        self.sift_up(self.data.len() - 1);
+    }
+
+    fn poll(&mut self) -> Node {
+        let n = self.data.len();
+        let res = self.data[0];
+        if n == 1 {
+            self.data.pop();
+            return res;
+        }
+        let last = self.data.pop().unwrap();
+        self.data[0] = last;
+        self.sift_down(0);
+        res
+    }
+
+    fn sift_up(&mut self, mut idx: usize) {
+        let x = self.data[idx];
+        while idx > 0 {
+            let parent = (idx - 1) / 2;
+            if cmp(&x, &self.data[parent]) >= 0 {
+                break;
+            }
+            self.data[idx] = self.data[parent];
+            idx = parent;
+        }
+        self.data[idx] = x;
+    }
+
+    fn sift_down(&mut self, mut idx: usize) {
+        let n = self.data.len();
+        let x = self.data[idx];
+        loop {
+            let left = idx * 2 + 1;
+            if left >= n {
+                break;
+            }
+            let mut child = left;
+            let right = left + 1;
+            if right < n && cmp(&self.data[right], &self.data[left]) < 0 {
+                child = right;
+            }
+            if cmp(&x, &self.data[child]) <= 0 {
+                break;
+            }
+            self.data[idx] = self.data[child];
+            idx = child;
+        }
+        self.data[idx] = x;
+    }
+}
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: usize = match it.next() {
+        Some(s) => s.parse().unwrap(),
+        None => return,
+    };
+
+    let mut q = JPriorityQueue::with_capacity(n);
+    for i in 0..n {
+        let v: i32 = it.next().unwrap().parse().unwrap();
+        q.add(Node {
+            ind: (i as i32) + 1,
+            val: v,
+        });
+    }
+
+    let mut team1: Vec<i32> = Vec::new();
+    let mut team2: Vec<i32> = Vec::new();
+
+    let mut temp: i32 = 1;
+    while !q.is_empty() {
+        if temp > 0 {
+            team1.push(q.poll().ind);
+            temp *= -1;
+        } else {
+            team2.push(q.poll().ind);
+            temp *= -1;
+        }
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!("{}\n", team1.len()));
+    for &x in &team1 {
+        out.push_str(&format!("{} ", x));
+    }
+    out.push('\n');
+    out.push_str(&format!("{}\n", team2.len()));
+    for &x in &team2 {
+        out.push_str(&format!("{} ", x));
+    }
+    out.push('\n');
+
+    print!("{}", out);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

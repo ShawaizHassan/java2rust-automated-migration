@@ -1,0 +1,417 @@
+INDEX: 514 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskC solver = new TaskC();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskC {
+        static final int INF = (int) 1e9;
+
+        public void solve(int testNumber, InputReader in, PrintWriter out) {
+            int n = in.nextInt();
+            String s = in.next();
+            int nk = 0;
+            int nv = 0;
+            int no = 0;
+            int[] kpos = new int[n];
+            int[] vpos = new int[n];
+            int[] opos = new int[n];
+            int[] snk = new int[n + 1];
+            int[] snv = new int[n + 1];
+            int[] sno = new int[n + 1];
+            for (int i = 0; i < n; ++i) {
+                char ch = s.charAt(i);
+                if (ch == 'V') {
+                    vpos[nv++] = i;
+                } else if (ch == 'K') {
+                    kpos[nk++] = i;
+                } else {
+                    opos[no++] = i;
+                }
+                snk[i + 1] = nk;
+                snv[i + 1] = nv;
+                sno[i + 1] = no;
+            }
+            int[][][][] best = new int[2][nk + 1][nv + 1][no + 1];
+            for (int[][][] x : best) for (int[][] y : x) for (int[] z : y) Arrays.fill(z, INF);
+            best[0][0][0][0] = 0;
+            for (int k = 0; k <= nk; ++k) {
+                for (int v = 0; v <= nv; ++v) {
+                    for (int o = 0; o <= no; ++o) {
+                        for (int hv = 0; hv < 2; ++hv) {
+                            int cur = best[hv][k][v][o];
+                            if (k < nk && hv == 0) {
+                                best[0][k + 1][v][o] = Math.min(best[0][k + 1][v][o], cur + Math.max(snv[kpos[k]] - v,0) + Math.max(sno[kpos[k]] - o,0));
+                            }
+                            if (v < nv) {
+                                best[1][k][v + 1][o] = Math.min(best[1][k][v + 1][o], cur + Math.max(snk[vpos[v]] - k,0) + Math.max(sno[vpos[v]] - o,0));
+                            }
+                            if (o < no) {
+                                best[0][k][v][o + 1] = Math.min(best[0][k][v][o + 1], cur + Math.max(snv[opos[o]] - v,0) + Math.max(snk[opos[o]] - k,0));
+                            }
+                        }
+                    }
+                }
+            }
+            out.println(Math.min(best[0][nk][nv][no], best[1][nk][nv][no]) );
+        }
+
+    }
+
+    static class InputReader {
+        public BufferedReader reader;
+        public StringTokenizer tokenizer;
+
+        public InputReader(InputStream stream) {
+            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            tokenizer = null;
+        }
+
+        public String next() {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return tokenizer.nextToken();
+        }
+
+        public int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.*;
+
+public class F 
+{
+    public static void main(String [] args) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter writer = new PrintWriter(System.out);
+        
+        int n = Integer.parseInt(reader.readLine());
+        
+        int [] a = new int[n];
+        StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
+        for(int i = 0 ; i < n ; i++)
+            a[i] = Integer.parseInt(tokenizer.nextToken());
+        
+        int [] res = new int[n+1];
+        
+        for(int u = 2 ; u <= n ; u++)
+            for(int k = 1 ; k < n ;)
+            {
+                int v = (u-2)/k + 1;
+                
+                int nk;
+                if(v == 1)
+                    nk = n;
+                else
+                {
+                    nk = (u-1)/(v-1);
+                    if(nk == k)
+                        nk++;
+                }
+                
+                if(a[v-1] > a[u-1])
+                {
+                    res[k]++;
+                    res[nk]--;
+                }
+                k = nk;
+            }
+        
+        for(int i = 1 ; i < res.length ; i++)
+            res[i] += res[i-1];
+        
+        for(int i = 1 ; i < n ; i++)
+            writer.print(res[i]+" ");
+        writer.println();
+        
+        writer.flush();
+        writer.close();
+    }
+
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input).unwrap();
+        Self { input: input.into_bytes(), idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn main() {
+    let mut sc = Scanner::new();
+    let n_i32 = sc.next_i32();
+    if n_i32 <= 0 {
+        // Matches Java behavior loosely; input constraints typically ensure n>0.
+        return;
+    }
+    let n: usize = n_i32 as usize;
+
+    let mut a = vec![0i32; n];
+    for i in 0..n {
+        a[i] = sc.next_i32();
+    }
+
+    let mut res = vec![0i32; n + 1];
+
+    for u in 2..=n {
+        let mut k: usize = 1;
+        while k < n {
+            let v: usize = (u - 2) / k + 1;
+
+            let nk: usize;
+            if v == 1 {
+                nk = n;
+            } else {
+                nk = {
+                    let mut t = (u - 1) / (v - 1);
+                    if t == k {
+                        t += 1;
+                    }
+                    t
+                };
+            }
+
+            if a[v - 1] > a[u - 1] {
+                res[k] += 1;
+                res[nk] -= 1;
+            }
+            k = nk;
+        }
+    }
+
+    for i in 1..res.len() {
+        let prev = res[i - 1];
+        res[i] += prev;
+    }
+
+    let mut out = String::new();
+    for i in 1..n {
+        out.push_str(&res[i].to_string());
+        out.push(' ');
+    }
+    out.push('\n');
+    print!("{}", out);
+}
+```
+
+Java:
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.StringTokenizer;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		InputStream input = System.in;
+		OutputStream output = System.out;
+		InputReader in = new InputReader(input);
+		PrintWriter out = new PrintWriter(output);
+		Solve solve = new Solve();
+		solve.solve(in, out);
+		out.close();
+	}
+	
+	static class Solve {
+		void solve(InputReader in, PrintWriter out) {
+			int n = in.nextInt();
+			int k = in.nextInt();
+			Integer [] a = new Integer[n];
+			int res = 0;
+			for(int i = 0; i < n; i++) {
+				a[i] = in.nextInt();
+			}
+			Arrays.sort(a, new Comparator<Integer>() {
+				
+				@Override
+				public int compare(Integer o1, Integer o2) {
+					return (o1%10) - (o2%10);
+				}
+				
+			});
+			for(int i = n-1; i >=0; i--) {
+				while(((a[i]%10)!=0)&&(k>0)) {
+					a[i]++;
+					k--;
+				}
+				res += a[i]/10;
+			}
+			if (k >=10) {
+				res += k/10;
+			}
+			if (res > 10 * n) {
+				res = 10 * n;
+			}
+			out.println(res);
+		}
+	}
+	
+	static class InputReader {
+		BufferedReader br;
+		StringTokenizer tokenizer = null;
+		InputReader(InputStream in) {
+			br = new BufferedReader(new InputStreamReader(in));
+		}
+		
+		String next() {
+			while((tokenizer==null)||(!(tokenizer.hasMoreTokens()))) {
+				try {
+					tokenizer = new StringTokenizer(br.readLine());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return tokenizer.nextToken();
+		}
+		
+		int nextInt() {
+			return Integer.parseInt(next());
+		}
+		
+		long nextLong() {
+			return Long.parseLong(next());	
+		}
+		
+		double nextDouble() {
+			return Double.parseDouble(next());
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::cmp::Ordering;
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+
+    let n: i32 = it.next().unwrap().parse().unwrap();
+    let mut k: i32 = it.next().unwrap().parse().unwrap();
+
+    let n_usize = n as usize;
+    let mut a: Vec<i32> = Vec::with_capacity(n_usize);
+    for _ in 0..n_usize {
+        let v: i32 = it.next().unwrap().parse().unwrap();
+        a.push(v);
+    }
+
+    a.sort_by(|&x, &y| {
+        let rx = x % 10;
+        let ry = y % 10;
+        rx.cmp(&ry)
+    });
+
+    let mut res: i32 = 0;
+
+    for idx in (0..n_usize).rev() {
+        while (a[idx] % 10 != 0) && (k > 0) {
+            a[idx] += 1;
+            k -= 1;
+        }
+        res += a[idx] / 10;
+    }
+
+    if k >= 10 {
+        res += k / 10;
+    }
+    let cap = 10 * n;
+    if res > cap {
+        res = cap;
+    }
+
+    print!("{}", res);
+    println!();
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.

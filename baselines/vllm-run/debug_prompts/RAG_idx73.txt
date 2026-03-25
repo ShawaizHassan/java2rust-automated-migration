@@ -1,0 +1,307 @@
+INDEX: 73 | METHOD: RAG
+================================================================================
+[SYSTEM]
+You are an expert in both Java and Rust. Your task is to translate Java code into Rust.
+--------------------------------------------------------------------------------
+[USER]
+I will provide Java code and some examples.
+Your job is to translate ONLY the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java code to translate
+### BEGIN JAVA_TO_TRANSLATE
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class A {
+
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        PrintWriter out = new PrintWriter(System.out);
+        int n = sc.nextInt();
+        char[] a = sc.next().toCharArray();
+        List<Character> list = new ArrayList<>();
+        for (char c : a) list.add(c);
+        while (true) {
+            int max = 0, maxIdx = -1;
+            for (int i = 0; i < list.size(); i++) {
+                if ((i > 0 && list.get(i) == list.get(i - 1) + 1 || i < list.size() - 1 && list.get(i) == list.get(i + 1) + 1) && list.get(i) > max) {
+                    max = list.get(i);
+                    maxIdx = i;
+                }
+            }
+            if (maxIdx == -1) break;
+            List<Character> newList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                if (i != maxIdx) {
+                    newList.add(list.get(i));
+                }
+            }
+            list = newList;
+        }
+        out.println(a.length - list.size());
+        out.flush();
+        out.close();
+    }
+
+    static class Scanner
+    {
+        StringTokenizer st;
+        BufferedReader br;
+
+        public Scanner(InputStream system) {br = new BufferedReader(new InputStreamReader(system));}
+        public Scanner(String file) throws Exception {br = new BufferedReader(new FileReader(file));}
+        public String next() throws IOException
+        {
+            while (st == null || !st.hasMoreTokens()) st = new StringTokenizer(br.readLine());
+            return st.nextToken();
+        }
+        public String nextLine()throws IOException{return br.readLine();}
+        public int nextInt() throws IOException {return Integer.parseInt(next());}
+        public double nextDouble() throws IOException {return Double.parseDouble(next());}
+        public char nextChar()throws IOException{return next().charAt(0);}
+        public Long nextLong()throws IOException{return Long.parseLong(next());}
+        public boolean ready() throws IOException{return br.ready();}
+        public void waitForInput() throws InterruptedException {Thread.sleep(3000);}
+    }
+}
+### END JAVA_TO_TRANSLATE
+
+### Translation examples (DO NOT TRANSLATE)
+### BEGIN EXAMPLES
+Java:
+```
+import java.io.PrintWriter;
+import java.util.*;
+public class c {
+public static void main(String[] args)
+{
+    Scanner input = new Scanner(System.in);
+    String s = input.next();
+    int n = s.length();
+    PrintWriter out = new PrintWriter(System.out);
+    ArrayList<Character> list = new ArrayList<Character>();
+    for(int i = 0; i<n; i++)
+    {
+        char c = s.charAt(i);
+        boolean triple = list.size() >= 2 && c == list.get(list.size()-1) && c == list.get(list.size()-2);
+        boolean double2 = list.size() >= 3 && c == list.get(list.size()-1) && list.get(list.size()-2) == list.get(list.size()-3);
+        if(triple || double2) continue;
+        list.add(c);
+    }
+    for(char c: list) out.print(c);
+    
+    
+    out.close();
+}
+}
+
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+fn main() {
+    let mut input = String::new();
+    io::stdin().read_to_string(&mut input).unwrap();
+    let mut it = input.split_whitespace();
+    let s = match it.next() {
+        Some(v) => v.as_bytes(),
+        None => return,
+    };
+
+    let mut list: Vec<u8> = Vec::with_capacity(s.len());
+
+    for &c in s {
+        let len = list.len();
+        let triple = len >= 2 && c == list[len - 1] && c == list[len - 2];
+        let double2 = len >= 3 && c == list[len - 1] && list[len - 2] == list[len - 3];
+        if triple || double2 {
+            continue;
+        }
+        list.push(c);
+    }
+
+    let mut out = String::with_capacity(list.len());
+    for &c in &list {
+        out.push(c as char);
+    }
+    print!("{out}");
+}
+```
+
+Java:
+```
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	static InputReader scan = new InputReader(new BufferedInputStream(System.in));
+	static ArrayList<Integer> list = new ArrayList<>();
+	static int loss = 0;
+
+	public static void main(String[] args) {
+		int n = scan.nextInt();
+		for (int i = 0; i < n; i++) {
+			list.add(scan.nextInt());
+		}
+		Collections.sort(list);
+		int max = 1;
+		loss = list.get(0);
+		for (int i = 0; i < n; i++) {
+			if (max >= n - i)
+				break;
+			if(i>0&&list.get(i-1)==list.get(i)) {
+				continue;
+			}
+			int temp = fun(i);
+			if (temp > max) {
+				max = temp;
+			}
+			for( ;i+1<n&&Math.abs(list.get(i+1)-loss)>5;i++) {
+				
+			}
+			
+		}
+		System.out.println(max);
+	}
+
+	static int fun(int n) {
+		int num = list.get(n);
+		int count = 0;
+		for (int i = n ; i < list.size(); i++) {
+			if (Math.abs(list.get(i) - num) <= 5) {
+				count++;
+			} else {
+				
+				//    +++
+				loss = list.get(i);
+				break;
+			}
+		}
+		return count;
+	}
+
+	static class InputReader {
+		public BufferedReader reader;
+		public StringTokenizer tokenizer;
+
+		public InputReader(InputStream stream) {
+			reader = new BufferedReader(new InputStreamReader(stream), 32768);
+			tokenizer = null;
+		}
+
+		public String next() {
+			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+				try {
+					tokenizer = new StringTokenizer(reader.readLine());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			return tokenizer.nextToken();
+		}
+
+		public int nextInt() {
+			return Integer.parseInt(next());
+		}
+	}
+}
+```
+Translated Rust:
+```
+use std::io::{self, Read};
+
+struct Scanner {
+    input: Vec<u8>,
+    idx: usize,
+}
+impl Scanner {
+    fn new() -> Self {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        Self { input, idx: 0 }
+    }
+    fn next_i32(&mut self) -> i32 {
+        while self.idx < self.input.len() && self.input[self.idx].is_ascii_whitespace() {
+            self.idx += 1;
+        }
+        let mut sign = 1i32;
+        if self.idx < self.input.len() && self.input[self.idx] == b'-' {
+            sign = -1;
+            self.idx += 1;
+        }
+        let mut num = 0i32;
+        while self.idx < self.input.len() && !self.input[self.idx].is_ascii_whitespace() {
+            num = num * 10 + (self.input[self.idx] - b'0') as i32;
+            self.idx += 1;
+        }
+        num * sign
+    }
+}
+
+fn fun(n: usize, list: &Vec<i32>, loss: &mut i32) -> i32 {
+    let num = list[n];
+    let mut count = 0i32;
+    for i in n..list.len() {
+        if (list[i] - num).abs() <= 5 {
+            count += 1;
+        } else {
+            *loss = list[i];
+            break;
+        }
+    }
+    count
+}
+
+fn main() {
+    let mut scan = Scanner::new();
+    let n = scan.next_i32() as usize;
+    let mut list: Vec<i32> = Vec::with_capacity(n);
+    for _ in 0..n {
+        list.push(scan.next_i32());
+    }
+    list.sort();
+
+    let mut maxv: i32 = 1;
+    let mut loss: i32 = list[0];
+
+    let mut i: usize = 0;
+    while i < n {
+        if maxv as usize >= n - i {
+            break;
+        }
+        if i > 0 && list[i - 1] == list[i] {
+            i += 1;
+            continue;
+        }
+
+        let temp = fun(i, &list, &mut loss);
+        if temp > maxv {
+            maxv = temp;
+        }
+
+        while i + 1 < n && (list[i + 1] - loss).abs() > 5 {
+            i += 1;
+        }
+
+        i += 1;
+    }
+
+    println!("{}", maxv);
+}
+```
+### END EXAMPLES
+
+### Reminder
+Output ONLY the translated Safe Rust code no explanations, comments, or extra text.
