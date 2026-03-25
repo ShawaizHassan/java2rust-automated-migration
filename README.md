@@ -86,20 +86,7 @@ Helps preserve:
 
 ## ⚙️ Pipeline
 
-
-Java Code
-↓
-Static Analysis → Rule Category
-↓
-CC-RAG Retrieval + TRL Rules
-↓
-IPO Summary
-↓
-LLM Translation
-↓
-(Optional) Compile & Fix
-↓
-Final Rust Code
+<img width="2034" height="1247" alt="Pipeline1" src="https://github.com/user-attachments/assets/14b88f8e-b2e9-47e5-b41b-481a1f963d59" />
 
 
 ---
@@ -171,6 +158,7 @@ baseline prompts (Instruction, ICL, CoT, RAG)
 method prompts (JavaRustTrans)
 summary prompts (IPO)
 refinement prompts (compiler fix)
+
 🔬 Contributions
 ✅ Category-aware retrieval (CC-RAG)
 ✅ Translation Rules Library (TRL)
