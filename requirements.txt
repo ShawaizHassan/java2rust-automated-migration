@@ -7,3 +7,13 @@ jsonlines
 mkdocs
 mkdocs-material
 rank_bm25
+
+transformers
+datasets
+sentencepiece
+accelerate
+scikit-learn
+pandas
+numpy
+tqdm
+rank-bm25
