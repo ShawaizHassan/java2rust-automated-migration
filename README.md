@@ -177,15 +177,19 @@ refinement prompts (compiler fix)
 ✅ IPO-based semantic scaffolding
 ✅ Compiler-driven refinement
 ✅ End-to-end structured translation pipeline
+
 ⚠️ Notes
 Dataset is not included (can be reconstructed)
 Outputs are omitted for size
 Deterministic decoding (temperature = 0)
+
 📌 Future Work
 Better handling of type/trait mismatches
 Improved retrieval filtering
 Multi-step refinement
 Support for larger real-world codebases
+
+
 📜 Citation
 @article{javarusttrans2026,
   title={Integrating Static Analysis and Retrieval for LLM-Based Java-to-Rust Translation},
