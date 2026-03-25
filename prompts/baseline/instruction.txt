@@ -1,0 +1,7 @@
+Here is Java code. Translate it to Rust. Return ONLY the translated Safe Rust code (no extra text).
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### BEGIN JAVA_TO_TRANSLATE
+{java_code}
+### END JAVA_TO_TRANSLATE

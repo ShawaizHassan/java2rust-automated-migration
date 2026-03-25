@@ -1,0 +1,26 @@
+I will provide Java code and translation rule hints.
+Your job is to translate **only** the Java code into Safe Rust.
+
+Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.
+
+### Java Code to translate:
+```java
+{java_code}```
+
+Translation examples (DO NOT TRANSLATE)
+
+{few_shot}
+
+Summary (Reference Only)
+
+This section contains a summary about the Java code. Use it as guidance.
+{summary}
+
+Translation Rule Hints
+
+This section contains Translation Rule Hints about the Java and Rust code. Use as guidance.
+{translation_rules}
+
+Reminder
+1- Carefully read and understand the Java code, and Translation Rule Hints.
+2- Output only the Safe Rust code — no explanations, comments, or additional text.

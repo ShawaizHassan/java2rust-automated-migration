@@ -176,17 +176,7 @@ class BaseTranslator:
                     "### BEGIN EXAMPLES\n{few_shot}\n### END EXAMPLES"
                 ),
             },
-            "Vert": {
-                "system": self.system_prompt,
-                "user": (
-                    "Java code to translate\n"
-                    "Preserve behavior exactly: replicate the same algorithm, control flow, edge cases, and I/O format—do not simplify, optimize, or refactor.\n\n"
-                    "### BEGIN JAVA_TO_TRANSLATE\n{java_code}\n### END JAVA_TO_TRANSLATE\n\n\n"
-                    "Do compilable Safe Rust translation of the above Java code. Output code ONLY (no comments). "
-                    "Include all necessary imports. Avoid unsafe code. Preserve class/interface structure as idiomatic Rust "
-                    "(e.g., use structs/impl). No main function."
-                ),
-            },
+
         }
 
 

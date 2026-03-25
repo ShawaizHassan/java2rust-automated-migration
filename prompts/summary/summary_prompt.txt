@@ -1,0 +1,11 @@
+Your task is to generate a **summary** based on **Java code**.
+
+Write EXACTLY 3 lines in this format:
+Input: <what is read from stdin/files; data types/structure>
+Process: <main steps/algorithm; key conditions/loops/data structures>
+Output: <what is printed/returned; format>
+
+### Java Code
+{java_code}
+### Reminder
+**- Output ONLY those 3 lines. No extra text.**

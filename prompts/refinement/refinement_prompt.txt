@@ -1,0 +1,9 @@
+Rust you generated:
+{rust_code}
+
+Compiler error:
+{error}
+
+Fix ONLY what is needed to compile. Do NOT change the algorithm, goal, or I/O format. 
+Do NOT replace with a different solution. Prefer small edits; keep structure/names when possible. 
+Output ONLY the full corrected Rust code.
