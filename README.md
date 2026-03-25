@@ -1,36 +1,194 @@
-# JAVA2RUST: Toward Automated Migration of Java Programs to Rust
+# 🚀 JavaRustTrans: LLM-Based Java → Rust Translation with Static Analysis and Retrieval
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
-![CI](https://img.shields.io/github/actions/workflow/status/OWNER/java2rust-automated-migration/ci.yml?branch=main)
-![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-3776AB)
-![CUDA](https://img.shields.io/badge/CUDA-optional-informational)
+A structured framework for generating **compilable, behavior-preserving Rust code** from Java using LLMs, combining **retrieval, static analysis, semantic scaffolding, and compiler-guided refinement**.
 
-Automated **Java → Rust** migration with **LLM baselines** (vLLM, DeepSeek), **JSONL parallel pairs**, prompts, and evaluation (BLEU, CodeBLEU, compile/test pass).  
-This repo aims to be a clean, reproducible starting point for research and practical migration pipelines.
+📄 Paper: *Integrating Static Analysis and Retrieval for LLM-Based Java-to-Rust Translation*  
+---
 
-> **SEO keywords:** Java to Rust, automated migration, code translation, LLM, vLLM, DeepSeek, JSONL dataset, CodeBLEU, compile pass.
+## 🔍 Overview
+
+Java-to-Rust translation is challenging due to:
+- strict ownership & type system in Rust
+- subtle I/O and behavioral differences
+- frequent compilation failures in LLM outputs
+
+**JavaRustTrans** addresses these challenges by transforming translation into a **structured pipeline** instead of naive prompting.
+
+> Instead of “just prompt the model”, we guide it with:
+> **relevant examples + rules + intent + compiler feedback**
+
+📊 Results (from paper):
+- **+16.64 CA (Computational Accuracy)**
+- **+10.62 CSR (Compilation Success Rate)**  
+compared to strong baselines :contentReference[oaicite:0]{index=0}
 
 ---
 
-## TL;DR Quickstart
+## 🧠 Key Idea
+
+JavaRustTrans decomposes translation into:
+
+
+Evidence (retrieval)
+
+Rules (static analysis)
+Intent (IPO summary)
+Repair (compiler feedback)
+
+This leads to:
+- ✔ higher compilation success  
+- ✔ better functional correctness  
+- ✔ low unsafe Rust usage  
+
+---
+
+## 🏗️ Architecture
+
+The framework consists of **4 core components**:
+
+### 1. 🔎 Category-Constrained Retrieval (CC-RAG)
+- Detects translation category via static analysis  
+- Retrieves **relevant Java–Rust examples** (not random/global)
+
+---
+
+### 2. 📚 Translation Rules Library (TRL)
+Encodes common Java → Rust pitfalls:
+- ownership & borrowing  
+- indexing (`usize`)  
+- I/O parsing  
+- data structures  
+
+Provides **grounded, actionable hints**
+
+---
+
+### 3. 🧾 IPO-Structured Summarization
+Extracts program intent:
+
+
+Input → Process → Output
+
+
+Helps preserve:
+- behavior  
+- I/O contract  
+- algorithm logic  
+
+---
+
+### 4. 🔧 Compiler-Driven Refinement
+- Runs `rustc` on generated code  
+- Uses error messages to fix issues  
+- Performs **one-step minimal repair**
+
+---
+
+## ⚙️ Pipeline
+
+
+Java Code
+↓
+Static Analysis → Rule Category
+↓
+CC-RAG Retrieval + TRL Rules
+↓
+IPO Summary
+↓
+LLM Translation
+↓
+(Optional) Compile & Fix
+↓
+Final Rust Code
+
+
+---
+
+## 📊 Results
+
+JavaRustTrans consistently outperforms baselines across **7 open-source LLMs**:
+
+| Method | CA ↑ | CSR ↑ |
+|------|------|------|
+| Instruction | Low | Low |
+| ICL | Medium | Medium |
+| RAG | Strong | Strong |
+| **JavaRustTrans** | **Best** | **Best** |
+
+✔ Improvements are consistent across model families  
+✔ Unsafe Rust usage remains low :contentReference[oaicite:1]{index=1}  
+
+---
+
+## 📁 Project Structure
+
+
+.
+├── baselines/ # Instruction, ICL, CoT, RAG
+├── method/ # JavaRustTrans pipeline
+├── retrieve/ # BM25 + CC-RAG
+├── eval/ # Evaluation scripts
+├── scripts/ # Utilities & analysis
+├── prompts/ # All prompt templates
+├── Dockerfile # Reproducible environment
+
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone repository
 
 ```bash
-# 1) Clone
-git clone https://github.com/OWNER/java2rust-automated-migration.git
+git clone https://github.com/yourusername/java2rust-automated-migration.git
 cd java2rust-automated-migration
+2. Run with Docker (recommended)
+docker build -t javarusttrans .
+docker run --gpus all -it javarusttrans
+3. Run experiments
+python baselines/vllm-run/baseline.py
+python method/main.py
+🧪 Evaluation
 
-# 2) Environment (choose one)
-bash scripts/setup_env.sh        # creates conda env or venv
+We evaluate using:
 
-# 3) Install
-pip install -r requirements.txt
-pip install -r requirements-dev.txt   # optional: dev tools
+CSR (Compilation Success Rate) → does it compile?
+CA (Computational Accuracy) → does it pass tests?
+UR / UR-LOC → unsafe Rust usage
 
-# 4) Run format/lint (optional but recommended)
-bash scripts/format.sh
-bash scripts/lint.sh
+✔ Rust code compiled using rustc
+✔ Correctness verified via unit tests
 
-# 5) Try evaluation stubs (will print usage)
-python eval/metrics.py --help
-python eval/compile_test.py --help
-```
+🧩 Prompts
+
+All prompts are modular and stored in:
+
+prompts/
+
+Includes:
+
+baseline prompts (Instruction, ICL, CoT, RAG)
+method prompts (JavaRustTrans)
+summary prompts (IPO)
+refinement prompts (compiler fix)
+🔬 Contributions
+✅ Category-aware retrieval (CC-RAG)
+✅ Translation Rules Library (TRL)
+✅ IPO-based semantic scaffolding
+✅ Compiler-driven refinement
+✅ End-to-end structured translation pipeline
+⚠️ Notes
+Dataset is not included (can be reconstructed)
+Outputs are omitted for size
+Deterministic decoding (temperature = 0)
+📌 Future Work
+Better handling of type/trait mismatches
+Improved retrieval filtering
+Multi-step refinement
+Support for larger real-world codebases
+📜 Citation
+@article{javarusttrans2026,
+  title={Integrating Static Analysis and Retrieval for LLM-Based Java-to-Rust Translation},
+  author={Anonymous},
+  year={2026}
+}
