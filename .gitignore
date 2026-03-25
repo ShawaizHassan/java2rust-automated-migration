@@ -132,7 +132,6 @@ data/retrieval/processed/
 !data/retrieval/scripts/
 
 # Keep all scripts, configs, prompts
-!scripts/
 !baselines/
 !configs/
 !prompts/
