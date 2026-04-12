@@ -2,6 +2,8 @@
 
 **Category-Conditioned Retrieval and Grounded Hints for Reliable Java-to-Rust Translation**
 
+*Shawaiz Hassan · Ahmad Hassan · Harbin Institute of Technology (Shenzhen)*
+
 ---
 
 Direct prompting fails Java-to-Rust translation not randomly — it fails in predictable, category-structured ways: usize/i32 mismatches in array indexing, buffering gaps in I/O parsing, overflow in modular arithmetic, borrow conflicts in data structure manipulation. JavaRustTrans exploits this structure. Instead of prompting blindly, it detects the failure category first, retrieves category-aligned exemplars, injects grounded static hints, scaffolds the program's I/O contract, then runs one bounded compiler-repair pass. The result: **+16.64pp computational accuracy and +10.62pp compilation success** over the strongest RAG baseline, across 522 Java programs and 7 open-source LLMs — with unsafe Rust usage remaining uniformly low.
@@ -23,17 +25,18 @@ Evaluated on 522 Java programs curated from [xCodeEval](https://github.com/ntunl
 
 ### Per-model breakdown
 
-| Model | CA — RAG | CA — JavaRustTrans | CSR — RAG | CSR — JavaRustTrans |
-|---|---|---|---|---|
-| DeepSeek-Coder-6.7B-Instruct | — | — | — | — |
-| DeepSeek-Coder-7B-Instruct-v1.5 | — | — | — | — |
-| Qwen2.5-Coder-7B-Instruct | — | — | — | — |
-| Qwen2.5-Coder-14B-Instruct | — | — | — | — |
-| CodeLlama-7B-Instruct | — | — | — | — |
-| CodeLlama-13B-Instruct | — | — | — | — |
-| CodeLlama-34B-Instruct | — | — | — | — |
+| Model | CA — RAG | CA — JavaRustTrans | Δ CA | CSR — RAG | CSR — JavaRustTrans | Δ CSR |
+|---|---|---|---|---|---|---|
+| DeepSeek-Coder-6.7B | 21.46 | **42.34** | +20.88 | 74.90 | **77.97** | +3.07 |
+| DeepSeek-Coder-33B | 1.53 | **10.34** | +8.81 | 5.17 | **18.97** | +13.80 |
+| Qwen2.5-Coder-7B | 33.52 | **52.68** | +19.16 | 49.62 | **72.80** | +23.18 |
+| Qwen2.5-Coder-14B | 52.49 | **70.69** | +18.20 | 64.94 | **84.48** | +19.54 |
+| CodeLlama-32B | 55.17 | **73.75** | +18.58 | 66.48 | **84.48** | +18.00 |
+| CodeLlama-7B | 3.07 | **14.94** | +11.87 | **76.44** | 61.49 | −14.95 ⚠ |
+| CodeLlama-34B | 3.64 | **22.61** | +18.97 | 58.43 | **70.11** | +11.68 |
+| **Average** | **24.41** | **41.05** | **+16.64** | **56.57** | **67.19** | **+10.62** |
 
-> **Note to contributors:** Fill in per-model numbers from Table 3 of the paper. The average gains are verified across all 7 models with consistent direction.
+> ⚠ **CodeLlama-7B CSR exception:** JavaRustTrans improves CA substantially (+11.87pp) but attains lower CSR than RAG on this model. As discussed in the paper, retrieval alone can sometimes satisfy compilation constraints on smaller models even when end-to-end functional correctness remains limited. CA improvement confirms the method still works; CSR trade-off is model-specific.
 
 ### Ablation: component contribution
 
@@ -300,3 +303,7 @@ All models run with greedy decoding (temperature = 0) via vLLM. JavaRustTrans sh
 ```
 
 ---
+
+## License
+
+See [LICENSE](LICENSE) for details.
